@@ -568,11 +568,18 @@ tbody td{padding:8px 14px;white-space:nowrap;}
   <!-- BY POSITION -->
   <div id="batting-positions" class="sub-page">
     <div class="charts-grid">
-      <div class="chart-card"><div class="chart-title">Average Runs by Batting Position</div><div class="chart-wrap" style="height:240px"><canvas id="chartPosAvg"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Average Runs by Batting Position <span style="font-weight:400;color:var(--muted);font-size:0.72rem">— click a bar to filter the table</span></div><div class="chart-wrap" style="height:240px"><canvas id="chartPosAvg" style="cursor:pointer"></canvas></div></div>
       <div class="chart-card"><div class="chart-title">Duck % by Position</div><div class="chart-wrap" style="height:240px"><canvas id="chartPosDuck"></canvas></div></div>
     </div>
     <div class="table-card">
-      <div class="table-header"><span class="table-title">Top Performers by Batting Position (min 5 innings)</span></div>
+      <div class="table-header">
+        <span class="table-title" id="posBatTableTitle">Top Performers by Batting Position (min 5 innings)</span>
+        <input class="search-box" placeholder="Search player..." oninput="filterTableSearch('tblPosBat',this.value)">
+      </div>
+      <div id="posBatFilterBar" style="display:none;padding:0 0 10px;font-size:0.78rem;color:var(--muted);align-items:center;gap:8px;">
+        Showing position <strong id="posBatFilterLabel" style="color:var(--text)"></strong>
+        <button class="close-btn" onclick="clearPosBatFilter()" style="font-size:0.7rem;padding:3px 8px">✕ Clear filter</button>
+      </div>
       <div class="table-wrap"><table id="tblPosBat"><thead><tr>
         <th onclick="sortTable('tblPosBat',0)">Pos</th>
         <th onclick="sortTable('tblPosBat',1)">Player</th>
@@ -2642,6 +2649,51 @@ function closeOppDetail() {
 // ============================================================
 var _profileToken = 0;
 
+// Standalone, synchronous render for the "Dismissal Types" chart on a player's
+// profile. Deliberately kept independent of the other profile charts (which run
+// in a batched, delayed block) so it has no shared state or timing dependency —
+// each call is a clean rebuild against the freshly-injected canvas for the
+// player currently being shown.
+function renderPlayerDismissalChart(player, playerRole) {
+  var canvas = document.getElementById('playerDismissalChart');
+  if (!canvas) return; // not a batter/all-round profile shape — chart isn't shown for this player
+
+  var counts = {};
+  for (var i = 0; i < CRICKET_DATA.batting.length; i++) {
+    var rec = CRICKET_DATA.batting[i];
+    if (rec.Batter !== player) continue;
+    if (!rec.Dismissal || rec.Dismissal === 'DNB') continue;
+    counts[rec.Dismissal] = (counts[rec.Dismissal] || 0) + 1;
+  }
+
+  var labels = Object.keys(counts).sort(function(a, b) { return counts[b] - counts[a]; });
+  var values = labels.map(function(l) { return counts[l]; });
+  if (values.length === 0) return;
+
+  var palette = ['#f85149','#c5202f','#58a6ff','#3fb950','#f0a500','#bc8cff','#ff7043','#26c6da','#ab47bc','#8b949e'];
+
+  makeChart('playerDismissalChart', {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: palette.slice(0, labels.length),
+        borderColor: '#141821',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'right', labels: { color: '#94A0B3', font: { size: 10 }, boxWidth: 10, boxHeight: 10, padding: 8 } }
+      }
+    }
+  });
+}
+
+
 function renderProfile() {
   var myToken = ++_profileToken;
   const player = document.getElementById('profileSelect').value;
@@ -2738,13 +2790,15 @@ function renderProfile() {
         ${[['Catches',catches],['Stumpings',stumpings],['Run Outs',runouts]].map(([l,v])=>'<div class=\"profile-stat-row\"><span class=\"profile-stat-label\">'+l+'</span><span class=\"profile-stat-val\">'+v+'</span></div>').join('')}
       </div>
       <div style="flex:1 1 320px;min-width:0;max-width:100%">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:12px;margin-bottom:12px;"><div class=\"profile-chart-card profile-chart-full\"><div class=\"chart-title\">Player Radar</div><div style=\"height:220px\"><canvas id=\"pchart-radar\"></canvas></div></div>${(playerRole&&playerRole.label!=="Batter")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Wickets per Season</div><div style=\"height:160px\"><canvas id=\"pchart2\"></canvas></div></div>':''}<div class=\"profile-chart-card\"><div class=\"chart-title\">Runs per Season</div><div style=\"height:160px\"><canvas id=\"pchart1\"></canvas></div></div>${(playerRole&&playerRole.label==="Bowler")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Economy by Season</div><div style=\"height:160px\"><canvas id=\"pchart4\"></canvas></div></div>':''}${(playerRole&&playerRole.label!=="Batter")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Bowling Avg by Season</div><div style=\"height:160px\"><canvas id=\"pchartBowlAvg\"></canvas></div></div>':''}${(!playerRole||playerRole.label!=="Bowler")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Batting Avg by Season</div><div style=\"height:160px\"><canvas id=\"pchart6\"></canvas></div></div>':''}${(playerRole&&playerRole.label!=="Batter")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Home vs Away Bowl Avg</div><div style=\"height:160px\"><canvas id=\"pchart9\"></canvas></div></div>':''}${(!playerRole||playerRole.label!=="Bowler")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Home vs Away Bat Average</div><div style=\"height:160px\"><canvas id=\"pchart5\"></canvas></div></div>':''}${(playerRole&&playerRole.label==="Bowler")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">1st vs 2nd Inn Bowl Avg</div><div style=\"height:160px\"><canvas id=\"pchart10\"></canvas></div></div>':''}${(!playerRole||playerRole.label==="Batter")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">1st vs 2nd Innings Avg</div><div style=\"height:160px\"><canvas id=\"pchart8\"></canvas></div></div>':''}${(!playerRole||playerRole.label!=="Bowler")?'<div class=\"profile-chart-card profile-chart-full\"><div class=\"chart-title\">Innings Scores</div><div style=\"height:160px\"><canvas id=\"pchart3\"></canvas></div></div>':''}${(!playerRole||playerRole.label==="Batter")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Dismissal Types</div><div style=\"height:160px\"><canvas id=\"pchartDismissal\"></canvas></div></div>':''}</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:12px;margin-bottom:12px;"><div class=\"profile-chart-card profile-chart-full\"><div class=\"chart-title\">Player Radar</div><div style=\"height:220px\"><canvas id=\"pchart-radar\"></canvas></div></div>${(playerRole&&playerRole.label!=="Batter")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Wickets per Season</div><div style=\"height:160px\"><canvas id=\"pchart2\"></canvas></div></div>':''}<div class=\"profile-chart-card\"><div class=\"chart-title\">Runs per Season</div><div style=\"height:160px\"><canvas id=\"pchart1\"></canvas></div></div>${(playerRole&&playerRole.label==="Bowler")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Economy by Season</div><div style=\"height:160px\"><canvas id=\"pchart4\"></canvas></div></div>':''}${(playerRole&&playerRole.label!=="Batter")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Bowling Avg by Season</div><div style=\"height:160px\"><canvas id=\"pchartBowlAvg\"></canvas></div></div>':''}${(!playerRole||playerRole.label!=="Bowler")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Batting Avg by Season</div><div style=\"height:160px\"><canvas id=\"pchart6\"></canvas></div></div>':''}${(playerRole&&playerRole.label!=="Batter")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Home vs Away Bowl Avg</div><div style=\"height:160px\"><canvas id=\"pchart9\"></canvas></div></div>':''}${(!playerRole||playerRole.label!=="Bowler")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Home vs Away Bat Average</div><div style=\"height:160px\"><canvas id=\"pchart5\"></canvas></div></div>':''}${(playerRole&&playerRole.label==="Bowler")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">1st vs 2nd Inn Bowl Avg</div><div style=\"height:160px\"><canvas id=\"pchart10\"></canvas></div></div>':''}${(!playerRole||playerRole.label==="Batter")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">1st vs 2nd Innings Avg</div><div style=\"height:160px\"><canvas id=\"pchart8\"></canvas></div></div>':''}${(!playerRole||playerRole.label!=="Bowler")?'<div class=\"profile-chart-card profile-chart-full\"><div class=\"chart-title\">Innings Scores</div><div style=\"height:160px\"><canvas id=\"pchart3\"></canvas></div></div>':''}${(!playerRole||playerRole.label==="Batter")?'<div class=\"profile-chart-card\"><div class=\"chart-title\">Dismissal Types</div><div style=\"height:160px\"><canvas id=\"playerDismissalChart\"></canvas></div></div>':''}</div>
         ${topInnings.length?`<div class="table-card" style="margin-bottom:12px"><div class="table-header"><span class="table-title">Top 5 Innings</span></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Opponent</th><th>Runs</th><th>Balls</th><th>SR</th><th>Dismissal</th><th>W/L</th></tr></thead><tbody>${topInnings.map(r=>`<tr><td>${r.Date}</td><td>${r.Opponent}</td><td class="highlight">${r.Runs}</td><td>${r.Balls||'-'}</td><td>${typeof r.SR==='number'?r.SR.toFixed(1):'-'}</td><td>${r.Dismissal}</td><td><span class="badge badge-${r['W/L']==='W'?'w':'l'}">${r['W/L']}</span></td></tr>`).join('')}</tbody></table></div></div>`:''}
         ${topSpells.length?`<div class="table-card" style="margin-bottom:12px"><div class="table-header"><span class="table-title">Best Bowling Spells</span></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Opponent</th><th>O</th><th>M</th><th>R</th><th>W</th><th>Econ</th></tr></thead><tbody>${topSpells.map(r=>`<tr><td>${r.Date}</td><td>${r.Opponent}</td><td>${r.Overs}</td><td>${r.Maidens}</td><td>${r.Runs}</td><td class="highlight">${r.Wickets}</td><td>${typeof r.Economy==='number'?r.Economy.toFixed(2):'-'}</td></tr>`).join('')}</tbody></table></div></div>`:''}
         ${motmWins.length?`<div class="table-card"><div class="table-header"><span class="table-title">MoTM Awards (${motmWins.length})</span></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Opponent</th><th>XI</th></tr></thead><tbody>${motmWins.map(m=>`<tr><td>${m.Date}</td><td>${m.Opponent}</td><td><span class="badge badge-${m.Team==='1st'?'1st':'2nd'}">${m.Team}</span></td></tr>`).join('')}</tbody></table></div></div>`:''}
       </div>
     </div>
   `;
+
+  renderPlayerDismissalChart(player, playerRole);
 
   // Radar scores
   function radarScore(val, max) { return max>0?Math.min(10,Math.round(val/max*100)/10):0; }
@@ -2893,24 +2947,6 @@ function renderProfile() {
     }
   
   
-    // Dismissal types pie — BAT + null role
-    if(!isBowler && document.getElementById('pchartDismissal')) {
-      var dismissalCounts = {};
-      CRICKET_DATA.batting.filter(function(r){
-        return r.Batter===player && r.Dismissal && r.Dismissal!=='DNB';
-      }).forEach(function(r){
-        var d = r.Dismissal;
-        dismissalCounts[d] = (dismissalCounts[d]||0) + 1;
-      });
-      var dLabels = Object.keys(dismissalCounts).sort(function(a,b){return dismissalCounts[b]-dismissalCounts[a];});
-      var dData   = dLabels.map(function(d){return dismissalCounts[d];});
-      var dColors = ['#f85149','#c5202f','#58a6ff','#3fb950','#f0a500','#bc8cff','#ff7043','#26c6da','#ab47bc','#8b949e'];
-      if(dData.length>0) makeChart('pchartDismissal',{type:'doughnut',data:{
-        labels:dLabels,
-        datasets:[{data:dData,backgroundColor:dColors.slice(0,dLabels.length),borderColor:'#141821',borderWidth:2}]
-      },options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{position:'right',labels:{color:'#94A0B3',font:{size:10},boxWidth:10,boxHeight:10,padding:8}}}}});
-    }
   },50);
 }
 
@@ -3163,7 +3199,7 @@ let sortState={};
 function sortTable(tableId,colIdx) {
   const table=document.getElementById(tableId);
   const tbody=table.querySelector('tbody');
-  const rows=Array.from(tbody.querySelectorAll('tr'));
+  const rows=Array.from(tbody.querySelectorAll('tr:not(.show-more-row)'));
   const key=tableId+colIdx, asc=sortState[key]!==true;
   sortState[key]=asc;
   table.querySelectorAll('thead th').forEach((th,i)=>{th.classList.remove('sort-asc','sort-desc');if(i===colIdx)th.classList.add(asc?'sort-asc':'sort-desc');});
@@ -3174,10 +3210,26 @@ function sortTable(tableId,colIdx) {
     return asc?av.localeCompare(bv):bv.localeCompare(av);
   });
   rows.forEach(r=>tbody.appendChild(r));
+  // Re-apply the row-limit/show-more logic against the NEW sort order — otherwise
+  // whichever rows happened to be hidden under the old order stay hidden, so a
+  // re-sort can show a stale, incorrect "top 25" instead of the true top 25.
+  if (tableShownRows[tableId] !== undefined) applyTableLimit(tableId);
 }
 function filterTableSearch(tableId,query) {
   const q=query.toLowerCase();
-  document.querySelector('#'+tableId+' tbody').querySelectorAll('tr').forEach(row=>{row.style.display=row.textContent.toLowerCase().includes(q)?'':'none';});
+  const tbody = document.querySelector('#'+tableId+' tbody');
+  if(!tbody) return;
+  if (q === '' && tableShownRows[tableId] !== undefined) {
+    // No active search — restore the normal row-limit view instead of showing everything.
+    tbody.querySelectorAll('tr:not(.show-more-row)').forEach(row=>{row.style.display='';});
+    applyTableLimit(tableId);
+    return;
+  }
+  tbody.querySelectorAll('tr:not(.show-more-row)').forEach(row=>{row.style.display=row.textContent.toLowerCase().includes(q)?'':'none';});
+  // While actively searching, hide the "show more" control and don't let the
+  // page-size limit re-hide genuine search matches beyond the default page size.
+  const showMoreRow = tbody.querySelector('.show-more-row');
+  if (showMoreRow) showMoreRow.style.display = 'none';
 }
 
 // ============================================================
@@ -3516,6 +3568,9 @@ function renderCloseGames() {
 // ============================================================
 // BATTING — BY POSITION
 // ============================================================
+var _posBatFilter = null; // active position filter (number) or null
+var _posBatTableRows = [];
+
 function renderBatByPosition() {
   const rows=getFiltered(CRICKET_DATA.batting).filter(r=>r.Dismissal!=='DNB'&&r.Pos>=1&&r.Pos<=11&&typeof r.Runs==='number');
   // Best at each position
@@ -3541,14 +3596,25 @@ function renderBatByPosition() {
       tableRows.push({pos,pl,inn:v.inn,runs:v.runs,avg,hs:v.hs,fifties:v.fifties,ducks:v.ducks,duckPct,twentyPct});
     });
   }
+  _posBatTableRows = tableRows; // keep full set around for filtering
 
   // Charts
   const posLabels=Array.from({length:11},(_,i)=>i+1);
   const allByPos={};
   rows.forEach(r=>{const p=Math.round(r.Pos);if(!allByPos[p])allByPos[p]={runs:0,inn:0,ducks:0,notout:0};allByPos[p].runs+=r.Runs;allByPos[p].inn++;if(r.Runs===0&&!['not out','retired not out'].includes((r.Dismissal||'').toLowerCase()))allByPos[p].ducks++;});
-  makeChart('chartPosAvg',{type:'bar',data:{labels:posLabels.map(p=>'#'+p),datasets:[{label:'Avg Runs',data:posLabels.map(p=>allByPos[p]&&allByPos[p].inn>0?(allByPos[p].runs/allByPos[p].inn).toFixed(1):0),backgroundColor:COLORS}]},options:{...chartOpts({plugins:{legend:{display:false}}}),scales:{x:{ticks:{color:'#8b949e'},grid:{color:'#21262d'}},y:{ticks:{color:'#8b949e'},grid:{color:'#21262d'}}}}});
+  makeChart('chartPosAvg',{type:'bar',data:{labels:posLabels.map(p=>'#'+p),datasets:[{label:'Avg Runs',data:posLabels.map(p=>allByPos[p]&&allByPos[p].inn>0?(allByPos[p].runs/allByPos[p].inn).toFixed(1):0),backgroundColor:COLORS}]},options:{...chartOpts({plugins:{legend:{display:false}},onClick:function(evt,elements){
+    if(!elements||!elements.length) return;
+    var pos = posLabels[elements[0].index];
+    applyPosBatFilter(pos);
+  }}),scales:{x:{ticks:{color:'#8b949e'},grid:{color:'#21262d'}},y:{ticks:{color:'#8b949e'},grid:{color:'#21262d'}}}}});
   makeChart('chartPosDuck',{type:'bar',data:{labels:posLabels.map(p=>'#'+p),datasets:[{label:'Duck %',data:posLabels.map(p=>allByPos[p]&&allByPos[p].inn>0?Math.round(allByPos[p].ducks/allByPos[p].inn*100):0),backgroundColor:'#f85149aa'}]},options:{...chartOpts({plugins:{legend:{display:false}}}),scales:{x:{ticks:{color:'#8b949e'},grid:{color:'#21262d'}},y:{max:100,ticks:{color:'#8b949e',callback:v=>v+'%'},grid:{color:'#21262d'}}}}});
 
+  renderPosBatTable();
+}
+
+function renderPosBatTable() {
+  var tableRows = (_posBatTableRows||[]).slice();
+  if (_posBatFilter !== null) tableRows = tableRows.filter(function(r){ return r.pos === _posBatFilter; });
   tableRows.sort((a,b)=>a.pos-b.pos||(parseFloat(b.avg)-parseFloat(a.avg)));
   document.querySelector('#tblPosBat tbody').innerHTML=tableRows.map(r=>`<tr>
     <td><strong>#${r.pos}</strong></td><td>${r.pl}</td><td>${r.inn}</td>
@@ -3556,7 +3622,29 @@ function renderBatByPosition() {
     <td>${r.ducks}</td><td class="${r.duckPct>20?'text-red':''}">${r.duckPct}%</td>
     <td class="${r.twentyPct>=40?'text-green':''}">${r.twentyPct}%</td>
   </tr>`).join('');
+  var bar = document.getElementById('posBatFilterBar');
+  var label = document.getElementById('posBatFilterLabel');
+  if (_posBatFilter !== null) {
+    bar.style.display = 'flex';
+    label.textContent = '#' + _posBatFilter;
+  } else {
+    bar.style.display = 'none';
+  }
+  if (typeof initTableLimit === 'function') initTableLimit('tblPosBat');
 }
+
+function applyPosBatFilter(pos) {
+  _posBatFilter = (_posBatFilter === pos) ? null : pos; // clicking the same bar again toggles it off
+  renderPosBatTable();
+  document.getElementById('tblPosBat').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function clearPosBatFilter() {
+  _posBatFilter = null;
+  renderPosBatTable();
+}
+
+
 
 // ============================================================
 // BATTING — VS OPPONENTS
