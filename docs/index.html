@@ -178,6 +178,13 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 .mobile-nav-item{display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:500;padding:12px 16px;cursor:pointer;border-radius:8px;text-align:left;width:100%;transition:all 0.15s;}
 .mobile-nav-item:hover,.mobile-nav-item.active{color:var(--text);background:var(--surface2);}
 .mobile-nav-item.active{color:var(--accent);border-left:3px solid var(--accent);}
+.mobile-nav-section{margin-top:4px;}
+.mobile-nav-section-header{display:flex;align-items:center;justify-content:space-between;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;padding:12px 16px 8px;cursor:pointer;width:100%;text-align:left;}
+.mobile-nav-section-caret{font-size:0.65rem;transition:transform 0.15s;opacity:0.7;}
+.mobile-nav-section.open .mobile-nav-section-caret{transform:rotate(180deg);}
+.mobile-nav-section-items{display:none;flex-direction:column;}
+.mobile-nav-section.open .mobile-nav-section-items{display:flex;}
+.mobile-nav-section-items .mobile-nav-item{padding-left:28px;font-size:0.9rem;}
 
 @media(max-width:768px){
   /* Show hamburger, hide desktop nav */
@@ -329,14 +336,14 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 
 <div class="header">
   <img src="logo.png" alt="Hessle CC" style="height:56px;width:auto;flex-shrink:0;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6))">
-  <nav class="nav" id="mainNav">
+  <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
     <button class="nav-btn active" onclick="showPage('overview',this)">Overview</button>
     <button class="nav-btn" onclick="showPage('batting',this)">Batting</button>
     <button class="nav-btn" onclick="showPage('bowling',this)">Bowling</button>
     <button class="nav-btn" onclick="showPage('profiles',this)">Players</button>
     <button class="nav-btn" onclick="showPage('matches',this)">Matches</button>
     <div class="nav-dropdown" id="navDropdown-stats">
-      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('stats')">Stats <span class="nav-dropdown-caret">▾</span></button>
+      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('stats')" aria-expanded="false" aria-haspopup="true">Stats <span class="nav-dropdown-caret">▾</span></button>
       <div class="nav-dropdown-menu">
         <button class="nav-btn" onclick="showPage('fielding',this)">Fielding</button>
         <button class="nav-btn" onclick="showPage('compare',this)">Compare</button>
@@ -347,7 +354,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
       </div>
     </div>
     <div class="nav-dropdown" id="navDropdown-awards">
-      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('awards')">Awards <span class="nav-dropdown-caret">▾</span></button>
+      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('awards')" aria-expanded="false" aria-haspopup="true">Awards <span class="nav-dropdown-caret">▾</span></button>
       <div class="nav-dropdown-menu">
         <button class="nav-btn" onclick="showPage('awards',this)">Awards</button>
         <button class="nav-btn" onclick="showPage('records',this)">Records</button>
@@ -355,40 +362,57 @@ tbody td{padding:8px 14px;white-space:nowrap;}
       </div>
     </div>
     <div class="nav-dropdown" id="navDropdown-league">
-      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('league')">League <span class="nav-dropdown-caret">▾</span></button>
+      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('league')" aria-expanded="false" aria-haspopup="true">League <span class="nav-dropdown-caret">▾</span></button>
       <div class="nav-dropdown-menu">
         <button class="nav-btn" onclick="showPage('league',this)">Table</button>
         <button class="nav-btn" onclick="showPage('route',this)">Route</button>
       </div>
     </div>
   </nav>
-  <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="Menu">
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="Menu" aria-expanded="false" aria-haspopup="true">
     <span></span><span></span><span></span>
   </button>
 </div>
 <!-- Mobile nav overlay -->
 <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileNav()"></div>
-<div class="mobile-nav-drawer" id="mobileNavDrawer">
+<div class="mobile-nav-drawer" id="mobileNavDrawer" role="dialog" aria-modal="true" aria-label="Mobile navigation menu">
   <div class="mobile-nav-header">
     <div class="logo" style="padding:0">HESSLE <span>CC</span></div>
-    <button onclick="closeMobileNav()" style="background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;padding:4px">✕</button>
+    <button onclick="closeMobileNav()" aria-label="Close menu" style="background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;padding:4px">✕</button>
   </div>
   <div class="mobile-nav-items">
     <button class="mobile-nav-item active" onclick="showPage('overview',this);closeMobileNav()">📊 Overview</button>
     <button class="mobile-nav-item" onclick="showPage('batting',this);closeMobileNav()">🏏 Batting</button>
     <button class="mobile-nav-item" onclick="showPage('bowling',this);closeMobileNav()">⚾ Bowling</button>
-    <button class="mobile-nav-item" onclick="showPage('fielding',this);closeMobileNav()">🧤 Fielding</button>
-    <button class="mobile-nav-item" onclick="showPage('compare',this);closeMobileNav()">⚖️ Compare</button>
-    <button class="mobile-nav-item" onclick="showPage('season',this);closeMobileNav()">📅 Season</button>
-    <button class="mobile-nav-item" onclick="showPage('opponents',this);closeMobileNav()">🏟️ Opponents</button>
     <button class="mobile-nav-item" onclick="showPage('profiles',this);closeMobileNav()">👤 Players</button>
-    <button class="mobile-nav-item" onclick="showPage('form',this);closeMobileNav()">📈 Form</button>
     <button class="mobile-nav-item" onclick="showPage('matches',this);closeMobileNav()">📋 Matches</button>
-    <button class="mobile-nav-item" onclick="showPage('bestxi',this);closeMobileNav()">⭐ Best XI</button>
-    <button class="mobile-nav-item" onclick="showPage('chasing',this);closeMobileNav()">🎯 Chase/Defend</button>
-    <button class="mobile-nav-item" onclick="showPage('records',this);closeMobileNav()">📜 Records</button>
-    <button class="mobile-nav-item" onclick="showPage('league',this);closeMobileNav()">🏆 League</button>
-    <button class="mobile-nav-item" onclick="showPage('route',this);closeMobileNav()">🗺️ Route</button>
+    <div class="mobile-nav-section" id="mobileNavSection-stats">
+      <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('stats')" aria-expanded="false">Stats <span class="mobile-nav-section-caret">▾</span></button>
+      <div class="mobile-nav-section-items">
+        <button class="mobile-nav-item" onclick="showPage('fielding',this);closeMobileNav()">🧤 Fielding</button>
+        <button class="mobile-nav-item" onclick="showPage('compare',this);closeMobileNav()">⚖️ Compare</button>
+        <button class="mobile-nav-item" onclick="showPage('season',this);closeMobileNav()">📅 Season</button>
+        <button class="mobile-nav-item" onclick="showPage('opponents',this);closeMobileNav()">🏟️ Opponents</button>
+        <button class="mobile-nav-item" onclick="showPage('form',this);closeMobileNav()">📈 Form</button>
+        <button class="mobile-nav-item" onclick="showPage('chasing',this);closeMobileNav()">🎯 Chase/Defend</button>
+      </div>
+    </div>
+    <div class="mobile-nav-section" id="mobileNavSection-awards">
+      <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('awards')" aria-expanded="false">Awards <span class="mobile-nav-section-caret">▾</span></button>
+      <div class="mobile-nav-section-items">
+        <button class="mobile-nav-item" onclick="showPage('awards',this);closeMobileNav()">🏅 Awards</button>
+        <button class="mobile-nav-item" onclick="showPage('records',this);closeMobileNav()">📜 Records</button>
+        <button class="mobile-nav-item" onclick="showPage('bestxi',this);closeMobileNav()">⭐ Best XI</button>
+      </div>
+    </div>
+    <div class="mobile-nav-section" id="mobileNavSection-league">
+      <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('league')">League <span class="mobile-nav-section-caret">▾</span></button>
+      <div class="mobile-nav-section-items">
+        <button class="mobile-nav-item" onclick="showPage('league',this);closeMobileNav()">🏆 Table</button>
+        <button class="mobile-nav-item" onclick="showPage('route',this);closeMobileNav()">🗺️ Route</button>
+      </div>
+    </div>
+  </div>
   </div>
 </div>
 
@@ -1089,77 +1113,6 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 </div>
 
 <!-- DATA ENTRY -->
-<div id="page-records" class="page">
-  <div class="section-title">Club Records</div>
-  <div id="records-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:14px;margin-bottom:32px;"></div>
-
-  <div class="section-title">Stat Lookup</div>
-  <div class="table-card" style="margin-bottom:0;">
-    <div style="padding:20px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;">
-      <div class="field-group" style="min-width:160px;">
-        <label style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px;">Stat Category</label>
-        <select id="rq-category" onchange="rqUpdateOptions()" style="width:100%;padding:8px 12px;">
-          <option value="batting">Batting</option>
-          <option value="bowling">Bowling</option>
-          <option value="fielding">Fielding</option>
-        </select>
-      </div>
-      <div class="field-group" style="min-width:200px;">
-        <label style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px;">Measure</label>
-        <select id="rq-measure" style="width:100%;padding:8px 12px;" onchange="rqToggleMinField()"></select>
-      </div>
-      <div class="field-group" style="min-width:140px;">
-        <label style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px;">Group By</label>
-        <select id="rq-groupby" style="width:100%;padding:8px 12px;">
-          <option value="player">Player</option>
-          <option value="opponent">Opponent (per player)</option>
-        </select>
-      </div>
-      <div class="field-group" style="min-width:140px;">
-        <label style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px;">vs Opponent</label>
-        <select id="rq-opponent" style="width:100%;padding:8px 12px;">
-          <option value="">Any opponent</option>
-        </select>
-      </div>
-      <div class="field-group" style="min-width:120px;">
-        <label style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px;">Home / Away</label>
-        <select id="rq-homeaway" style="width:100%;padding:8px 12px;">
-          <option value="">Both</option>
-          <option value="Home">Home</option>
-          <option value="Away">Away</option>
-        </select>
-      </div>
-      <div class="field-group" style="min-width:120px;">
-        <label style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px;">Result</label>
-        <select id="rq-result" style="width:100%;padding:8px 12px;">
-          <option value="">Win or Loss</option>
-          <option value="W">Wins Only</option>
-          <option value="L">Losses Only</option>
-        </select>
-      </div>
-      <div class="field-group" style="min-width:120px;">
-        <label style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px;">Innings</label>
-        <select id="rq-innings" style="width:100%;padding:8px 12px;">
-          <option value="">1st or 2nd</option>
-          <option value="1">1st Innings</option>
-          <option value="2">2nd Innings</option>
-        </select>
-      </div>
-      <div class="field-group" style="min-width:110px;" id="rq-minwrap">
-        <label style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px;">Min Innings</label>
-        <input id="rq-min" type="number" value="5" min="1" style="width:100%;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;">
-      </div>
-      <button class="btn-primary" onclick="runStatQuery()" style="padding:9px 22px;">Run Query</button>
-    </div>
-    <div class="table-wrap">
-      <table id="tblStatQuery">
-        <thead><tr id="rq-thead"></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
 <div id="page-bestxi" class="page">
   <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
     <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:1px;">Best XI Selector</div>
@@ -1359,6 +1312,17 @@ tbody td{padding:8px 14px;white-space:nowrap;}
   <div class="section-header">CLUB RECORDS</div>
   <div class="kpi-row" id="records-grid" style="flex-wrap:wrap"></div>
 
+  <div class="section-header" style="margin-top:20px">MILESTONE TIMELINE</div>
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">50s, 100s &amp; 5-Wicket Hauls</div>
+      <select id="milestoneYear" onchange="renderMilestoneTimeline()" style="width:auto">
+        <option value="">All Years</option>
+      </select>
+    </div>
+    <div id="milestone-timeline" style="max-height:520px;overflow-y:auto;padding:4px 16px 16px"></div>
+  </div>
+
   <div class="section-header" style="margin-top:20px">STAT LOOKUP</div>
   <div class="table-card">
     <div class="table-header"><div class="table-title">Custom Stat Query</div></div>
@@ -1483,6 +1447,37 @@ tbody td{padding:8px 14px;white-space:nowrap;}
         <div style="margin-top:8px">
           <button onclick="resetFixturePicks()" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;font-size:0.75rem;cursor:pointer">Reset all</button>
         </div>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top:20px">LEAGUE EXPLORER — PICK ANY RESULT</div>
+    <div style="padding:0 0 10px;font-size:0.78rem;color:var(--muted)">
+      Pick a winner for any fixture involving a top-5 team — not just Hessle's own — and see every
+      team's promotion odds update live. Fixtures outside the top 5 are still simulated in the
+      background, just not shown here since they rarely swing promotion.
+    </div>
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">All Remaining Fixtures</div>
+        <button onclick="resetExplorerPicks()" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 12px;font-size:0.75rem;cursor:pointer">Reset all</button>
+      </div>
+      <div class="table-wrap">
+        <table id="tblExplorerFixtures" style="min-width:420px">
+          <thead><tr><th>Fixture</th><th style="text-align:center">Pick winner</th></tr></thead>
+          <tbody id="explorer-fixtures-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="table-card" style="margin-top:16px">
+      <div class="table-header">
+        <div class="table-title">Projected Finish</div>
+        <div id="explorer-pick-count" style="font-size:0.78rem;color:var(--muted)"></div>
+      </div>
+      <div class="table-wrap">
+        <table id="tblExplorerResults">
+          <thead><tr><th>Pos</th><th>Team</th><th>Pts</th><th>Promo %</th></tr></thead>
+          <tbody id="explorer-results-tbody"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -1662,6 +1657,8 @@ function initDashboard() {
     document.getElementById('batFormPlayer').innerHTML += `<option value="${b}">${b}</option>`;
   });
 
+  computeLiveOdds();
+
   renderAll();
 
   // Mobile: reduce chart heights for better fit + init swipe tabs
@@ -1730,6 +1727,7 @@ function renderAll() {
   safe(renderRoute,'renderRoute');
   safe(renderRoute,'renderRoute');
   safe(renderRecords,'renderRecords');
+  safe(renderMilestoneTimeline,'renderMilestoneTimeline');
   // Apply row limits to large tables
   ['tblBatStats','tblBatInnings','tblBowlStats','tblBowlSpells','tblAllMatches',
    'tblOpponents','tblBatStats','tblPosBat','tblWinSpells','tblBowlPairs',
@@ -1759,6 +1757,15 @@ function showPage(name, btn) {
       dd.querySelector('.nav-dropdown-btn').classList.add('active');
     }
   });
+  // Auto-expand the mobile accordion section containing the newly active page
+  // (e.g. arriving via a deep link) so the highlighted item is actually visible.
+  document.querySelectorAll('.mobile-nav-section').forEach(function(sec){
+    if (btn && sec.contains(btn)) {
+      sec.classList.add('open');
+      var header = sec.querySelector('.mobile-nav-section-header');
+      if (header) header.setAttribute('aria-expanded', 'true');
+    }
+  });
   // Scroll to top of page on mobile
   if(window.innerWidth <= 768) window.scrollTo({top:0, behavior:'smooth'});
   updateURL({page: name==='overview'?null:name, player:null, opponent:null});
@@ -1768,25 +1775,63 @@ function toggleNavDropdown(key) {
   var dd = document.getElementById('navDropdown-'+key);
   if (!dd) return;
   var wasOpen = dd.classList.contains('open');
-  document.querySelectorAll('.nav-dropdown').forEach(function(d){ d.classList.remove('open'); });
-  if (!wasOpen) dd.classList.add('open');
+  document.querySelectorAll('.nav-dropdown').forEach(function(d){
+    d.classList.remove('open');
+    var b = d.querySelector('.nav-dropdown-btn');
+    if (b) b.setAttribute('aria-expanded', 'false');
+  });
+  if (!wasOpen) {
+    dd.classList.add('open');
+    var btn = dd.querySelector('.nav-dropdown-btn');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+  }
 }
 
 // Close any open nav dropdown when clicking outside it
 document.addEventListener('click', function(e){
   if (!e.target.closest('.nav-dropdown')) {
-    document.querySelectorAll('.nav-dropdown').forEach(function(d){ d.classList.remove('open'); });
+    document.querySelectorAll('.nav-dropdown').forEach(function(d){
+      d.classList.remove('open');
+      var b = d.querySelector('.nav-dropdown-btn');
+      if (b) b.setAttribute('aria-expanded', 'false');
+    });
   }
 });
 
+// Close open dropdowns/mobile nav on Escape, for keyboard users
+document.addEventListener('keydown', function(e){
+  if (e.key !== 'Escape') return;
+  document.querySelectorAll('.nav-dropdown').forEach(function(d){
+    d.classList.remove('open');
+    var b = d.querySelector('.nav-dropdown-btn');
+    if (b) b.setAttribute('aria-expanded', 'false');
+  });
+  var drawer = document.getElementById('mobileNavDrawer');
+  if (drawer && drawer.classList.contains('open')) closeMobileNav();
+});
+
+function toggleMobileNavSection(key) {
+  var sec = document.getElementById('mobileNavSection-'+key);
+  if (!sec) return;
+  // Unlike the desktop dropdown, mobile sections stay independent — the drawer
+  // already scrolls, so there's no need to force-close other sections.
+  var nowOpen = sec.classList.toggle('open');
+  var header = sec.querySelector('.mobile-nav-section-header');
+  if (header) header.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
+}
+
 function toggleMobileNav() {
-  document.getElementById('mobileNavDrawer').classList.toggle('open');
+  var open = document.getElementById('mobileNavDrawer').classList.toggle('open');
   document.getElementById('mobileNavOverlay').classList.toggle('open');
+  var btn = document.getElementById('hamburgerBtn');
+  if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 
 function closeMobileNav() {
   document.getElementById('mobileNavDrawer').classList.remove('open');
   document.getElementById('mobileNavOverlay').classList.remove('open');
+  var btn = document.getElementById('hamburgerBtn');
+  if (btn) btn.setAttribute('aria-expanded', 'false');
 }
 function showTab(page, tab, btn) {
   document.querySelectorAll(`#page-${page} .sub-page`).forEach(p=>p.classList.remove('active'));
@@ -2904,7 +2949,7 @@ function renderProfile() {
   
     // 1st vs 2nd innings avg — BAT only
     if(document.getElementById('pchart8')) {
-      var allBatP=CRICKET_DATA.batting.filter(function(r){return r.Batter===player&&r.Dismissal!=='DNB'&&typeof r.Runs==='number';});
+      var allBatP=batRows.filter(function(r){return r.Dismissal!=='DNB'&&typeof r.Runs==='number';});
       var inn1p=allBatP.filter(function(r){return r.Innings===1;});
       var inn2p=allBatP.filter(function(r){return r.Innings===2;});
       var notOut=['not out','retired not out'];
@@ -2916,8 +2961,8 @@ function renderProfile() {
     }
     // Home vs Away bowling avg — BOWL + AR (pchart9)
     if(!isBatter && document.getElementById('pchart9')) {
-      var homeB=CRICKET_DATA.bowling.filter(function(r){return r.Bowler===player&&r['Home/Away']==='Home';});
-      var awayB=CRICKET_DATA.bowling.filter(function(r){return r.Bowler===player&&r['Home/Away']==='Away';});
+      var homeB=bowlRows.filter(function(r){return r['Home/Away']==='Home';});
+      var awayB=bowlRows.filter(function(r){return r['Home/Away']==='Away';});
       var bAvg=function(rows){var w=rows.reduce(function(s,r){return s+(r.Wickets||0);},0);var ru=rows.reduce(function(s,r){return s+(r.Runs||0);},0);return w>0?parseFloat((ru/w).toFixed(1)):0;};
       var hBAvg=bAvg(homeB),aBAvg=bAvg(awayB);
       if(hBAvg>0||aBAvg>0) makeChart('pchart9',{type:'bar',data:{
@@ -2927,8 +2972,8 @@ function renderProfile() {
 
     // 1st vs 2nd innings bowling avg — BOWL only (pchart10)
     if(isBowler && document.getElementById('pchart10')) {
-      var bInn1=CRICKET_DATA.bowling.filter(function(r){return r.Bowler===player&&r.Innings===1;});
-      var bInn2=CRICKET_DATA.bowling.filter(function(r){return r.Bowler===player&&r.Innings===2;});
+      var bInn1=bowlRows.filter(function(r){return r.Innings===1;});
+      var bInn2=bowlRows.filter(function(r){return r.Innings===2;});
       var bInnAvg=function(rows){var w=rows.reduce(function(s,r){return s+(r.Wickets||0);},0);var ru=rows.reduce(function(s,r){return s+(r.Runs||0);},0);return w>0?parseFloat((ru/w).toFixed(1)):0;};
       var bi1=bInnAvg(bInn1),bi2=bInnAvg(bInn2);
       if(bi1>0||bi2>0) makeChart('pchart10',{type:'bar',data:{
@@ -5150,6 +5195,83 @@ function updateThemeToggleIcon(mode) {
 // ============================================================
 // RECORDS PAGE — curated standout stats + flexible query builder
 // ============================================================
+// ============================================================
+// MILESTONE TIMELINE — 50s, 100s, 5-wicket hauls, chronological
+// ============================================================
+var _milestoneYearsPopulated = false;
+
+function renderMilestoneTimeline() {
+  var container = document.getElementById('milestone-timeline');
+  if (!container) return;
+
+  var milestones = [];
+
+  CRICKET_DATA.batting.forEach(function(r) {
+    if (typeof r.Runs !== 'number' || r.Runs < 50) return;
+    milestones.push({
+      date: r.Date, team: r.Team, opponent: r.Opponent, player: r.Batter,
+      type: r.Runs >= 100 ? 'century' : 'fifty',
+      label: r.Runs >= 100 ? 'Century' : 'Half-Century',
+      detail: r.Runs + (r.Dismissal === 'Not Out' ? '*' : '') + ' runs off ' + (r.Balls || '—') + ' balls',
+      sortVal: r.Runs
+    });
+  });
+
+  CRICKET_DATA.bowling.forEach(function(r) {
+    if (typeof r.Wickets !== 'number' || r.Wickets < 5) return;
+    milestones.push({
+      date: r.Date, team: r.Team, opponent: r.Opponent, player: r.Bowler,
+      type: 'fiver',
+      label: '5-Wicket Haul',
+      detail: r.Wickets + '/' + (r.Runs || 0) + ' off ' + (r.Overs || '—') + ' overs',
+      sortVal: r.Wickets
+    });
+  });
+
+  // Populate the year dropdown once (distinct years across all milestones, newest first)
+  var yearSel = document.getElementById('milestoneYear');
+  if (yearSel && !_milestoneYearsPopulated) {
+    var years = Array.from(new Set(milestones.map(function(m) { return m.date.slice(0, 4); }))).sort().reverse();
+    years.forEach(function(y) {
+      yearSel.innerHTML += '<option value="' + y + '">' + y + '</option>';
+    });
+    _milestoneYearsPopulated = true;
+  }
+
+  var filterYear = yearSel ? yearSel.value : '';
+  if (filterYear) milestones = milestones.filter(function(m) { return m.date.slice(0, 4) === filterYear; });
+
+  // Most recent first
+  milestones.sort(function(a, b) { return b.date.localeCompare(a.date) || (b.sortVal - a.sortVal); });
+
+  if (milestones.length === 0) {
+    container.innerHTML = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:0.85rem">No milestones in this period.</div>';
+    return;
+  }
+
+  var typeColor = { century: 'var(--accent2)', fifty: 'var(--green)', fiver: 'var(--purple)' };
+
+  container.innerHTML = milestones.map(function(m) {
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--border)">' +
+      '<div style="flex-shrink:0;width:3px;align-self:stretch;border-radius:2px;background:' + typeColor[m.type] + '"></div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' +
+          '<a class="player-link" href="#" data-player="' + m.player + '" style="color:var(--text);font-weight:600;text-decoration:none;font-size:0.88rem">' + m.player + '</a>' +
+          '<span class="badge badge-' + (m.team === '1st' ? '1st' : '2nd') + '" style="font-size:0.65rem">' + m.team + '</span>' +
+          '<span style="font-size:0.7rem;color:' + typeColor[m.type] + ';font-weight:600">' + m.label + '</span>' +
+        '</div>' +
+        '<div style="font-size:0.78rem;color:var(--muted);margin-top:2px">' + m.detail + ' vs ' + m.opponent + '</div>' +
+      '</div>' +
+      '<div style="font-size:0.72rem;color:var(--muted);flex-shrink:0;text-align:right">' + m.date + '</div>' +
+    '</div>';
+  }).join('');
+
+  container.onclick = function(e) {
+    var link = e.target.closest('.player-link');
+    if (link) { e.preventDefault(); goToPlayer(link.dataset.player); }
+  };
+}
+
 function renderRecords() {
   const bat = getFiltered(CRICKET_DATA.batting).filter(r => r.Dismissal !== 'DNB' && typeof r.Runs === 'number');
   const bowl = getFiltered(CRICKET_DATA.bowling);
@@ -5530,8 +5652,9 @@ var LEAGUE_TABLE_2ND = [
   {pos:13, team:'South Cave CC',         short:'South Cave',   P:12, W:3,  T:0, L:8,  pts:42,  nrr:-0.52, isHessle:false, rem:5},
 ];
 
-// Pre-computed promotion odds for 2nd XI (500k Monte Carlo)
-// Hessle 2nd have 4 remaining games (P:13, season total = 17)
+// Fallback values only — overwritten live by computeLiveOdds() on every page
+// load (see the simulator below). These stay here purely so the page has
+// sane numbers to show for the split-second before that runs.
 var MC_PROMO_2ND = [99.1, 81.7, 18.8, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 var MC_RELG_2ND  = [0.0,  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 var SCENARIO_ODDS_2ND = {3: 100.0, 2: 90.3, 1: 58.4, 0: 4.3};
@@ -5556,6 +5679,310 @@ var FIXTURE_ODDS_2ND = {
 var TOTAL_SEASON_GAMES = 22;
 var PROMO_SPOTS = 2;
 var RELG_SPOTS  = 2;
+
+
+// ════════════════════════════════════════════════════════════════════════
+// LIVE PROMOTION/RELEGATION SIMULATOR
+// Runs a Monte Carlo simulation of the rest of the season directly in the
+// browser, using each team's current season win-rate (from LEAGUE_TABLE /
+// LEAGUE_TABLE_2ND) as its strength — no separately-maintained "form" data,
+// so this recalculates itself automatically every time the table is updated.
+//
+// TO KEEP THIS ACCURATE EACH WEEK, UPDATE:
+//   1. LEAGUE_TABLE / LEAGUE_TABLE_2ND — points, W/L, pos (as before)
+//   2. HESSLE_REMAINING / HESSLE_REMAINING_2ND — remove Hessle's played games
+//   3. LEAGUE_FIXTURES_REMAINING / LEAGUE_FIXTURES_REMAINING_2ND below —
+//      remove OTHER teams' played games (Hessle's own games are already
+//      covered by HESSLE_REMAINING and should NOT also appear here)
+// Nothing else needs to change — MC_PROMO, MC_RELG, COMBO_ODDS,
+// SCENARIO_ODDS and FIXTURE_ODDS (and their _2ND versions) are all
+// recomputed fresh on every page load by computeLiveOdds() below.
+// ════════════════════════════════════════════════════════════════════════
+
+// All-team remaining fixtures (excluding Hessle's own — those live in
+// HESSLE_REMAINING already and are simulated alongside these).
+var LEAGUE_FIXTURES_REMAINING = [
+  ["Brandesburton CC","Welton CC"],
+  ["Cottingham CC","Beverley Town CC"],
+  ["Hull Strikers CC","Cherry Burton CC"],
+  ["Kirkella CC","Walkington CC"],
+  ["North Ferriby CC","Sutton-on-Hull CC"],
+  ["Beverley Town CC","North Ferriby CC"],
+  ["Cherry Burton CC","Kirkella CC"],
+  ["Sutton-on-Hull CC","Hull Strikers CC"],
+  ["Walkington CC","Driffield Town CC"],
+  ["Welton CC","Cottingham CC"],
+  ["Beverley Town CC","Sutton-on-Hull CC"],
+  ["Cottingham CC","Cherry Burton CC"],
+  ["Driffield Town CC","Welton CC"],
+  ["Kirkella CC","Brandesburton CC"],
+  ["North Ferriby CC","Walkington CC"],
+  ["Beverley Town CC","Brandesburton CC"],
+  ["Cherry Burton CC","Walkington CC"],
+  ["Cottingham CC","Driffield Town CC"],
+  ["Hull Strikers CC","Welton CC"],
+  ["North Ferriby CC","Kirkella CC"],
+  ["Brandesburton CC","Cottingham CC"],
+  ["Driffield Town CC","North Ferriby CC"],
+  ["Kirkella CC","Hull Strikers CC"],
+  ["Walkington CC","Sutton-on-Hull CC"],
+  ["Welton CC","Cherry Burton CC"]
+];
+var LEAGUE_FIXTURES_REMAINING_2ND = [
+  ["Dalton Holme CC","Beverley Town CC"],
+  ["Eastrington CC","Humbleton CC"],
+  ["Old Hymerians CC","Cottingham CC"],
+  ["South Cave & Brantingham CC","Hutton Cranswick CC"],
+  ["South Holderness CC","Kirkella CC"],
+  ["Dalton Holme CC","Eastrington CC"],
+  ["Humbleton CC","Cottingham CC"],
+  ["Hutton Cranswick CC","Kirkella CC"],
+  ["Londesborough Park CC","South Cave & Brantingham CC"],
+  ["Swanland CC","Old Hymerians CC"],
+  ["Cottingham CC","Hutton Cranswick CC"],
+  ["Dalton Holme CC","Kirkella CC"],
+  ["South Cave & Brantingham CC","Old Hymerians CC"],
+  ["South Holderness CC","Humbleton CC"],
+  ["Swanland CC","Londesborough Park CC"],
+  ["Dalton Holme CC","South Cave & Brantingham CC"],
+  ["Humbleton CC","Londesborough Park CC"],
+  ["Hutton Cranswick CC","Swanland CC"],
+  ["Kirkella CC","Beverley Town CC"],
+  ["South Holderness CC","Eastrington CC"],
+  ["Cottingham CC","South Holderness CC"],
+  ["Eastrington CC","South Cave & Brantingham CC"],
+  ["Humbleton CC","Kirkella CC"],
+  ["Hutton Cranswick CC","Dalton Holme CC"],
+  ["Londesborough Park CC","Beverley Town CC"]
+];
+
+// Full remaining-fixture list for a league, combining the "other teams"
+// list above with Hessle's own remaining games — built on demand (not as a
+// top-level constant) since HESSLE_REMAINING is declared further down.
+function getAllRemainingFixtures(is2nd) {
+  if (is2nd) {
+    return LEAGUE_FIXTURES_REMAINING_2ND.concat(
+      HESSLE_REMAINING_2ND.map(function(fx) { return ['Hessle CC 2nd XI', fx.opp]; })
+    );
+  }
+  return LEAGUE_FIXTURES_REMAINING.concat(
+    HESSLE_REMAINING.map(function(fx) { return ['Hessle CC', fx.opp]; })
+  );
+}
+
+// Season win-rate based team strength, capped away from 0%/100% so no
+// team is ever treated as a mathematical certainty either way.
+function lgStrength(t) {
+  var decisive = Math.max(1, t.W + t.L);
+  var wr = t.W / decisive;
+  return Math.min(0.95, Math.max(0.05, wr));
+}
+
+// Simulate the rest of the season nSims times; returns {promo:[...], relg:[...]}
+// arrays in the same order as `table`.
+function simulateLeagueOdds(table, fixtures, promoSpots, relegSpots, isPPG, nSims) {
+  nSims = nSims || 20000;
+  var teamIdx = {};
+  table.forEach(function(t, i) { teamIdx[t.team] = i; });
+  var strength = table.map(lgStrength);
+  var basePts = table.map(function(t) { return t.pts; });
+  var baseP   = table.map(function(t) { return t.P; });
+  var promoCount = table.map(function() { return 0; });
+  var relegCount = table.map(function() { return 0; });
+  var validFixtures = fixtures.filter(function(f) {
+    return teamIdx[f[0]] !== undefined && teamIdx[f[1]] !== undefined;
+  });
+
+  for (var s = 0; s < nSims; s++) {
+    var pts = basePts.slice();
+    var P = baseP.slice();
+    for (var f = 0; f < validFixtures.length; f++) {
+      var a = teamIdx[validFixtures[f][0]], b = teamIdx[validFixtures[f][1]];
+      var pa = strength[a] / (strength[a] + strength[b]);
+      if (Math.random() < pa) { pts[a] += 10; } else { pts[b] += 10; }
+      P[a]++; P[b]++;
+    }
+    var order = table.map(function(t, i) { return i; });
+    order.sort(function(i, j) {
+      var vi = isPPG ? pts[i] / Math.max(1, P[i]) : pts[i];
+      var vj = isPPG ? pts[j] / Math.max(1, P[j]) : pts[j];
+      return vj - vi;
+    });
+    for (var r = 0; r < order.length; r++) {
+      if (r < promoSpots) promoCount[order[r]]++;
+      if (relegSpots > 0 && r >= order.length - relegSpots) relegCount[order[r]]++;
+    }
+  }
+  return {
+    promo: promoCount.map(function(c) { return Math.round(1000 * c / nSims) / 10; }),
+    relg:  relegCount.map(function(c) { return Math.round(1000 * c / nSims) / 10; })
+  };
+}
+
+// Simulate every win/loss combination across Hessle's own remaining fixtures
+// (bit N = fixture N won), with all other fixtures simulated normally each
+// time. Returns {combo: {bits: pct}, scenario: {winCount: pct}, fixture: {opp: {win,lose,swing}}}
+// Same as simulateLeagueOdds, but any fixture with a forced result in `picks`
+// (picks[idx] === 0 or 1, meaning fixtures[idx][0] or [1] wins) is applied
+// directly to the starting points/games-played before simulating everything
+// else normally. Used by the interactive "League Explorer".
+function simulateLeagueOddsWithPicks(table, fixtures, picks, promoSpots, relegSpots, isPPG, nSims) {
+  nSims = nSims || 8000;
+  var teamIdx = {};
+  table.forEach(function(t, i) { teamIdx[t.team] = i; });
+  var strength = table.map(lgStrength);
+  var basePts = table.map(function(t) { return t.pts; });
+  var baseP   = table.map(function(t) { return t.P; });
+  var unpicked = [];
+
+  fixtures.forEach(function(f, idx) {
+    var a = teamIdx[f[0]], b = teamIdx[f[1]];
+    if (a === undefined || b === undefined) return;
+    var pick = picks[idx];
+    if (pick === 0) { basePts[a] += 10; baseP[a]++; baseP[b]++; }
+    else if (pick === 1) { basePts[b] += 10; baseP[a]++; baseP[b]++; }
+    else unpicked.push(f);
+  });
+
+  var promoCount = table.map(function() { return 0; });
+  var relegCount = table.map(function() { return 0; });
+  var pointsSum = table.map(function() { return 0; });
+
+  for (var s = 0; s < nSims; s++) {
+    var pts = basePts.slice();
+    var P = baseP.slice();
+    for (var f = 0; f < unpicked.length; f++) {
+      var a = teamIdx[unpicked[f][0]], b = teamIdx[unpicked[f][1]];
+      var pa = strength[a] / (strength[a] + strength[b]);
+      if (Math.random() < pa) { pts[a] += 10; } else { pts[b] += 10; }
+      P[a]++; P[b]++;
+    }
+    var order = table.map(function(t, i) { return i; });
+    order.sort(function(i, j) {
+      var vi = isPPG ? pts[i] / Math.max(1, P[i]) : pts[i];
+      var vj = isPPG ? pts[j] / Math.max(1, P[j]) : pts[j];
+      return vj - vi;
+    });
+    for (var r = 0; r < order.length; r++) {
+      if (r < promoSpots) promoCount[order[r]]++;
+      if (relegSpots > 0 && r >= order.length - relegSpots) relegCount[order[r]]++;
+    }
+    for (var i2 = 0; i2 < table.length; i2++) pointsSum[i2] += pts[i2];
+  }
+  return {
+    promo: promoCount.map(function(c) { return Math.round(1000 * c / nSims) / 10; }),
+    relg:  relegCount.map(function(c) { return Math.round(1000 * c / nSims) / 10; }),
+    avgPts: pointsSum.map(function(s2) { return Math.round(s2 / nSims); })
+  };
+}
+
+// Simulate every win/loss combination across Hessle's own remaining fixtures
+// (bit N = fixture N won), with all other fixtures simulated normally each
+// time. Returns {combo: {bits: pct}, scenario: {winCount: pct}, fixture: {opp: {win,lose,swing}}}
+function simulateHessleCombos(table, otherFixtures, hessleRemaining, hessleTeamName, promoSpots, isPPG, nPerCombo) {
+  nPerCombo = nPerCombo || 3000;
+  var teamIdx = {};
+  table.forEach(function(t, i) { teamIdx[t.team] = i; });
+  var hIdx = teamIdx[hessleTeamName];
+  var strength = table.map(lgStrength);
+  var basePts = table.map(function(t) { return t.pts; });
+  var baseP   = table.map(function(t) { return t.P; });
+  var validOther = otherFixtures.filter(function(f) {
+    return teamIdx[f[0]] !== undefined && teamIdx[f[1]] !== undefined;
+  });
+  var n = hessleRemaining.length;
+  var oppIdxList = hessleRemaining.map(function(fx) { return teamIdx[fx.opp]; });
+
+  var combo = {};
+  for (var bits = 0; bits < (1 << n); bits++) {
+    var hits = 0;
+    for (var s = 0; s < nPerCombo; s++) {
+      var pts = basePts.slice();
+      var P = baseP.slice();
+      for (var i = 0; i < n; i++) {
+        var oppIdx = oppIdxList[i];
+        if (oppIdx === undefined) continue;
+        var hessleWon = !!(bits & (1 << i));
+        if (hessleWon) { pts[hIdx] += 10; } else { pts[oppIdx] += 10; }
+        P[hIdx]++; P[oppIdx]++;
+      }
+      for (var f = 0; f < validOther.length; f++) {
+        var a = teamIdx[validOther[f][0]], b = teamIdx[validOther[f][1]];
+        var pa = strength[a] / (strength[a] + strength[b]);
+        if (Math.random() < pa) { pts[a] += 10; } else { pts[b] += 10; }
+        P[a]++; P[b]++;
+      }
+      var order = table.map(function(t, i) { return i; });
+      order.sort(function(i, j) {
+        var vi = isPPG ? pts[i] / Math.max(1, P[i]) : pts[i];
+        var vj = isPPG ? pts[j] / Math.max(1, P[j]) : pts[j];
+        return vj - vi;
+      });
+      if (order.slice(0, promoSpots).indexOf(hIdx) !== -1) hits++;
+    }
+    combo[bits] = Math.round(1000 * hits / nPerCombo) / 10;
+  }
+
+  // Derive SCENARIO_ODDS (grouped by win-count) from combo.
+  // combo[] values are already percentages (0-100), so just average + round
+  // to 1dp — do NOT re-apply the fraction->percentage scaling used above.
+  var scenario = {};
+  var groups = {};
+  for (var b = 0; b < (1 << n); b++) {
+    var wins = 0, bb = b;
+    while (bb) { wins += bb & 1; bb >>= 1; }
+    (groups[wins] = groups[wins] || []).push(combo[b]);
+  }
+  Object.keys(groups).forEach(function(w) {
+    var arr = groups[w];
+    scenario[w] = Math.round(10 * arr.reduce(function(a, b) { return a + b; }, 0) / arr.length) / 10;
+  });
+
+  // Derive FIXTURE_ODDS (per-fixture win/lose/swing) from combo
+  var fixture = {};
+  hessleRemaining.forEach(function(fx, i) {
+    var bit = 1 << i;
+    var winVals = [], loseVals = [];
+    for (var b = 0; b < (1 << n); b++) {
+      if (b & bit) winVals.push(combo[b]); else loseVals.push(combo[b]);
+    }
+    var avgWin = Math.round(10 * winVals.reduce(function(a, b) { return a + b; }, 0) / winVals.length) / 10;
+    var avgLose = Math.round(10 * loseVals.reduce(function(a, b) { return a + b; }, 0) / loseVals.length) / 10;
+    fixture[fx.opp] = { win: avgWin, lose: avgLose, swing: Math.round((avgWin - avgLose) * 10) / 10 };
+  });
+
+  return { combo: combo, scenario: scenario, fixture: fixture };
+}
+
+// Runs all simulations once and overwrites MC_PROMO/MC_RELG/COMBO_ODDS/
+// SCENARIO_ODDS/FIXTURE_ODDS (and _2ND versions) with fresh live numbers.
+// Called once during initDashboard(), before the first render.
+function computeLiveOdds() {
+  try {
+    var r1 = simulateLeagueOdds(LEAGUE_TABLE, LEAGUE_FIXTURES_REMAINING.concat(
+      HESSLE_REMAINING.map(function(fx) { return ['Hessle CC', fx.opp]; })
+    ), PROMO_SPOTS, RELG_SPOTS, false, 20000);
+    MC_PROMO = r1.promo;
+    MC_RELG  = r1.relg;
+
+    var h1 = simulateHessleCombos(LEAGUE_TABLE, LEAGUE_FIXTURES_REMAINING, HESSLE_REMAINING, 'Hessle CC', PROMO_SPOTS, false, 3000);
+    COMBO_ODDS = h1.combo;
+    SCENARIO_ODDS = h1.scenario;
+    FIXTURE_ODDS = h1.fixture;
+
+    var r2 = simulateLeagueOdds(LEAGUE_TABLE_2ND, LEAGUE_FIXTURES_REMAINING_2ND.concat(
+      HESSLE_REMAINING_2ND.map(function(fx) { return ['Hessle CC 2nd XI', fx.opp]; })
+    ), PROMO_SPOTS_2ND, 0, true, 20000);
+    MC_PROMO_2ND = r2.promo;
+    MC_RELG_2ND  = r2.relg;
+
+    var h2 = simulateHessleCombos(LEAGUE_TABLE_2ND, LEAGUE_FIXTURES_REMAINING_2ND, HESSLE_REMAINING_2ND, 'Hessle CC 2nd XI', PROMO_SPOTS_2ND, true, 3000);
+    SCENARIO_ODDS_2ND = h2.scenario;
+    FIXTURE_ODDS_2ND = h2.fixture;
+  } catch (e) {
+    console.error('computeLiveOdds failed, falling back to last-known static odds:', e);
+  }
+}
 
 // Confirmed remaining fixtures for Hessle in order
 // (Cherry Burton CC won 08 Aug — removed from list; COMBO_ODDS/FIXTURE_ODDS rebuilt to match)
@@ -5705,6 +6132,10 @@ function renderLeague(xi) {
   } else {
     renderFixturesOnly();
   }
+
+  // ── League Explorer (all-teams what-if picker) ───────────
+  renderExplorer();
+
   if (false) { // dead code placeholder — actual rendering in renderFixturesOnly
     var fixTbody = null;
     HESSLE_REMAINING.forEach(function(fix, idx) {
@@ -5753,7 +6184,7 @@ function renderLeague(xi) {
 
     fixTbody.innerHTML +=
       '<tr><td colspan="6" style="color:var(--muted);font-size:0.72rem;padding-top:8px">' +
-      'Odds from 200,000 Monte Carlo simulations (head-to-head model, 50% season / 50% last-5 form). Updated weekly.' +
+      'Odds from a live Monte Carlo simulation (20,000 runs), based on each team\'s current season win rate. Recalculates automatically every time the table is updated.' +
       '</td></tr>';
   }
 
@@ -5784,14 +6215,111 @@ function resetFixturePicks() {
   updateProjectedOdds();
 }
 
+// ════════════════════════════════════════════════════════════════════════
+// LEAGUE EXPLORER — pick a hypothetical winner for ANY remaining fixture in
+// the league (not just Hessle's own) and see every team's promotion odds
+// update live. Picks are keyed by fixture index within getAllRemainingFixtures().
+// ════════════════════════════════════════════════════════════════════════
+window._explorerPicks = window._explorerPicks || {};
+
+function renderExplorer() {
+  var is2nd = window._leagueXI === '2nd';
+  var table = is2nd ? LEAGUE_TABLE_2ND : LEAGUE_TABLE;
+  var fixtures = getAllRemainingFixtures(is2nd);
+  var tbody = document.getElementById('explorer-fixtures-tbody');
+  if (!tbody) return;
+
+  // Only show fixtures involving a team currently in the top 5 — the rest
+  // still get simulated normally (see updateExplorerResults), they're just
+  // not worth cluttering the picker with since they rarely swing promotion.
+  var posByTeam = {};
+  table.forEach(function(t) { posByTeam[t.team] = t.pos; });
+  var top5Fixtures = [];
+  fixtures.forEach(function(f, idx) {
+    var posA = posByTeam[f[0]], posB = posByTeam[f[1]];
+    if ((posA && posA <= 5) || (posB && posB <= 5)) top5Fixtures.push({ f: f, idx: idx });
+  });
+
+  var picks = window._explorerPicks;
+  tbody.innerHTML = top5Fixtures.map(function(entry) {
+    var f = entry.f, idx = entry.idx;
+    var pick = picks[idx];
+    var aSel = pick === 0, bSel = pick === 1;
+    var btnA = '<button data-eidx="' + idx + '" data-side="0" onclick="toggleExplorerPick(this)" style="padding:4px 10px;border-radius:5px;border:1px solid ' +
+      (aSel ? 'var(--green);background:var(--green);color:#fff' : 'var(--border);background:none;color:var(--muted)') +
+      ';cursor:pointer;font-size:0.78rem;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + f[0] + '</button>';
+    var btnB = '<button data-eidx="' + idx + '" data-side="1" onclick="toggleExplorerPick(this)" style="padding:4px 10px;border-radius:5px;border:1px solid ' +
+      (bSel ? 'var(--green);background:var(--green);color:#fff' : 'var(--border);background:none;color:var(--muted)') +
+      ';cursor:pointer;font-size:0.78rem;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + f[1] + '</button>';
+    return '<tr><td style="font-size:0.75rem;color:var(--muted)">' + f[0] + ' vs ' + f[1] + '</td>' +
+      '<td style="text-align:center;white-space:nowrap">' + btnA + ' <span style="color:var(--muted);font-size:0.7rem">vs</span> ' + btnB + '</td></tr>';
+  }).join('');
+
+  updateExplorerResults();
+}
+
+function toggleExplorerPick(el) {
+  try {
+    var idx = el.getAttribute('data-eidx');
+    var side = parseInt(el.getAttribute('data-side'), 10);
+    var picks = window._explorerPicks;
+    picks[idx] = picks[idx] === side ? undefined : side;
+    renderExplorer();
+  } catch (e) {
+    console.error('toggleExplorerPick error:', e);
+  }
+}
+
+function resetExplorerPicks() {
+  window._explorerPicks = {};
+  renderExplorer();
+}
+
+function updateExplorerResults() {
+  var is2nd = window._leagueXI === '2nd';
+  var table = is2nd ? LEAGUE_TABLE_2ND : LEAGUE_TABLE;
+  var fixtures = getAllRemainingFixtures(is2nd);
+  var promoSpots = is2nd ? PROMO_SPOTS_2ND : PROMO_SPOTS;
+  var relegSpots = is2nd ? 0 : RELG_SPOTS;
+  var picks = window._explorerPicks;
+
+  var pickedCount = 0;
+  for (var k in picks) { if (picks[k] !== undefined) pickedCount++; }
+  var posByTeam = {};
+  table.forEach(function(t) { posByTeam[t.team] = t.pos; });
+  var pickableCount = fixtures.filter(function(f) {
+    var posA = posByTeam[f[0]], posB = posByTeam[f[1]];
+    return (posA && posA <= 5) || (posB && posB <= 5);
+  }).length;
+  var countEl = document.getElementById('explorer-pick-count');
+  if (countEl) countEl.textContent = pickedCount + ' of ' + pickableCount + ' fixtures picked';
+
+  var result = simulateLeagueOddsWithPicks(table, fixtures, picks, promoSpots, relegSpots, is2nd, 8000);
+
+  var rows = table.map(function(t, i) {
+    return { team: t.team, avgPts: result.avgPts[i], promo: result.promo[i], isHessle: t.isHessle };
+  });
+  rows.sort(function(a, b) { return b.avgPts - a.avgPts; });
+
+  var tbody = document.getElementById('explorer-results-tbody');
+  if (tbody) {
+    tbody.innerHTML = rows.map(function(r, i) {
+      var rowBg = r.isHessle ? 'background:rgba(88,166,255,0.08)' : '';
+      var promoColor = r.promo >= 50 ? 'var(--green)' : r.promo >= 15 ? 'var(--accent2)' : 'var(--muted)';
+      return '<tr style="' + rowBg + '"><td>' + (i + 1) + '</td><td>' + (r.isHessle ? '<strong>' + r.team + '</strong>' : r.team) + '</td>' +
+        '<td>' + r.avgPts + '</td><td style="color:' + promoColor + ';font-weight:700">' + r.promo + '%</td></tr>';
+    }).join('');
+  }
+}
+
 // ── Module-level constants (accessible to renderFixturesOnly, updateProjectedOdds etc) ──
 var MC_PROMO = [90.2, 66.7, 37.9, 4.0, 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 var MC_RELG  = [0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 10.5, 32.0, 57.5, 99.8];
-// COMBO_ODDS: pre-computed promotion odds for every W/L combination across Hessle's 5 remaining fixtures.
-// (Cherry Burton CC won 08 Aug — removed from table. bit 0=Driffield, bit 1=Brandesburton, bit 2=Hull Strikers, bit 3=Sutton, bit 4=Beverley)
-// Key = 5-bit integer where bit N=1 means win fixture N (order = HESSLE_REMAINING order).
-// Recomputed 11 Aug 2026 using blended season-record + recent-form team strength ratings,
-// 8k Monte Carlo sims per combination with the other 25 remaining league fixtures simulated normally.
+// Fallback values only — all of MC_PROMO, MC_RELG, COMBO_ODDS, SCENARIO_ODDS
+// and FIXTURE_ODDS below are overwritten live by computeLiveOdds() (defined
+// further up) on every page load, using the current LEAGUE_TABLE and
+// remaining-fixtures lists. These static numbers exist purely as a fallback
+// in case that simulation ever fails to run.
 var COMBO_ODDS = {0:0.0,1:0.0,2:0.0,3:0.0,4:0.0,5:0.0,6:0.0,7:0.0,8:0.0,9:0.0,10:0.0,11:0.0,12:0.0,13:0.0,14:0.0,15:1.0,16:0.0,17:0.0,18:0.0,19:0.2,20:0.0,21:0.1,22:0.0,23:8.4,24:0.0,25:0.1,26:0.0,27:8.2,28:0.0,29:7.8,30:2.7,31:48.1};
 // SCENARIO_ODDS derived from COMBO_ODDS averages (5 remaining fixtures)
 var SCENARIO_ODDS = {5: 48.1, 4: 5.6, 3: 0.0, 2: 0.0};
@@ -5842,7 +6370,7 @@ function renderFixturesOnly() {
   });
   fixTbody.innerHTML +=
     '<tr><td colspan="6" style="color:var(--muted);font-size:0.72rem;padding-top:8px">' +
-    'Odds from 200,000 Monte Carlo simulations (head-to-head model, 50% season / 50% last-5 form). Updated weekly.' +
+    'Odds from a live Monte Carlo simulation (20,000 runs), based on each team\'s current season win rate. Recalculates automatically every time the table is updated.' +
     '</td></tr>';
 }
 
