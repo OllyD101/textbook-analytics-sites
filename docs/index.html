@@ -121,6 +121,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 .close-btn:hover{color:var(--text);}
 .clickable-row{cursor:pointer;}
 .clickable-row:hover td{color:var(--accent2);}
+#on-this-day-card .table-card:hover{border-color:var(--accent);}
 
 /* DATA ENTRY */
 .entry-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
@@ -451,6 +452,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
   <!-- SUMMARY -->
   <div id="overview-summary" class="sub-page active">
     <div class="kpi-row" id="overview-kpis"></div>
+    <div id="on-this-day-card" style="display:none;margin-top:16px"></div>
     <div class="charts-grid">
       <div class="chart-card"><div class="chart-title">Win/Loss by Season</div><div class="chart-wrap"><canvas id="chartWL"></canvas></div></div>
       <div class="chart-card"><div class="chart-title">Runs Scored vs Conceded (last 15)</div><div class="chart-wrap"><canvas id="chartRunsComp"></canvas></div></div>
@@ -1696,6 +1698,7 @@ function renderAll() {
   function safe(fn,name){try{fn();}catch(e){console.error(name+' failed:',e);}}
   safe(function(){updateLoadingMsg('Loading match data...');},'loadingMsg');
   safe(renderOverview,'renderOverview');
+  safe(renderOnThisDay,'renderOnThisDay');
   setTimeout(function(){safe(renderOverviewSparklines,'sparklines');}, 50);
   safe(renderBatStats,'renderBatStats');
   safe(renderBatInnings,'renderBatInnings');
@@ -1991,6 +1994,90 @@ function computeBowlStats(rows) {
 // ============================================================
 // OVERVIEW
 // ============================================================
+// ============================================================
+// ON THIS DAY — a past match/milestone from today's calendar date
+// ============================================================
+function renderOnThisDay() {
+  var el = document.getElementById('on-this-day-card');
+  if (!el) return;
+
+  var today = new Date();
+  var todayISO = today.toISOString().slice(0, 10);
+  var pad = function(n) { return n < 10 ? '0' + n : '' + n; };
+  var todayMD = pad(today.getMonth() + 1) + '-' + pad(today.getDate());
+
+  function mdOf(dateStr) { return dateStr.slice(5); }
+  function daysBetween(mdA, mdB) {
+    // Rough same-year distance between two MM-DD strings (ignores leap years, fine for a "nearby" fallback)
+    var a = new Date('2001-' + mdA), b = new Date('2001-' + mdB);
+    return Math.abs((a - b) / 86400000);
+  }
+
+  var candidates = CRICKET_DATA.matches.filter(function(m) {
+    return m.Date !== todayISO && mdOf(m.Date) === todayMD;
+  });
+  var usedFallback = false;
+  if (candidates.length === 0) {
+    // Fall back to the closest match date (any year) within a week either side
+    var best = null, bestDist = 8;
+    CRICKET_DATA.matches.forEach(function(m) {
+      if (m.Date === todayISO) return;
+      var d = daysBetween(mdOf(m.Date), todayMD);
+      if (d < bestDist) { bestDist = d; best = m; }
+    });
+    if (best) { candidates = [best]; usedFallback = true; }
+  }
+
+  if (candidates.length === 0) { el.style.display = 'none'; return; }
+
+  // Prefer whichever candidate date has an associated batting/bowling milestone
+  var chosen = candidates[0];
+  for (var i = 0; i < candidates.length; i++) {
+    var hasMilestone = CRICKET_DATA.batting.some(function(r) { return r.Date === candidates[i].Date && typeof r.Runs === 'number' && r.Runs >= 50; }) ||
+                        CRICKET_DATA.bowling.some(function(r) { return r.Date === candidates[i].Date && typeof r.Wickets === 'number' && r.Wickets >= 5; });
+    if (hasMilestone) { chosen = candidates[i]; break; }
+  }
+
+  var year = chosen.Date.slice(0, 4);
+  var yearsAgo = today.getFullYear() - parseInt(year, 10);
+  var resultWord = chosen.Result === 'W' ? 'beat' : chosen.Result === 'L' ? 'lost to' : 'drew with';
+  var resultColor = chosen.Result === 'W' ? 'var(--green)' : chosen.Result === 'L' ? 'var(--red)' : 'var(--muted)';
+
+  var milestoneLines = [];
+  CRICKET_DATA.batting.forEach(function(r) {
+    if (r.Date === chosen.Date && typeof r.Runs === 'number' && r.Runs >= 50) {
+      milestoneLines.push(r.Batter + ' scored ' + r.Runs + (r.Dismissal === 'Not Out' ? '*' : ''));
+    }
+  });
+  CRICKET_DATA.bowling.forEach(function(r) {
+    if (r.Date === chosen.Date && typeof r.Wickets === 'number' && r.Wickets >= 5) {
+      milestoneLines.push(r.Bowler + ' took ' + r.Wickets + '/' + (r.Runs || 0));
+    }
+  });
+
+  var dateLabel = usedFallback
+    ? ('Around this time, ' + yearsAgo + (yearsAgo === 1 ? ' year' : ' years') + ' ago')
+    : ('On this day, ' + yearsAgo + (yearsAgo === 1 ? ' year' : ' years') + ' ago');
+
+  el.style.display = 'block';
+  el.innerHTML =
+    '<div class="table-card clickable-row" style="cursor:pointer" onclick="openMatchDetail(\'' + chosen.Date + '\',\'' + chosen.Opponent + '\',\'' + chosen.Team + '\')">' +
+      '<div style="padding:14px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px">' +
+        '<div style="min-width:0">' +
+          '<div style="font-size:0.7rem;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">' + dateLabel + '</div>' +
+          '<div style="font-size:0.95rem">' +
+            '<span class="badge badge-' + (chosen.Team === '1st' ? '1st' : '2nd') + '" style="margin-right:6px">' + chosen.Team + '</span>' +
+            'Hessle <span style="color:' + resultColor + ';font-weight:700">' + resultWord + '</span> ' + chosen.Opponent +
+          '</div>' +
+          (milestoneLines.length
+            ? '<div style="font-size:0.8rem;color:var(--muted);margin-top:6px">' + milestoneLines.join(' &middot; ') + '</div>'
+            : '') +
+        '</div>' +
+        '<div style="font-size:0.75rem;color:var(--accent);white-space:nowrap;flex-shrink:0;font-weight:600;padding-top:2px">View scorecard &rarr;</div>' +
+      '</div>' +
+    '</div>';
+}
+
 function renderOverview() {
   const m=getFiltered(CRICKET_DATA.matches);
   const wins=m.filter(r=>r.Result==='W').length, losses=m.filter(r=>r.Result==='L').length;
