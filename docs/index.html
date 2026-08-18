@@ -1311,6 +1311,11 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 
 </div>
 <div id="page-records" class="page">
+  <div id="recent-records-section" style="display:none">
+    <div class="section-header">RECENTLY BROKEN</div>
+    <div id="recent-records-grid" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px"></div>
+  </div>
+
   <div class="section-header">CLUB RECORDS</div>
   <div class="kpi-row" id="records-grid" style="flex-wrap:wrap"></div>
 
@@ -1426,31 +1431,6 @@ tbody td{padding:8px 14px;white-space:nowrap;}
     </div>
     <div class="section-header" style="margin-top:20px">SCENARIO ANALYSIS — HESSLE OUTCOMES</div>
     <div class="kpi-row" id="league-scenarios"></div>
-    <div class="table-card" style="margin-top:16px">
-      <div class="table-header">
-        <div class="table-title">Remaining Fixtures</div>
-        <div style="font-size:0.78rem;color:var(--muted)">Tap W / L to model scenarios</div>
-      </div>
-      <div class="table-wrap">
-        <table id="tblLeagueFixtures" style="min-width:420px">
-          <thead><tr>
-            <th style="position:sticky;left:0;z-index:10;background:var(--surface2)">Opponent</th>
-            <th>H/A</th><th>Pts</th><th>Result</th><th>Promo%</th><th>Swing</th>
-          </tr></thead>
-          <tbody id="league-fixtures-tbody"></tbody>
-        </table>
-      </div>
-      <div id="league-projected" style="margin-top:12px;padding:12px 16px;border-radius:8px;background:var(--surface2);display:none">
-        <div style="font-size:0.75rem;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Projected promotion odds</div>
-        <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
-          <div id="league-projected-odds" style="font-size:2rem;font-weight:800;color:var(--accent)">—</div>
-          <div id="league-projected-label" style="font-size:0.85rem;color:var(--muted)"></div>
-        </div>
-        <div style="margin-top:8px">
-          <button onclick="resetFixturePicks()" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;font-size:0.75rem;cursor:pointer">Reset all</button>
-        </div>
-      </div>
-    </div>
 
     <div class="section-header" style="margin-top:20px">LEAGUE EXPLORER — PICK ANY RESULT</div>
     <div style="padding:0 0 10px;font-size:0.78rem;color:var(--muted)">
@@ -1730,6 +1710,7 @@ function renderAll() {
   safe(renderRoute,'renderRoute');
   safe(renderRoute,'renderRoute');
   safe(renderRecords,'renderRecords');
+  safe(renderRecentRecords,'renderRecentRecords');
   safe(renderMilestoneTimeline,'renderMilestoneTimeline');
   // Apply row limits to large tables
   ['tblBatStats','tblBatInnings','tblBowlStats','tblBowlSpells','tblAllMatches',
@@ -1997,6 +1978,14 @@ function computeBowlStats(rows) {
 // ============================================================
 // ON THIS DAY — a past match/milestone from today's calendar date
 // ============================================================
+function openOnThisDayMatch(date, opponent, team) {
+  // The match scorecard panel lives physically inside the Matches page, so
+  // it stays invisible if opened while on a different page — navigate there
+  // first, then open the detail once that page is actually showing.
+  showPage('matches', null);
+  setTimeout(function() { openMatchDetail(date, opponent, team); }, 150);
+}
+
 function renderOnThisDay() {
   var el = document.getElementById('on-this-day-card');
   if (!el) return;
@@ -2061,7 +2050,7 @@ function renderOnThisDay() {
 
   el.style.display = 'block';
   el.innerHTML =
-    '<div class="table-card clickable-row" style="cursor:pointer" onclick="openMatchDetail(\'' + chosen.Date + '\',\'' + chosen.Opponent + '\',\'' + chosen.Team + '\')">' +
+    '<div class="table-card clickable-row" style="cursor:pointer" onclick="openOnThisDayMatch(\'' + chosen.Date + '\',\'' + chosen.Opponent + '\',\'' + chosen.Team + '\')">' +
       '<div style="padding:14px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px">' +
         '<div style="min-width:0">' +
           '<div style="font-size:0.7rem;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">' + dateLabel + '</div>' +
@@ -5145,6 +5134,176 @@ function sharePlayer() {
 }
 
 // ============================================================
+// SHAREABLE MILESTONE CARDS — renders a Milestone Timeline or
+// Recently Broken Records entry as a downloadable/shareable PNG image.
+// ============================================================
+function shareMilestoneCard(source, idx) {
+  try {
+    var entry = source === 'timeline'
+      ? (window._milestoneTimelineData || [])[idx]
+      : (window._recentRecordsData || [])[idx];
+    if (!entry) return;
+
+    var card;
+    if (source === 'timeline') {
+      var spaceIdx = entry.detail.indexOf(' ');
+      var statBig = spaceIdx > -1 ? entry.detail.slice(0, spaceIdx) : entry.detail;
+      var statRest = spaceIdx > -1 ? entry.detail.slice(spaceIdx + 1) : '';
+      card = {
+        statBig: statBig,
+        statLabel: entry.label,
+        player: entry.player,
+        subtitle: statRest,
+        context: entry.team + ' XI vs ' + entry.opponent,
+        dateLabel: entry.date
+      };
+    } else {
+      card = {
+        statBig: String(entry.value),
+        statLabel: entry.label,
+        player: entry.who,
+        subtitle: entry.detail,
+        context: 'Hessle CC Record',
+        dateLabel: entry.date
+      };
+    }
+    renderMilestoneCardCanvas(card);
+  } catch (e) {
+    console.error('shareMilestoneCard error:', e);
+  }
+}
+
+function _fitText(ctx, text, maxWidth, startSize, family, weight, minSize) {
+  var size = startSize;
+  while (size > minSize) {
+    ctx.font = weight + ' ' + size + 'px ' + family;
+    if (ctx.measureText(text).width <= maxWidth) break;
+    size -= 4;
+  }
+  ctx.font = weight + ' ' + size + 'px ' + family;
+  return size;
+}
+
+function renderMilestoneCardCanvas(card) {
+  var W = 1080, H = 1080;
+  var canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  var ctx = canvas.getContext('2d');
+
+  function draw(logoImg) {
+    // Background
+    var grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, '#161b22');
+    grad.addColorStop(1, '#0d1117');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Top accent bar
+    ctx.fillStyle = '#c5202f';
+    ctx.fillRect(0, 0, W, 12);
+
+    ctx.textAlign = 'center';
+
+    // Crest
+    if (logoImg) {
+      var logoSize = 140;
+      ctx.drawImage(logoImg, W/2 - logoSize/2, 60, logoSize, logoSize);
+    }
+
+    // Club wordmark
+    ctx.fillStyle = '#8b949e';
+    ctx.font = '700 30px "DM Sans", sans-serif';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('HESSLE CRICKET CLUB', W/2, 240);
+
+    // Big stat
+    ctx.fillStyle = '#f0a500';
+    _fitText(ctx, card.statBig, W - 120, 260, "'Bebas Neue', sans-serif", '400', 100);
+    ctx.fillText(card.statBig, W/2, 470);
+
+    // Stat label
+    ctx.fillStyle = '#8b949e';
+    ctx.font = '700 32px "DM Sans", sans-serif';
+    ctx.fillText(card.statLabel.toUpperCase(), W/2, 520);
+
+    // Divider
+    ctx.strokeStyle = '#30363d';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(W/2 - 100, 570);
+    ctx.lineTo(W/2 + 100, 570);
+    ctx.stroke();
+
+    // Player name
+    ctx.fillStyle = '#e6edf3';
+    _fitText(ctx, card.player, W - 100, 72, "'DM Sans', sans-serif", '700', 36);
+    ctx.fillText(card.player, W/2, 660);
+
+    // Subtitle (detail)
+    if (card.subtitle) {
+      ctx.fillStyle = '#8b949e';
+      _fitText(ctx, card.subtitle, W - 100, 34, "'DM Sans', sans-serif", '400', 20);
+      ctx.fillText(card.subtitle, W/2, 710);
+    }
+
+    // Context (opponent / record type)
+    ctx.fillStyle = '#c5202f';
+    ctx.font = '600 30px "DM Sans", sans-serif';
+    ctx.fillText(card.context, W/2, 770);
+
+    // Date, bottom
+    ctx.fillStyle = '#8b949e';
+    ctx.font = '500 26px "DM Sans", sans-serif';
+    ctx.fillText(card.dateLabel, W/2, H - 60);
+
+    _downloadCanvasAsImage(canvas, card.player.replace(/\s+/g, '_') + '_' + card.statLabel.replace(/\s+/g, '_'));
+  }
+
+  var finish = function() {
+    var logo = document.querySelector('.header img');
+    if (!logo || !logo.src) { draw(null); return; }
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function() { draw(img); };
+    img.onerror = function() { draw(null); };
+    img.src = logo.src;
+  };
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(finish).catch(finish);
+  } else {
+    finish();
+  }
+}
+
+function _downloadCanvasAsImage(canvas, filename) {
+  canvas.toBlob(function(blob) {
+    if (!blob) return;
+    if (navigator.share && navigator.canShare) {
+      var file = new File([blob], filename + '.png', { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: 'Hessle CC' }).catch(function() {
+          _triggerDownload(blob, filename);
+        });
+        return;
+      }
+    }
+    _triggerDownload(blob, filename);
+  }, 'image/png');
+}
+
+function _triggerDownload(blob, filename) {
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = filename + '.png';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+}
+
+// ============================================================
 // CHASING — BAND DETAIL PANEL
 // ============================================================
 var _chaseBandData = [];
@@ -5336,9 +5495,11 @@ function renderMilestoneTimeline() {
     return;
   }
 
+  window._milestoneTimelineData = milestones;
+
   var typeColor = { century: 'var(--accent2)', fifty: 'var(--green)', fiver: 'var(--purple)' };
 
-  container.innerHTML = milestones.map(function(m) {
+  container.innerHTML = milestones.map(function(m, idx) {
     return '<div style="display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--border)">' +
       '<div style="flex-shrink:0;width:3px;align-self:stretch;border-radius:2px;background:' + typeColor[m.type] + '"></div>' +
       '<div style="flex:1;min-width:0">' +
@@ -5349,6 +5510,7 @@ function renderMilestoneTimeline() {
         '</div>' +
         '<div style="font-size:0.78rem;color:var(--muted);margin-top:2px">' + m.detail + ' vs ' + m.opponent + '</div>' +
       '</div>' +
+      '<button onclick="shareMilestoneCard(\'timeline\',' + idx + ')" title="Share as image" style="flex-shrink:0;background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;font-weight:600">Share</button>' +
       '<div style="font-size:0.72rem;color:var(--muted);flex-shrink:0;text-align:right">' + m.date + '</div>' +
     '</div>';
   }).join('');
@@ -5357,6 +5519,210 @@ function renderMilestoneTimeline() {
     var link = e.target.closest('.player-link');
     if (link) { e.preventDefault(); goToPlayer(link.dataset.player); }
   };
+}
+
+// ============================================================
+// RECENTLY BROKEN — current record holders whose record-setting event
+// happened within the last 90 days. Not a full history of every time a
+// record has ever changed hands, but a good proxy: if the current holder
+// set it recently, it's very likely a new/recent record rather than a
+// long-standing one nobody has approached.
+// ============================================================
+function renderRecentRecords() {
+  var section = document.getElementById('recent-records-section');
+  var grid = document.getElementById('recent-records-grid');
+  if (!section || !grid) return;
+
+  var WINDOW_DAYS = 90;
+  var today = new Date();
+  function daysAgo(dateStr) {
+    var d = new Date(dateStr + 'T12:00:00');
+    return Math.round((today - d) / 86400000);
+  }
+
+  var bat = CRICKET_DATA.batting.filter(function(r) { return r.Dismissal !== 'DNB' && typeof r.Runs === 'number'; });
+  var bowl = CRICKET_DATA.bowling.filter(function(r) { return typeof r.Wickets === 'number'; });
+  var matches = CRICKET_DATA.matches;
+
+  var candidates = [];
+
+  // ── Generic helper: walks a chronologically-ordered set of events and
+  // tracks the all-time best value + who holds it. A "break" is only
+  // recorded when the CURRENT record holder is a DIFFERENT person from
+  // whoever held it immediately before — not just the same long-standing
+  // holder adding to their own tally. `accumulate=true` sums valueFn per
+  // player over time (career totals); `accumulate=false` compares each
+  // event's own value directly (single-match/innings records).
+  function findRecordHolderChange(rows, dateKey, playerFn, valueFn, accumulate) {
+    var sorted = rows.slice().sort(function(a, b) {
+      return a[dateKey] < b[dateKey] ? -1 : a[dateKey] > b[dateKey] ? 1 : 0;
+    });
+    var totals = {};
+    var globalMax = -Infinity, globalHolder = null, changeDate = null, changeRow = null;
+    sorted.forEach(function(r) {
+      var p = playerFn(r), v = valueFn(r);
+      if (!p || v === null || v === undefined) return;
+      var currentVal;
+      if (accumulate) {
+        totals[p] = (totals[p] || 0) + v;
+        currentVal = totals[p];
+      } else {
+        currentVal = v;
+      }
+      if (currentVal > globalMax) {
+        globalMax = currentVal;
+        if (p !== globalHolder) {
+          changeDate = r[dateKey];
+          changeRow = r;
+          globalHolder = p;
+        }
+      }
+    });
+    return globalHolder ? { player: globalHolder, value: globalMax, date: changeDate, row: changeRow } : null;
+  }
+
+  function addCumulative(label, rows, valueFn, playerFn) {
+    var r = findRecordHolderChange(rows, 'Date', playerFn, valueFn, true);
+    if (r) candidates.push({ label: label, value: r.value, who: r.player, date: r.date, detail: 'Career total \u2014 took the record over from a different holder' });
+  }
+
+  function addSingleEvent(label, rows, valueFn, playerFn, valueLabelFn, detailFn) {
+    var r = findRecordHolderChange(rows, 'Date', playerFn, valueFn, false);
+    if (r) candidates.push({ label: label, value: valueLabelFn ? valueLabelFn(r) : r.value, who: r.player, date: r.date, detail: detailFn ? detailFn(r.row) : '' });
+  }
+
+  // ── Career / cumulative records ──────────────────────────
+  addCumulative('Most Career Runs', bat, function(r) { return r.Runs; }, function(r) { return r.Batter; });
+  addCumulative('Most Fifties', bat, function(r) { return r.Runs >= 50 ? 1 : 0; }, function(r) { return r.Batter; });
+  addCumulative('Most Hundreds', bat, function(r) { return r.Runs >= 100 ? 1 : 0; }, function(r) { return r.Batter; });
+  addCumulative('Most Sixes (career)', bat, function(r) { return r['6s'] || 0; }, function(r) { return r.Batter; });
+  addCumulative('Most Fours (career)', bat, function(r) { return r['4s'] || 0; }, function(r) { return r.Batter; });
+  addCumulative('Most Wickets', bowl, function(r) { return r.Wickets; }, function(r) { return r.Bowler; });
+  addCumulative('Most 5-Wicket Hauls', bowl, function(r) { return r.Wickets >= 5 ? 1 : 0; }, function(r) { return r.Bowler; });
+  addCumulative('Most Catches (career)', CRICKET_DATA.fielding, function(r) { return r.Dismissal === 'Caught' ? 1 : 0; }, function(r) { return r.Fielder; });
+  addCumulative('Most Run Outs (career)', CRICKET_DATA.fielding, function(r) { return r.Dismissal === 'Run Out' ? 1 : 0; }, function(r) { return r.Fielder; });
+  addCumulative('Most Stumpings (career)', CRICKET_DATA.keeping, function(r) { return (r.Dismissal === 'Stumped' || r.Dismissal === 'Stumping') ? 1 : 0; }, function(r) { return r.Keeper; });
+  addCumulative('Most Not Outs (career)', bat, function(r) { return r.Dismissal === 'Not Out' ? 1 : 0; }, function(r) { return r.Batter; });
+  addCumulative('Most Maidens (career)', bowl, function(r) { return r.Maidens || 0; }, function(r) { return r.Bowler; });
+  addCumulative('Most Innings Played (batting)', bat, function() { return 1; }, function(r) { return r.Batter; });
+  addCumulative('Most Spells Bowled', bowl, function() { return 1; }, function(r) { return r.Bowler; });
+  addCumulative('Most Fielding Dismissals (career)', CRICKET_DATA.fielding, function(r) { return (r.Dismissal === 'Caught' || r.Dismissal === 'Run Out') ? 1 : 0; }, function(r) { return r.Fielder; });
+
+  // ── Rate records (average / strike rate / economy) — same holder-change
+  // principle, but a rate can rise and fall each innings, and only counts
+  // once a player has reached a minimum sample size (matching the Stat
+  // Lookup tool's own default of 10 qualifying innings/spells).
+  function findRateRecordHolderChange(rows, dateKey, playerFn, numFn, denomFn, minQualify, higherIsBetter) {
+    var sorted = rows.slice().sort(function(a, b) {
+      return a[dateKey] < b[dateKey] ? -1 : a[dateKey] > b[dateKey] ? 1 : 0;
+    });
+    var sums = {}, counts = {};
+    var bestRate = higherIsBetter ? -Infinity : Infinity, bestHolder = null, changeDate = null;
+    sorted.forEach(function(r) {
+      var p = playerFn(r);
+      if (!p) return;
+      var num = numFn(r), den = denomFn(r);
+      if (num === null || den === null) return;
+      sums[p] = sums[p] || { num: 0, den: 0 };
+      sums[p].num += num; sums[p].den += den;
+      counts[p] = (counts[p] || 0) + 1;
+      if (counts[p] < minQualify || sums[p].den === 0) return;
+      var rate = sums[p].num / sums[p].den;
+      var isBetter = higherIsBetter ? rate > bestRate : rate < bestRate;
+      if (isBetter) {
+        bestRate = rate;
+        if (p !== bestHolder) { changeDate = r[dateKey]; bestHolder = p; }
+      }
+    });
+    return bestHolder ? { player: bestHolder, value: bestRate, date: changeDate } : null;
+  }
+
+  function addRate(label, rows, numFn, denomFn, playerFn, minQualify, higherIsBetter, formatFn) {
+    var r = findRateRecordHolderChange(rows, 'Date', playerFn, numFn, denomFn, minQualify, higherIsBetter);
+    if (r) candidates.push({ label: label, value: formatFn(r.value), who: r.player, date: r.date, detail: 'Min ' + minQualify + ' qualifying innings/spells \\u2014 took the record over from a different holder' });
+  }
+
+  addRate('Best Batting Average', bat, function(r) { return r.Runs; }, function(r) { return r.Dismissal === 'Not Out' ? 0 : 1; },
+    function(r) { return r.Batter; }, 10, true, function(v) { return v.toFixed(1); });
+  addRate('Best Strike Rate', bat.filter(function(r) { return r.Balls > 0; }), function(r) { return r.Runs; }, function(r) { return r.Balls; },
+    function(r) { return r.Batter; }, 10, true, function(v) { return (v * 100).toFixed(1); });
+  addRate('Best Bowling Average', bowl, function(r) { return r.Runs || 0; }, function(r) { return r.Wickets; },
+    function(r) { return r.Bowler; }, 10, false, function(v) { return v.toFixed(1); });
+  addRate('Best Economy Rate', bowl, function(r) { return r.Runs || 0; }, function(r) { return r.Overs || 0; },
+    function(r) { return r.Bowler; }, 10, false, function(v) { return v.toFixed(2); });
+
+  // ── Single-match / single-innings records ────────────────
+  addSingleEvent('Highest Individual Score', bat,
+    function(r) { return r.Runs; }, function(r) { return r.Batter; },
+    function(r) { return r.row.Runs + (r.row.Dismissal === 'Not Out' ? '*' : ''); },
+    function(row) { return 'vs ' + row.Opponent; });
+
+  addSingleEvent('Best Bowling Figures', bowl,
+    // Combine wickets+economy into one sortable number so "better figures" (more wkts, fewer runs) wins ties correctly
+    function(r) { return r.Wickets * 1000 - (r.Runs || 0); }, function(r) { return r.Bowler; },
+    function(r) { return r.row.Wickets + '/' + (r.row.Runs || 0); },
+    function(row) { return 'vs ' + row.Opponent; });
+
+  addSingleEvent('Most Sixes in an Innings', bat.filter(function(r) { return (r['6s'] || 0) > 0; }),
+    function(r) { return r['6s']; }, function(r) { return r.Batter; },
+    function(r) { return r.value; },
+    function(row) { return 'vs ' + row.Opponent; });
+
+  addSingleEvent('Most Fours in an Innings', bat.filter(function(r) { return (r['4s'] || 0) > 0; }),
+    function(r) { return r['4s']; }, function(r) { return r.Batter; },
+    function(r) { return r.value; },
+    function(row) { return 'vs ' + row.Opponent; });
+
+  addSingleEvent('Highest Team Total', matches,
+    function(r) { return r['Runs Scored']; }, function(r) { return r.Team + ' XI'; },
+    function(r) { return r.value; },
+    function(row) { return 'vs ' + row.Opponent; });
+
+  addSingleEvent('Biggest Win Margin (runs)', matches.filter(function(m) { return m.Result === 'W' && m['Bat/Field First'] === 'Bat'; }),
+    function(r) { return r['Runs Scored'] - r['Runs Conceded']; }, function(r) { return r.Team + ' XI'; },
+    function(r) { return r.value + ' runs'; },
+    function(row) { return 'vs ' + row.Opponent; });
+
+  (function() {
+    var counts = {}; // per Date|Team|Fielder
+    CRICKET_DATA.fielding.forEach(function(r) {
+      if (r.Dismissal !== 'Caught') return;
+      var key = r.Date + '|' + r.Team + '|' + r.Fielder;
+      counts[key] = (counts[key] || 0) + 1;
+    });
+    var rows = Object.keys(counts).map(function(k) {
+      var parts = k.split('|');
+      return { Date: parts[0], Team: parts[1], Fielder: parts[2], count: counts[k] };
+    });
+    var r = findRecordHolderChange(rows, 'Date', function(x) { return x.Fielder; }, function(x) { return x.count; }, false);
+    if (r) {
+      var m = CRICKET_DATA.matches.find(function(mm) { return mm.Date === r.date && mm.Team === r.row.Team; });
+      candidates.push({ label: 'Most Catches in a Match', value: r.value, who: r.player, date: r.date, detail: m ? 'vs ' + m.Opponent : '' });
+    }
+  })();
+
+  var recent = candidates.filter(function(c) { return daysAgo(c.date) <= WINDOW_DAYS; });
+  recent.sort(function(a, b) { return daysAgo(a.date) - daysAgo(b.date); });
+
+  if (recent.length === 0) { section.style.display = 'none'; return; }
+
+  section.style.display = 'block';
+  window._recentRecordsData = recent;
+  grid.innerHTML = recent.map(function(c, idx) {
+    var ago = daysAgo(c.date);
+    var agoLabel = ago === 0 ? 'Today' : ago === 1 ? 'Yesterday' : ago + ' days ago';
+    return '<div class="table-card" style="margin-bottom:0"><div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
+      '<div>' +
+        '<div style="font-size:0.7rem;color:var(--accent2);font-weight:700;letter-spacing:0.5px;text-transform:uppercase">' + c.label + '</div>' +
+        '<div style="font-size:0.95rem;margin-top:2px"><strong>' + c.who + '</strong> \u2014 ' + c.value + '</div>' +
+        '<div style="font-size:0.78rem;color:var(--muted);margin-top:2px">' + c.detail + '</div>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:10px;flex-shrink:0">' +
+        '<div style="font-size:0.75rem;color:var(--muted);white-space:nowrap">' + agoLabel + '</div>' +
+        '<button onclick="shareMilestoneCard(\'record\',' + idx + ')" title="Share as image" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;font-weight:600">Share</button>' +
+      '</div>' +
+    '</div></div>';
+  }).join('');
 }
 
 function renderRecords() {
@@ -5706,18 +6072,18 @@ function runStatQuery() {
 // ============================================================
 
 var LEAGUE_TABLE = [
-  {pos:1,  team:'Cottingham CC',        short:'Cottingham',    P:17, W:13, T:1, L:2,  pts:145, nrr: 1.87, isHessle:false},
-  {pos:2,  team:'Beverley Town CC',     short:'Beverley',      P:17, W:12, T:0, L:5,  pts:136, nrr: 1.10, isHessle:false},
-  {pos:3,  team:'Driffield Town CC',    short:'Driffield',     P:17, W:13, T:0, L:4,  pts:132, nrr: 1.21, isHessle:false},
-  {pos:4,  team:'Hessle CC',            short:'Hessle',        P:17, W:11, T:0, L:5,  pts:114, nrr: 0.11, isHessle:true},
-  {pos:5,  team:'Welton CC',            short:'Welton',        P:17, W:10, T:0, L:6,  pts:112, nrr: 0.66, isHessle:false},
-  {pos:6,  team:'North Ferriby CC',     short:'N. Ferriby',    P:17, W:8,  T:0, L:9,  pts:86,  nrr: 0.23, isHessle:false},
-  {pos:7,  team:'Kirkella CC',          short:'Kirkella',      P:17, W:7,  T:0, L:10, pts:86,  nrr:-0.65, isHessle:false},
-  {pos:8,  team:'Sutton-on-Hull CC',    short:'Sutton',        P:17, W:7,  T:1, L:9,  pts:85,  nrr: 0.39, isHessle:false},
-  {pos:9,  team:'Hull Strikers CC',     short:'Hull Strikers', P:17, W:6,  T:0, L:10, pts:66,  nrr:-0.63, isHessle:false},
-  {pos:10, team:'Walkington CC',        short:'Walkington',    P:17, W:5,  T:0, L:9,  pts:60,  nrr:-1.15, isHessle:false},
-  {pos:11, team:'Cherry Burton CC',     short:'Cherry Burton', P:17, W:5,  T:0, L:12, pts:54,  nrr:-1.07, isHessle:false},
-  {pos:12, team:'Brandesburton CC',     short:'Brandesburton', P:17, W:2,  T:0, L:14, pts:36,  nrr:-2.09, isHessle:false},
+  {pos:1,  team:'Cottingham CC',        short:'Cottingham',    P:18, W:14, T:1, L:2,  pts:155, nrr: 1.83, isHessle:false},
+  {pos:2,  team:'Beverley Town CC',     short:'Beverley',      P:18, W:12, T:0, L:6,  pts:136, nrr: 0.95, isHessle:false},
+  {pos:3,  team:'Driffield Town CC',    short:'Driffield',     P:18, W:13, T:0, L:5,  pts:132, nrr: 0.92, isHessle:false},
+  {pos:4,  team:'Hessle CC',            short:'Hessle',        P:18, W:12, T:0, L:5,  pts:124, nrr: 0.42, isHessle:true},
+  {pos:5,  team:'Welton CC',            short:'Welton',        P:18, W:11, T:0, L:6,  pts:122, nrr: 0.81, isHessle:false},
+  {pos:6,  team:'North Ferriby CC',     short:'N. Ferriby',    P:18, W:9,  T:0, L:9,  pts:96,  nrr: 0.22, isHessle:false},
+  {pos:7,  team:'Kirkella CC',          short:'Kirkella',      P:18, W:7,  T:0, L:11, pts:90,  nrr:-0.61, isHessle:false},
+  {pos:8,  team:'Sutton-on-Hull CC',    short:'Sutton',        P:18, W:7,  T:1, L:10, pts:89,  nrr: 0.35, isHessle:false},
+  {pos:9,  team:'Walkington CC',        short:'Walkington',    P:18, W:6,  T:0, L:9,  pts:70,  nrr:-1.07, isHessle:false},
+  {pos:10, team:'Hull Strikers CC',     short:'Hull Strikers', P:18, W:6,  T:0, L:11, pts:68,  nrr:-0.60, isHessle:false},
+  {pos:11, team:'Cherry Burton CC',     short:'Cherry Burton', P:18, W:6,  T:0, L:12, pts:64,  nrr:-0.99, isHessle:false},
+  {pos:12, team:'Brandesburton CC',     short:'Brandesburton', P:18, W:2,  T:0, L:15, pts:36,  nrr:-2.20, isHessle:false},
 ];
 
 // This league is decided by Points Per Game (PPG) — teams play an uneven number of
@@ -5789,11 +6155,6 @@ var RELG_SPOTS  = 2;
 // All-team remaining fixtures (excluding Hessle's own — those live in
 // HESSLE_REMAINING already and are simulated alongside these).
 var LEAGUE_FIXTURES_REMAINING = [
-  ["Brandesburton CC","Welton CC"],
-  ["Cottingham CC","Beverley Town CC"],
-  ["Hull Strikers CC","Cherry Burton CC"],
-  ["Kirkella CC","Walkington CC"],
-  ["North Ferriby CC","Sutton-on-Hull CC"],
   ["Beverley Town CC","North Ferriby CC"],
   ["Cherry Burton CC","Kirkella CC"],
   ["Sutton-on-Hull CC","Hull Strikers CC"],
@@ -6072,9 +6433,8 @@ function computeLiveOdds() {
 }
 
 // Confirmed remaining fixtures for Hessle in order
-// (Cherry Burton CC won 08 Aug — removed from list; COMBO_ODDS/FIXTURE_ODDS rebuilt to match)
+// (Cherry Burton CC won 08 Aug, Driffield Town CC won 15 Aug — both removed from list)
 var HESSLE_REMAINING = [
-  {opp:'Driffield Town CC', ha:'A'},
   {opp:'Brandesburton CC',  ha:'H'},
   {opp:'Hull Strikers CC',  ha:'A'},
   {opp:'Sutton-on-Hull CC', ha:'A'},
@@ -6196,7 +6556,7 @@ function renderLeague(xi) {
   var scenEl = document.getElementById('league-scenarios');
   if (scenEl) {
     var scenHTML = '';
-    var sc_wins = is2nd ? [3, 2, 1, 0] : [5, 4, 3, 2];
+    var sc_wins = is2nd ? [3, 2, 1, 0] : [4, 3, 2, 1];
     sc_wins.forEach(function(wins) {
       var finalPts = hPts + wins * 10;
       var odds     = sc_odds[wins] || 0;
@@ -6204,104 +6564,15 @@ function renderLeague(xi) {
       scenHTML +=
         '<div class="kpi ' + kl + '">' +
           '<div class="kpi-val">' + odds + '%</div>' +
-          '<div class="kpi-label">Win ' + wins + '/' + (is2nd ? 3 : 5) + ' \u2192 ' + finalPts + 'pts</div>' +
+          '<div class="kpi-label">Win ' + wins + '/' + (is2nd ? 3 : 4) + ' \u2192 ' + finalPts + 'pts</div>' +
         '</div>';
     });
     scenEl.innerHTML = scenHTML;
   }
 
-  // ── Remaining fixtures table with W/L toggles ────────────
-  if (!window._fixturePicks) window._fixturePicks = {};
-  if (is2nd) {
-    if (!window._fixturePicks2nd) window._fixturePicks2nd = {};
-    renderFixturesOnly2nd();
-    updateProjectedOdds2nd();
-  } else {
-    renderFixturesOnly();
-  }
-
   // ── League Explorer (all-teams what-if picker) ───────────
   renderExplorer();
-
-  if (false) { // dead code placeholder — actual rendering in renderFixturesOnly
-    var fixTbody = null;
-    HESSLE_REMAINING.forEach(function(fix, idx) {
-      var opp  = LEAGUE_TABLE.find(function(t){ return t.team === fix.opp; });
-      if (!opp) return;
-      var fo   = FIXTURE_ODDS[fix.opp] || {win: 5.9, lose: 1.5, swing: 4.4};
-      var zoneLabel = opp.pos <= 2  ? '🟢'
-                    : opp.pos <= 4  ? '🟡'
-                    : opp.pos >= 11 ? '🔴'
-                    : '⚪';
-      var swingCol = fo.swing >= 7 ? 'var(--accent2)' : 'var(--muted)';
-      var pick = window._fixturePicks[String(idx)]; // keys stored as strings
-
-      // Sticky first cell for opponent name
-      var oppCellStyle = 'position:sticky;left:0;z-index:5;background:var(--surface);';
-      if (pick === 'W') oppCellStyle += 'background:rgba(63,185,80,0.12);';
-      if (pick === 'L') oppCellStyle += 'background:rgba(248,81,73,0.10);';
-
-      // W/L toggle buttons
-      var wSel = pick==='W';
-      var lSel = pick==='L';
-      var btnW = '<button data-fidx="' + idx + '" data-res="W" onclick="toggleFixturePick(this)" ' +
-        'style="padding:3px 10px;border-radius:5px;border:1px solid ' +
-        (wSel ? 'var(--green);background:var(--green);color:#fff' : 'var(--border);background:none;color:var(--muted)') +
-        ';cursor:pointer;font-weight:700;font-size:0.8rem;margin-right:4px">W</button>';
-      var btnL = '<button data-fidx="' + idx + '" data-res="L" onclick="toggleFixturePick(this)" ' +
-        'style="padding:3px 10px;border-radius:5px;border:1px solid ' +
-        (lSel ? 'var(--red);background:var(--red);color:#fff' : 'var(--border);background:none;color:var(--muted)') +
-        ';cursor:pointer;font-weight:700;font-size:0.8rem">L</button>';
-
-      // Displayed promo% depends on pick
-      var promoDisplay = pick === 'W' ? '<span style="color:var(--green);font-weight:700">' + fo.win + '%</span>'
-                       : pick === 'L' ? '<span style="color:var(--red)">' + fo.lose + '%</span>'
-                       : '<span style="color:var(--muted)">—</span>';
-
-      fixTbody.innerHTML +=
-        '<tr>' +
-        '<td style="' + oppCellStyle + '">' + zoneLabel + ' ' + opp.team + '</td>' +
-        '<td style="color:var(--muted);text-align:center">' + fix.ha + '</td>' +
-        '<td>' + opp.pts + '</td>' +
-        '<td>' + btnW + btnL + '</td>' +
-        '<td>' + promoDisplay + '</td>' +
-        '<td style="color:' + swingCol + ';font-weight:700">+' + fo.swing + '%</td>' +
-        '</tr>';
-    });
-
-    fixTbody.innerHTML +=
-      '<tr><td colspan="6" style="color:var(--muted);font-size:0.72rem;padding-top:8px">' +
-      'Odds from a live Monte Carlo simulation (20,000 runs), based on each team\'s current season win rate. Recalculates automatically every time the table is updated.' +
-      '</td></tr>';
-  }
-
-  // Update the projected odds panel
-  updateProjectedOdds();
 }
-
-function toggleFixturePick(el) {
-  try {
-    if (!window._fixturePicks) window._fixturePicks = {};
-    var idx    = el.getAttribute('data-fidx');
-    var result = el.getAttribute('data-res');
-    // Toggle: clicking same result again clears it
-    window._fixturePicks[idx] = window._fixturePicks[idx] === result ? undefined : result;
-    // Only re-render the fixtures tbody and projected panel — not the whole page.
-    // Calling full renderLeague() from a click handler destroys the clicked button
-    // mid-event which causes browser script errors.
-    renderFixturesOnly();
-    updateProjectedOdds();
-  } catch(e) {
-    console.error('toggleFixturePick error:', e);
-  }
-}
-
-function resetFixturePicks() {
-  window._fixturePicks = {};
-  renderFixturesOnly();
-  updateProjectedOdds();
-}
-
 // ════════════════════════════════════════════════════════════════════════
 // LEAGUE EXPLORER — pick a hypothetical winner for ANY remaining fixture in
 // the league (not just Hessle's own) and see every team's promotion odds
@@ -6399,7 +6670,7 @@ function updateExplorerResults() {
   }
 }
 
-// ── Module-level constants (accessible to renderFixturesOnly, updateProjectedOdds etc) ──
+// ── Module-level constants (overwritten live by computeLiveOdds() below) ──
 var MC_PROMO = [90.2, 66.7, 37.9, 4.0, 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 var MC_RELG  = [0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 10.5, 32.0, 57.5, 99.8];
 // Fallback values only — all of MC_PROMO, MC_RELG, COMBO_ODDS, SCENARIO_ODDS
@@ -6418,219 +6689,7 @@ var FIXTURE_ODDS = {
   'Beverley Town CC':  {win: 4.7, lose: 0.1, swing: 4.6},
 };
 
-function renderFixturesOnly() {
-  if (window._leagueXI === '2nd') return; // 2nd XI uses renderFixturesOnly2nd
-  var fixTbody = document.getElementById('league-fixtures-tbody');
-  if (!fixTbody) return;
-  var picks = window._fixturePicks || {};
-  fixTbody.innerHTML = '';
-  HESSLE_REMAINING.forEach(function(fix, idx) {
-    var opp = LEAGUE_TABLE.find(function(t){ return t.team === fix.opp; });
-    if (!opp) return;
-    var fo  = FIXTURE_ODDS[fix.opp] || {win: 5.9, lose: 1.5, swing: 4.4};
-    var zoneLabel = opp.pos <= 2 ? '🟢' : opp.pos <= 4 ? '🟡' : opp.pos >= 11 ? '🔴' : '⚪';
-    var swingCol  = fo.swing >= 7 ? 'var(--accent2)' : 'var(--muted)';
-    var pick      = picks[String(idx)];
-    var wSel = pick === 'W';
-    var lSel = pick === 'L';
-    var oppBg = wSel ? 'rgba(63,185,80,0.12)' : lSel ? 'rgba(248,81,73,0.10)' : 'var(--surface)';
-    var btnW = '<button data-fidx="' + idx + '" data-res="W" onclick="toggleFixturePick(this)" ' +
-      'style="padding:3px 10px;border-radius:5px;border:1px solid ' +
-      (wSel ? 'var(--green);background:var(--green);color:#fff' : 'var(--border);background:none;color:var(--muted)') +
-      ';cursor:pointer;font-weight:700;font-size:0.8rem;margin-right:4px">W</button>';
-    var btnL = '<button data-fidx="' + idx + '" data-res="L" onclick="toggleFixturePick(this)" ' +
-      'style="padding:3px 10px;border-radius:5px;border:1px solid ' +
-      (lSel ? 'var(--red);background:var(--red);color:#fff' : 'var(--border);background:none;color:var(--muted)') +
-      ';cursor:pointer;font-weight:700;font-size:0.8rem">L</button>';
-    var promoDisplay = pick === 'W' ? '<span style="color:var(--green);font-weight:700">' + fo.win + '%</span>'
-                     : pick === 'L' ? '<span style="color:var(--red)">' + fo.lose + '%</span>'
-                     : '<span style="color:var(--muted)">—</span>';
-    fixTbody.innerHTML +=
-      '<tr>' +
-      '<td style="position:sticky;left:0;z-index:5;background:' + oppBg + '">' + zoneLabel + ' ' + opp.team + '</td>' +
-      '<td style="color:var(--muted);text-align:center">' + fix.ha + '</td>' +
-      '<td>' + opp.pts + '</td>' +
-      '<td>' + btnW + btnL + '</td>' +
-      '<td>' + promoDisplay + '</td>' +
-      '<td style="color:' + swingCol + ';font-weight:700">+' + fo.swing + '%</td>' +
-      '</tr>';
-  });
-  fixTbody.innerHTML +=
-    '<tr><td colspan="6" style="color:var(--muted);font-size:0.72rem;padding-top:8px">' +
-    'Odds from a live Monte Carlo simulation (20,000 runs), based on each team\'s current season win rate. Recalculates automatically every time the table is updated.' +
-    '</td></tr>';
-}
-
-function updateProjectedOdds() {
-  var projEl  = document.getElementById('league-projected');
-  var oddsEl  = document.getElementById('league-projected-odds');
-  var labelEl = document.getElementById('league-projected-label');
-  if (!projEl || !oddsEl || !labelEl) return;
-
-  var picks = window._fixturePicks || {};
-  var pickedCount = 0;
-  for (var k in picks) { if (picks[k]) pickedCount++; }
-
-  if (pickedCount === 0) {
-    projEl.style.display = 'none';
-    return;
-  }
-
-  projEl.style.display = 'block';
-
-  // Start from base promotion odds, then adjust for each picked result
-  // Use a simple additive model: each W adds (win_odds - base), each L adds (lose_odds - base)
-  // This is an approximation — the full model accounts for game interactions
-  // Build the combo key: 8-bit integer where bit N=1 means fixture N is picked as W.
-  // Unpicked fixtures contribute the AVERAGE of their W and L odds (i.e. expected value).
-  // For fully-specified combos we use the exact COMBO_ODDS lookup.
-  // For partial picks we interpolate: fix W picks to 1, L picks to 0, unpicked to 0.5 weight.
-  var wCount = 0, lCount = 0, unCount = 0;
-  var comboKey = 0;
-  var partialKey = 0;  // for partial picks: treat unpicked as 0.5 weight
-  var isFullySpecified = true;
-  HESSLE_REMAINING.forEach(function(fix, idx) {
-    var key = String(idx);
-    var bit = 1 << idx;
-    if (picks[key] === 'W') {
-      comboKey |= bit;
-      partialKey |= bit;
-      wCount++;
-    } else if (picks[key] === 'L') {
-      lCount++;
-      // L = bit stays 0 in comboKey
-    } else {
-      unCount++;
-      isFullySpecified = false;
-    }
-  });
-
-  var adjustedPct;
-  if (isFullySpecified) {
-    // Exact lookup
-    adjustedPct = COMBO_ODDS[comboKey] || 0;
-  } else {
-    // Partial: average over all fully-specified combos consistent with the current picks
-    var total = 0, count = 0;
-    for (var k = 0; k < 256; k++) {
-      // Check this combo is consistent: W picks must be 1, L picks must be 0
-      var consistent = true;
-      HESSLE_REMAINING.forEach(function(fix, idx) {
-        var key2 = String(idx);
-        var bit2 = 1 << idx;
-        if (picks[key2] === 'W' && !(k & bit2)) consistent = false;
-        if (picks[key2] === 'L' &&  (k & bit2)) consistent = false;
-      });
-      if (consistent) { total += (COMBO_ODDS[k] || 0); count++; }
-    }
-    adjustedPct = count > 0 ? Math.round(total / count * 10) / 10 : 0;
-  }
-
-  adjustedPct = Math.max(0, Math.min(99, adjustedPct));
-  var col = adjustedPct >= 20 ? 'var(--green)' : adjustedPct >= 5 ? 'var(--accent2)' : 'var(--red)';
-  oddsEl.style.color = col;
-  oddsEl.textContent = adjustedPct + '%';
-
-  var winsText = wCount > 0 ? wCount + ' W' + (unCount > 0 ? '' : '') : '';
-  var lossText = lCount > 0 ? lCount + ' L' : '';
-  var unText   = unCount > 0 ? unCount + ' unselected' : '';
-  var parts = [winsText, lossText, unText].filter(Boolean);
-  var scenCount = isFullySpecified ? 1 : (count || 1);
-  labelEl.textContent = parts.join(', ') + ' — averaging ' + scenCount + ' scenario' + (scenCount > 1 ? 's' : '');
-}
-
-
-
-function renderFixturesOnly2nd() {
-  var fixTbody = document.getElementById('league-fixtures-tbody');
-  if (!fixTbody) return;
-  var picks = window._fixturePicks2nd || {};
-  fixTbody.innerHTML = '';
-  HESSLE_REMAINING_2ND.forEach(function(fix, idx) {
-    var fo   = FIXTURE_ODDS_2ND[fix.opp] || {win:93.5, lose:83.5, swing:10.0};
-    var pick = picks[String(idx)];
-    var wSel = pick === 'W', lSel = pick === 'L';
-    var oppBg = wSel ? 'rgba(63,185,80,0.12)' : lSel ? 'rgba(248,81,73,0.10)' : 'var(--surface)';
-    var btnW = '<button data-fidx="' + idx + '" data-res="W" onclick="toggleFixturePick2nd(this)" ' +
-      'style="padding:3px 10px;border-radius:5px;border:1px solid ' +
-      (wSel ? 'var(--green);background:var(--green);color:#fff' : 'var(--border);background:none;color:var(--muted)') +
-      ';cursor:pointer;font-weight:700;font-size:0.8rem;margin-right:4px">W</button>';
-    var btnL = '<button data-fidx="' + idx + '" data-res="L" onclick="toggleFixturePick2nd(this)" ' +
-      'style="padding:3px 10px;border-radius:5px;border:1px solid ' +
-      (lSel ? 'var(--red);background:var(--red);color:#fff' : 'var(--border);background:none;color:var(--muted)') +
-      ';cursor:pointer;font-weight:700;font-size:0.8rem">L</button>';
-    var promoDisplay = pick === 'W' ? '<span style="color:var(--green);font-weight:700">' + fo.win + '%</span>'
-                     : pick === 'L' ? '<span style="color:var(--red)">'              + fo.lose + '%</span>'
-                     : '<span style="color:var(--muted)">—</span>';
-    fixTbody.innerHTML +=
-      '<tr>' +
-      '<td style="position:sticky;left:0;z-index:5;background:' + oppBg + '">' + fix.opp + '</td>' +
-      '<td style="color:var(--muted);text-align:center">' + fix.ha + '</td>' +
-      '<td>' + fix.pts + '</td>' +
-      '<td>' + btnW + btnL + '</td>' +
-      '<td>' + promoDisplay + '</td>' +
-      '<td style="color:var(--accent2);font-weight:700">+' + fo.swing + '%</td>' +
-      '</tr>';
-  });
-  fixTbody.innerHTML +=
-    '<tr><td colspan="6" style="color:var(--muted);font-size:0.72rem;padding-top:8px">' +
-    'Odds from 200k Monte Carlo simulations. Swings are similar across all fixtures as none are direct promotion rivals.' +
-    '</td></tr>';
-}
-
-function toggleFixturePick2nd(el) {
-  try {
-    if (!window._fixturePicks2nd) window._fixturePicks2nd = {};
-    var idx    = el.getAttribute('data-fidx');
-    var result = el.getAttribute('data-res');
-    window._fixturePicks2nd[idx] = window._fixturePicks2nd[idx] === result ? undefined : result;
-    renderFixturesOnly2nd();
-    updateProjectedOdds2nd();
-  } catch(e) { console.error('toggleFixturePick2nd error:', e); }
-}
-
-function updateProjectedOdds2nd() {
-  var projEl  = document.getElementById('league-projected');
-  var oddsEl  = document.getElementById('league-projected-odds');
-  var labelEl = document.getElementById('league-projected-label');
-  if (!projEl || !oddsEl || !labelEl) return;
-  var picks = window._fixturePicks2nd || {};
-  var pickedCount = 0;
-  for (var k in picks) { if (picks[k]) pickedCount++; }
-  if (pickedCount === 0) { projEl.style.display = 'none'; return; }
-  projEl.style.display = 'block';
-  var base = MC_PROMO_2ND[1]; // Hessle 2nd index
-  var adj  = base;
-  var wCount = 0, lCount = 0;
-  HESSLE_REMAINING_2ND.forEach(function(fix, idx) {
-    var fo  = FIXTURE_ODDS_2ND[fix.opp] || {win:93.5, lose:83.5, swing:10.0};
-    var key = String(idx);
-    if (picks[key] === 'W') { adj += (fo.win  - base) * 0.6; wCount++; }
-    if (picks[key] === 'L') { adj += (fo.lose - base) * 0.6; lCount++; }
-  });
-  adj = Math.max(0, Math.min(100, Math.round(adj * 10)/10));
-  var col = adj >= 80 ? 'var(--green)' : adj >= 50 ? 'var(--accent2)' : 'var(--red)';
-  oddsEl.style.color = col;
-  oddsEl.textContent = adj + '%';
-  var parts = [];
-  if (wCount) parts.push(wCount + ' W');
-  if (lCount) parts.push(lCount + ' L');
-  var rem = 3 - pickedCount;
-  if (rem) parts.push(rem + ' unselected');
-  labelEl.textContent = parts.join(', ') + ' — remaining simulated at average odds';
-}
-
-
-
-// ============================================================
-// ROUTE TO PROMOTION PAGE
-// ============================================================
-
 var ROUTE_WEEKS = [
-
-  {date:'15 Aug 2026',hessle:{opp:'Driffield Town CC',ha:'A'},
-   watches:[{home:'Beverley Town CC',away:'Cottingham CC',wantWin:'Cottingham CC',key:true,why:'Beverley host league leaders Cottingham who are clear favourites'}],
-   others:['Brandesburton vs Welton','Hull Strikers vs Cherry Burton','Kirkella vs Walkington','N.Ferriby vs Sutton']},
   {date:'22 Aug 2026',hessle:{opp:'Brandesburton CC',ha:'H'},
    watches:[{home:'Beverley Town CC',away:'North Ferriby CC',wantWin:'North Ferriby CC',key:true,why:'Beverley strong favourites at home - any slip here is valuable'},
             {home:'Walkington CC',away:'Driffield Town CC',wantWin:'Walkington CC',key:true,why:'Driffield away at Walkington who have won their last two'}],
@@ -6647,6 +6706,7 @@ var ROUTE_WEEKS = [
    watches:[{home:'Driffield Town CC',away:'North Ferriby CC',wantWin:'North Ferriby CC',key:true,why:'Final day - if Hessle beat Beverley, a Driffield loss to N.Ferriby could seal it'}],
    others:['Brandesburton vs Cottingham','Kirkella vs Hull Strikers','Walkington vs Sutton','Welton vs Cherry Burton']},
 ];
+
 
 function renderRoute() {
   var el = document.getElementById('route-weeks');
