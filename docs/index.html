@@ -352,6 +352,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
         <button class="nav-btn" onclick="showPage('opponents',this)">Opponents</button>
         <button class="nav-btn" onclick="showPage('form',this)">Form</button>
         <button class="nav-btn" onclick="showPage('chasing',this)">Chase/Defend</button>
+        <button class="nav-btn" onclick="showPage('statquery',this)">Stat Query</button>
       </div>
     </div>
     <div class="nav-dropdown" id="navDropdown-awards">
@@ -396,6 +397,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
         <button class="mobile-nav-item" onclick="showPage('opponents',this);closeMobileNav()">🏟️ Opponents</button>
         <button class="mobile-nav-item" onclick="showPage('form',this);closeMobileNav()">📈 Form</button>
         <button class="mobile-nav-item" onclick="showPage('chasing',this);closeMobileNav()">🎯 Chase/Defend</button>
+        <button class="mobile-nav-item" onclick="showPage('statquery',this);closeMobileNav()">🔎 Stat Query</button>
       </div>
     </div>
     <div class="mobile-nav-section" id="mobileNavSection-awards">
@@ -555,9 +557,14 @@ tbody td{padding:8px 14px;white-space:nowrap;}
     <button class="tab" onclick="showTab('batting','form',this)">Rolling Form</button>
   </div>
   <div id="batting-stats" class="sub-page active">
-    <div class="table-header" style="padding:0 0 12px">
+    <div class="table-header" style="padding:0 0 12px;flex-wrap:wrap;gap:8px">
       <span class="table-title">Batting Averages & Aggregates</span>
-      <input class="search-box" placeholder="Search player..." oninput="filterTableSearch('tblBatStats',this.value)">
+      <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
+        <label style="font-size:0.78rem;color:var(--muted);display:flex;align-items:center;gap:6px">Min Innings
+          <input id="batMinInnings" type="number" min="0" value="0" oninput="renderBatStats()" style="width:60px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 8px;font-size:0.82rem">
+        </label>
+        <input class="search-box" placeholder="Search player..." oninput="filterTableSearch('tblBatStats',this.value)">
+      </div>
     </div>
     <div class="table-card"><div class="table-wrap"><table id="tblBatStats"><thead><tr>
       <th onclick="sortTable('tblBatStats',0)">Player</th><th onclick="sortTable('tblBatStats',1)">Inn</th>
@@ -653,9 +660,14 @@ tbody td{padding:8px 14px;white-space:nowrap;}
     <button class="tab" onclick="showTab('bowling','extras',this)">Wides & No Balls</button>
   </div>
   <div id="bowling-stats" class="sub-page active">
-    <div class="table-header" style="padding:0 0 12px">
+    <div class="table-header" style="padding:0 0 12px;flex-wrap:wrap;gap:8px">
       <span class="table-title">Bowling Aggregates</span>
-      <input class="search-box" placeholder="Search player..." oninput="filterTableSearch('tblBowlStats',this.value)">
+      <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
+        <label style="font-size:0.78rem;color:var(--muted);display:flex;align-items:center;gap:6px">Min Wickets
+          <input id="bowlMinWickets" type="number" min="0" value="0" oninput="renderBowlStats()" style="width:60px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 8px;font-size:0.82rem">
+        </label>
+        <input class="search-box" placeholder="Search player..." oninput="filterTableSearch('tblBowlStats',this.value)">
+      </div>
     </div>
     <div class="table-card"><div class="table-wrap"><table id="tblBowlStats"><thead><tr>
       <th onclick="sortTable('tblBowlStats',0)">Player</th><th onclick="sortTable('tblBowlStats',1)">Matches</th>
@@ -1313,7 +1325,13 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 <div id="page-records" class="page">
   <div id="recent-records-section" style="display:none">
     <div class="section-header">RECENTLY BROKEN</div>
-    <div id="recent-records-grid" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px"></div>
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">Records Broken in the Last 90 Days</div>
+        <div id="recent-records-count" style="font-size:0.78rem;color:var(--muted)"></div>
+      </div>
+      <div id="recent-records-grid" style="max-height:520px;overflow-y:auto;padding:8px 16px 16px;display:flex;flex-direction:column;gap:8px"></div>
+    </div>
   </div>
 
   <div class="section-header">CLUB RECORDS</div>
@@ -1331,36 +1349,61 @@ tbody td{padding:8px 14px;white-space:nowrap;}
   </div>
 
   <div class="section-header" style="margin-top:20px">STAT LOOKUP</div>
+  <div style="padding:0 0 12px;font-size:0.82rem;color:var(--muted)">
+    This tool has moved to its own <a href="#" onclick="showPage('statquery',null);return false;" style="color:var(--accent)">Stat Query</a> page under Stats in the nav, with a lot more filters and a proper innings-by-innings view.
+  </div>
+</div>
+
+<div id="page-statquery" class="page">
+  <div class="section-header">STAT QUERY</div>
+  <div style="padding:0 0 12px;font-size:0.82rem;color:var(--muted)">
+    Build a custom query across every batting, bowling and fielding record — a Cricinfo Statsguru-style tool for the club's own data.
+  </div>
   <div class="table-card">
-    <div class="table-header"><div class="table-title">Custom Stat Query</div></div>
+    <div class="table-header"><div class="table-title">Query Builder</div></div>
     <div style="padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end">
       <div class="filter-group">
         <span class="filter-label">Category</span>
-        <select id="rq-category" onchange="rqUpdateOptions()" style="width:100%">
+        <select id="sq-category" onchange="sqUpdateOptions()" style="width:100%">
           <option value="batting">Batting</option>
           <option value="bowling">Bowling</option>
           <option value="fielding">Fielding</option>
         </select>
       </div>
       <div class="filter-group">
-        <span class="filter-label">Measure</span>
-        <select id="rq-measure" style="width:100%"></select>
+        <span class="filter-label">View</span>
+        <select id="sq-view" onchange="sqUpdateOptions()" style="width:100%">
+          <option value="leaderboard">Leaderboard</option>
+          <option value="list">Innings/Spell List</option>
+        </select>
       </div>
       <div class="filter-group">
+        <span class="filter-label">Measure</span>
+        <select id="sq-measure" style="width:100%"></select>
+      </div>
+      <div class="filter-group" id="sq-groupbywrap">
         <span class="filter-label">Group by</span>
-        <select id="rq-groupby" style="width:100%">
+        <select id="sq-groupby" style="width:100%">
           <option value="player">Player</option>
           <option value="season">Season</option>
           <option value="opponent">Opponent</option>
         </select>
       </div>
       <div class="filter-group">
+        <span class="filter-label">Team</span>
+        <select id="sq-team" style="width:100%">
+          <option value="">Both XIs</option>
+          <option value="1st">1st XI</option>
+          <option value="2nd">2nd XI</option>
+        </select>
+      </div>
+      <div class="filter-group">
         <span class="filter-label">Opponent</span>
-        <select id="rq-opponent" style="width:100%"><option value="">All</option></select>
+        <select id="sq-opponent" style="width:100%"><option value="">Any opponent</option></select>
       </div>
       <div class="filter-group">
         <span class="filter-label">H/A</span>
-        <select id="rq-homeaway" style="width:100%">
+        <select id="sq-homeaway" style="width:100%">
           <option value="">All</option>
           <option value="Home">Home</option>
           <option value="Away">Away</option>
@@ -1368,7 +1411,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
       </div>
       <div class="filter-group">
         <span class="filter-label">Result</span>
-        <select id="rq-result" style="width:100%">
+        <select id="sq-result" style="width:100%">
           <option value="">All</option>
           <option value="W">Wins only</option>
           <option value="L">Losses only</option>
@@ -1376,22 +1419,46 @@ tbody td{padding:8px 14px;white-space:nowrap;}
       </div>
       <div class="filter-group">
         <span class="filter-label">Innings</span>
-        <select id="rq-innings" style="width:100%">
+        <select id="sq-innings" style="width:100%">
           <option value="">All</option>
           <option value="1">1st innings</option>
           <option value="2">2nd innings</option>
         </select>
       </div>
-      <div class="filter-group">
-        <span class="filter-label">Min innings</span>
-        <input id="rq-min" type="number" value="10" min="1" style="width:80px;padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text)">
+      <div class="filter-group" id="sq-posWrap">
+        <span class="filter-label">Position</span>
+        <select id="sq-position" style="width:100%">
+          <option value="">Any position</option>
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+          <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+          <option value="10">10</option><option value="11">11</option>
+        </select>
       </div>
-      <button class="btn-primary" onclick="runStatQuery()" style="padding:8px 18px;font-size:0.85rem">Run</button>
-      <button onclick="rqReset()" style="padding:8px 14px;font-size:0.85rem;background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);cursor:pointer">Reset</button>
+      <div class="filter-group">
+        <span class="filter-label">Year from</span>
+        <select id="sq-yearfrom" style="width:100%"><option value="">Any</option></select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Year to</span>
+        <select id="sq-yearto" style="width:100%"><option value="">Any</option></select>
+      </div>
+      <div class="filter-group" id="sq-minwrap">
+        <span class="filter-label" id="sq-minlabel">Min innings</span>
+        <input id="sq-min" type="number" value="10" min="0" style="width:80px;padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text)">
+      </div>
+      <button class="btn-primary" onclick="runStatQuery()" style="padding:8px 18px;font-size:0.85rem">Run Query</button>
+      <button onclick="sqReset()" style="padding:8px 14px;font-size:0.85rem;background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);cursor:pointer">Reset</button>
     </div>
-    <div class="table-wrap">
+    <div class="table-wrap" id="sq-leaderboard-wrap">
       <table id="tblStatQuery">
-        <thead><tr id="rq-thead"></tr></thead>
+        <thead><tr id="sq-thead"></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="table-wrap" id="sq-list-wrap" style="display:none">
+      <table id="tblStatQueryList">
+        <thead><tr id="sq-list-thead"></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -1640,6 +1707,9 @@ function initDashboard() {
   });
 
   computeLiveOdds();
+  sqPopulateOpponents();
+  sqPopulateYears();
+  sqUpdateOptions();
 
   renderAll();
 
@@ -1948,14 +2018,33 @@ function computeBatStats(rows) {
   });
 }
 
+// Overs are recorded in cricket's base-6 notation (e.g. 4.3 = 4 overs + 3
+// balls), not true decimal — so summing raw values across matches (4.3 + 3.4
+// = 7.7) can produce an invalid fraction like .6/.7/.8/.9, since a full over
+// only ever has 0-5 balls left over. These helpers convert to/from a total
+// ball count so arithmetic (sums, economy, strike rate) is always correct,
+// with the base-6 notation only ever re-applied at the point of display.
+function oversToBalls(overs) {
+  overs = overs || 0;
+  var whole = Math.trunc(overs);
+  var frac = Math.round((overs - whole) * 10);
+  return whole * 6 + frac;
+}
+function ballsToOvers(balls) {
+  balls = balls || 0;
+  var whole = Math.floor(balls / 6);
+  var rem = balls % 6;
+  return whole + rem / 10;
+}
+
 function computeBowlStats(rows) {
   const p={};
   rows.forEach(r=>{
     const name=r.Bowler; if(!name) return;
-    if(!p[name]) p[name]={name,matches:new Set(),overs:0,maidens:0,runs:0,wickets:0,wides:0,noballs:0,best_w:0,best_r:999,fiveWickets:0};
+    if(!p[name]) p[name]={name,matches:new Set(),ballsBowled:0,maidens:0,runs:0,wickets:0,wides:0,noballs:0,best_w:0,best_r:999,fiveWickets:0};
     const v=p[name];
     v.matches.add(r.Date+r.Opponent);
-    v.overs+=(r.Overs||0); v.maidens+=(r.Maidens||0); v.runs+=(r.Runs||0);
+    v.ballsBowled+=oversToBalls(r.Overs); v.maidens+=(r.Maidens||0); v.runs+=(r.Runs||0);
     const wkts=r.Wickets||0; v.wickets+=wkts;
     v.wides+=(r.Wides||0); v.noballs+=(r['No Balls']||0);
     if(wkts>v.best_w||(wkts===v.best_w&&(r.Runs||0)<v.best_r)){v.best_w=wkts;v.best_r=r.Runs||0;}
@@ -1963,11 +2052,12 @@ function computeBowlStats(rows) {
   });
   return Object.values(p).map(v=>{
     v.matchCount=v.matches.size;
+    const trueOvers=v.ballsBowled/6; // for division math — always exact, unlike the display notation
     v.avg=v.wickets>0?(v.runs/v.wickets).toFixed(2):'-';
-    v.econ=v.overs>0?(v.runs/v.overs).toFixed(2):'-';
-    v.sr=v.wickets>0?((v.overs*6)/v.wickets).toFixed(1):'-';
+    v.econ=trueOvers>0?(v.runs/trueOvers).toFixed(2):'-';
+    v.sr=v.wickets>0?(v.ballsBowled/v.wickets).toFixed(1):'-';
     v.best=v.best_w>0?`${v.best_w}/${v.best_r}`:'-';
-    v.overs=Math.round(v.overs*10)/10;
+    v.overs=ballsToOvers(v.ballsBowled);
     return v;
   });
 }
@@ -2164,13 +2254,15 @@ function renderOverview() {
 // BATTING
 // ============================================================
 function renderBatStats() {
-  const stats=computeBatStats(getFiltered(CRICKET_DATA.batting)).sort((a,b)=>b.runs-a.runs);
+  const minInn = parseInt(document.getElementById('batMinInnings')?.value, 10) || 0;
+  const stats=computeBatStats(getFiltered(CRICKET_DATA.batting)).filter(s=>s.inn>=minInn).sort((a,b)=>b.runs-a.runs);
   document.querySelector('#tblBatStats tbody').innerHTML=stats.map(s=>`<tr>
     <td><strong>${s.name}</strong></td><td>${s.inn}</td>
     <td class="highlight">${s.runs}</td><td>${s.hs}</td><td>${s.avg}</td><td>${s.sr}</td>
     <td>${s.fifties}</td><td>${s.hundreds}</td><td class="text-muted">${s.notOuts}</td>
     <td class="text-muted">${s.dnbs}</td><td>${s.fours}</td><td>${s.sixes}</td>
   </tr>`).join('');
+  if (typeof initTableLimit === 'function') initTableLimit('tblBatStats');
 }
 
 function renderBatInnings() {
@@ -2205,12 +2297,14 @@ function renderBatCharts() {
 // BOWLING
 // ============================================================
 function renderBowlStats() {
-  const stats=computeBowlStats(getFiltered(CRICKET_DATA.bowling)).sort((a,b)=>b.wickets-a.wickets);
+  const minWkts = parseInt(document.getElementById('bowlMinWickets')?.value, 10) || 0;
+  const stats=computeBowlStats(getFiltered(CRICKET_DATA.bowling)).filter(s=>s.wickets>=minWkts).sort((a,b)=>b.wickets-a.wickets);
   document.querySelector('#tblBowlStats tbody').innerHTML=stats.map(s=>`<tr>
     <td><strong>${s.name}</strong></td><td>${s.matchCount}</td><td>${s.overs}</td>
     <td class="highlight">${s.wickets}</td><td>${s.runs}</td><td>${s.avg}</td>
     <td>${s.econ}</td><td>${s.sr}</td><td>${s.maidens}</td><td>${s.best}</td><td>${s.fiveWickets}</td>
   </tr>`).join('');
+  if (typeof initTableLimit === 'function') initTableLimit('tblBowlStats');
 }
 
 function renderBowlSpells() {
@@ -2858,7 +2952,7 @@ function renderProfile() {
 
   // Bowling yearly
   const bowlByYear={};
-  bowlRows.forEach(r=>{const y=r.Date.slice(0,4);if(!bowlByYear[y])bowlByYear[y]={wkts:0,overs:0,runs:0};bowlByYear[y].wkts+=(r.Wickets||0);bowlByYear[y].overs+=(r.Overs||0);bowlByYear[y].runs+=(r.Runs||0);});
+  bowlRows.forEach(r=>{const y=r.Date.slice(0,4);if(!bowlByYear[y])bowlByYear[y]={wkts:0,ballsBowled:0,runs:0};bowlByYear[y].wkts+=(r.Wickets||0);bowlByYear[y].ballsBowled+=oversToBalls(r.Overs);bowlByYear[y].runs+=(r.Runs||0);});
   const bowlYrs=Object.keys(bowlByYear).sort();
 
   const teamSet=[...new Set([...batRows,...bowlRows].map(r=>r.Team))].sort();
@@ -4372,9 +4466,9 @@ function renderSquadDepth() {
   });
   CRICKET_DATA.bowling.forEach(function(r) {
     if(!r.Bowler) return;
-    if(!allBowlers[r.Bowler]) allBowlers[r.Bowler]={wkts:0,overs:0};
+    if(!allBowlers[r.Bowler]) allBowlers[r.Bowler]={wkts:0,ballsBowled:0};
     allBowlers[r.Bowler].wkts+=(r.Wickets||0);
-    allBowlers[r.Bowler].overs+=(r.Overs||0);
+    allBowlers[r.Bowler].ballsBowled+=oversToBalls(r.Overs);
   });
   const allPlayerNames = new Set([...Object.keys(allBatters),...Object.keys(allBowlers)]);
   // Also need match-level bowling counts per player
@@ -4392,7 +4486,7 @@ function renderSquadDepth() {
   });
 
   allPlayerNames.forEach(function(name) {
-    const careerBowl = allBowlers[name] || {wkts:0,overs:0};
+    const careerBowl = allBowlers[name] || {wkts:0,ballsBowled:0};
     const wm   = allBowlMatches[name] ? allBowlMatches[name].size : 0;
     const bm   = allBatMatches[name]  ? allBatMatches[name].size  : 0;
     const wkts = careerBowl.wkts;
@@ -4877,15 +4971,16 @@ function openPotmDetail(monthStr) {
   var bowlByPlayer = {};
   bowlRows.forEach(function(r){
     if(!r.Bowler) return;
-    if(!bowlByPlayer[r.Bowler]) bowlByPlayer[r.Bowler]={wkts:0,overs:0,runs:0};
+    if(!bowlByPlayer[r.Bowler]) bowlByPlayer[r.Bowler]={wkts:0,ballsBowled:0,runs:0};
     var v=bowlByPlayer[r.Bowler];
-    v.wkts+=(r.Wickets||0); v.overs+=(r.Overs||0); v.runs+=(r.Runs||0);
+    v.wkts+=(r.Wickets||0); v.ballsBowled+=oversToBalls(r.Overs); v.runs+=(r.Runs||0);
   });
   var bowlStats = Object.entries(bowlByPlayer).map(function(e){
     var p=e[0],v=e[1];
-    return {player:p,wkts:v.wkts,overs:+(v.overs.toFixed(1)),
+    var trueOvers=v.ballsBowled/6;
+    return {player:p,wkts:v.wkts,overs:ballsToOvers(v.ballsBowled),
             avg:v.wkts>0?(v.runs/v.wkts).toFixed(1):'—',
-            econ:v.overs>0?(v.runs/v.overs).toFixed(2):'—'};
+            econ:trueOvers>0?(v.runs/trueOvers).toFixed(2):'—'};
   }).sort(function(a,b){return b.wkts-a.wkts;});
 
   document.querySelector('#potm-detail-bowl tbody').innerHTML = bowlStats.map(function(r){
@@ -5568,6 +5663,9 @@ function renderRecentRecords() {
         currentVal = totals[p];
       } else {
         currentVal = v;
+        // Track each player's own best single-event value too, purely so the
+        // tie-check below also works for single-match/innings records.
+        totals[p] = Math.max(totals[p] === undefined ? -Infinity : totals[p], v);
       }
       if (currentVal > globalMax) {
         globalMax = currentVal;
@@ -5578,20 +5676,63 @@ function renderRecentRecords() {
         }
       }
     });
-    return globalHolder ? { player: globalHolder, value: globalMax, date: changeDate, row: changeRow } : null;
+    if (!globalHolder) return null;
+    // Tying a record isn't the same as breaking it — if someone else's final
+    // total also equals the all-time best, nobody has outright taken it over,
+    // so don't report this as a "recently broken" record at all.
+    var tieCount = 0;
+    Object.keys(totals).forEach(function(p) { if (totals[p] === globalMax) tieCount++; });
+    if (tieCount > 1) return null;
+    return { player: globalHolder, value: globalMax, date: changeDate, row: changeRow };
   }
 
-  function addCumulative(label, rows, valueFn, playerFn) {
-    var r = findRecordHolderChange(rows, 'Date', playerFn, valueFn, true);
-    if (r) candidates.push({ label: label, value: r.value, who: r.player, date: r.date, detail: 'Career total \u2014 took the record over from a different holder' });
+  // ── Minor-stat breakdowns: every cumulative/single-event measure below is
+  // also tracked split by Home/Away, 1st/2nd Innings, and both combined —
+  // e.g. "Most Wickets — Home, 1st Innings" — not just the career-wide total.
+  var SPLIT_VARIANTS = [
+    { label: null, filters: [] },
+    { label: 'Home', filters: [{field:'Home/Away', value:'Home'}] },
+    { label: 'Away', filters: [{field:'Home/Away', value:'Away'}] },
+    { label: '1st Innings', filters: [{field:'Innings', value:1}] },
+    { label: '2nd Innings', filters: [{field:'Innings', value:2}] },
+    { label: 'Home, 1st Innings', filters: [{field:'Home/Away', value:'Home'},{field:'Innings', value:1}] },
+    { label: 'Home, 2nd Innings', filters: [{field:'Home/Away', value:'Home'},{field:'Innings', value:2}] },
+    { label: 'Away, 1st Innings', filters: [{field:'Home/Away', value:'Away'},{field:'Innings', value:1}] },
+    { label: 'Away, 2nd Innings', filters: [{field:'Home/Away', value:'Away'},{field:'Innings', value:2}] },
+  ];
+  function applySplitFilters(rows, filters) {
+    if (!filters.length) return rows;
+    return rows.filter(function(r) {
+      return filters.every(function(f) { return r[f.field] === f.value; });
+    });
   }
 
-  function addSingleEvent(label, rows, valueFn, playerFn, valueLabelFn, detailFn) {
-    var r = findRecordHolderChange(rows, 'Date', playerFn, valueFn, false);
-    if (r) candidates.push({ label: label, value: valueLabelFn ? valueLabelFn(r) : r.value, who: r.player, date: r.date, detail: detailFn ? detailFn(r.row) : '' });
+  function addCumulative(label, rows, valueFn, playerFn, noSplit, formatFn) {
+    var variants = noSplit ? [SPLIT_VARIANTS[0]] : SPLIT_VARIANTS;
+    variants.forEach(function(variant) {
+      var splitRows = applySplitFilters(rows, variant.filters);
+      var r = findRecordHolderChange(splitRows, 'Date', playerFn, valueFn, true);
+      if (!r) return;
+      var fullLabel = variant.label ? label + ' \u2014 ' + variant.label : label;
+      candidates.push({ label: fullLabel, value: formatFn ? formatFn(r.value) : r.value, who: r.player, date: r.date, detail: 'Career total \u2014 took the record over from a different holder' });
+    });
+  }
+
+  function addSingleEvent(label, rows, valueFn, playerFn, valueLabelFn, detailFn, noSplit) {
+    var variants = noSplit ? [SPLIT_VARIANTS[0]] : SPLIT_VARIANTS;
+    variants.forEach(function(variant) {
+      var splitRows = applySplitFilters(rows, variant.filters);
+      var r = findRecordHolderChange(splitRows, 'Date', playerFn, valueFn, false);
+      if (!r) return;
+      var fullLabel = variant.label ? label + ' \u2014 ' + variant.label : label;
+      candidates.push({ label: fullLabel, value: valueLabelFn ? valueLabelFn(r) : r.value, who: r.player, date: r.date, detail: detailFn ? detailFn(r.row) : '' });
+    });
   }
 
   // ── Career / cumulative records ──────────────────────────
+  // Each of these also generates Home/Away, 1st/2nd Innings, and combined
+  // (e.g. "Home, 1st Innings") variants automatically — matching every
+  // breakdown the Stat Query tool itself supports, not just the headline total.
   addCumulative('Most Career Runs', bat, function(r) { return r.Runs; }, function(r) { return r.Batter; });
   addCumulative('Most Fifties', bat, function(r) { return r.Runs >= 50 ? 1 : 0; }, function(r) { return r.Batter; });
   addCumulative('Most Hundreds', bat, function(r) { return r.Runs >= 100 ? 1 : 0; }, function(r) { return r.Batter; });
@@ -5607,6 +5748,14 @@ function renderRecentRecords() {
   addCumulative('Most Innings Played (batting)', bat, function() { return 1; }, function(r) { return r.Batter; });
   addCumulative('Most Spells Bowled', bowl, function() { return 1; }, function(r) { return r.Bowler; });
   addCumulative('Most Fielding Dismissals (career)', CRICKET_DATA.fielding, function(r) { return (r.Dismissal === 'Caught' || r.Dismissal === 'Run Out') ? 1 : 0; }, function(r) { return r.Fielder; });
+  addCumulative('Most Overs Bowled (career)', bowl, function(r) { return oversToBalls(r.Overs); }, function(r) { return r.Bowler; }, false, ballsToOvers);
+  addCumulative('Most Runs Conceded (career)', bowl, function(r) { return r.Runs || 0; }, function(r) { return r.Bowler; });
+  addCumulative('Most Ducks', bat, function(r) { return (r.Runs === 0 && r.Dismissal !== 'Not Out') ? 1 : 0; }, function(r) { return r.Batter; });
+  addCumulative('Most Times Out LBW', bat, function(r) { return r.Dismissal === 'LBW' ? 1 : 0; }, function(r) { return r.Batter; });
+  addCumulative('Most Times Bowled (dismissal)', bat, function(r) { return r.Dismissal === 'Bowled' ? 1 : 0; }, function(r) { return r.Batter; });
+  addCumulative('Most Times Out Caught (batting)', bat, function(r) { return r.Dismissal === 'Caught' ? 1 : 0; }, function(r) { return r.Batter; });
+  addCumulative('Most Times Run Out (batting)', bat, function(r) { return r.Dismissal === 'Run Out' ? 1 : 0; }, function(r) { return r.Batter; });
+  addCumulative('Most Times Stumped (batting)', bat, function(r) { return r.Dismissal === 'Stumped' ? 1 : 0; }, function(r) { return r.Batter; });
 
   // ── Rate records (average / strike rate / economy) — same holder-change
   // principle, but a rate can rise and fall each innings, and only counts
@@ -5685,20 +5834,24 @@ function renderRecentRecords() {
 
   (function() {
     var counts = {}; // per Date|Team|Fielder
+    var meta = {};
     CRICKET_DATA.fielding.forEach(function(r) {
       if (r.Dismissal !== 'Caught') return;
       var key = r.Date + '|' + r.Team + '|' + r.Fielder;
       counts[key] = (counts[key] || 0) + 1;
+      meta[key] = r['Home/Away'];
     });
     var rows = Object.keys(counts).map(function(k) {
       var parts = k.split('|');
-      return { Date: parts[0], Team: parts[1], Fielder: parts[2], count: counts[k] };
+      return { Date: parts[0], Team: parts[1], Fielder: parts[2], count: counts[k], 'Home/Away': meta[k] };
     });
-    var r = findRecordHolderChange(rows, 'Date', function(x) { return x.Fielder; }, function(x) { return x.count; }, false);
-    if (r) {
-      var m = CRICKET_DATA.matches.find(function(mm) { return mm.Date === r.date && mm.Team === r.row.Team; });
-      candidates.push({ label: 'Most Catches in a Match', value: r.value, who: r.player, date: r.date, detail: m ? 'vs ' + m.Opponent : '' });
-    }
+    addSingleEvent('Most Catches in a Match', rows,
+      function(x) { return x.count; }, function(x) { return x.Fielder; },
+      function(r) { return r.value; },
+      function(row) {
+        var m = CRICKET_DATA.matches.find(function(mm) { return mm.Date === row.Date && mm.Team === row.Team; });
+        return m ? 'vs ' + m.Opponent : '';
+      });
   })();
 
   var recent = candidates.filter(function(c) { return daysAgo(c.date) <= WINDOW_DAYS; });
@@ -5708,11 +5861,13 @@ function renderRecentRecords() {
 
   section.style.display = 'block';
   window._recentRecordsData = recent;
+  var countEl = document.getElementById('recent-records-count');
+  if (countEl) countEl.textContent = recent.length + (recent.length === 1 ? ' record' : ' records');
   grid.innerHTML = recent.map(function(c, idx) {
     var ago = daysAgo(c.date);
     var agoLabel = ago === 0 ? 'Today' : ago === 1 ? 'Yesterday' : ago + ' days ago';
-    return '<div class="table-card" style="margin-bottom:0"><div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
-      '<div>' +
+    return '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 4px;border-bottom:1px solid var(--border)">' +
+      '<div style="min-width:0">' +
         '<div style="font-size:0.7rem;color:var(--accent2);font-weight:700;letter-spacing:0.5px;text-transform:uppercase">' + c.label + '</div>' +
         '<div style="font-size:0.95rem;margin-top:2px"><strong>' + c.who + '</strong> \u2014 ' + c.value + '</div>' +
         '<div style="font-size:0.78rem;color:var(--muted);margin-top:2px">' + c.detail + '</div>' +
@@ -5721,7 +5876,7 @@ function renderRecentRecords() {
         '<div style="font-size:0.75rem;color:var(--muted);white-space:nowrap">' + agoLabel + '</div>' +
         '<button onclick="shareMilestoneCard(\'record\',' + idx + ')" title="Share as image" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;font-weight:600">Share</button>' +
       '</div>' +
-    '</div></div>';
+    '</div>';
   }).join('');
 }
 
@@ -5851,8 +6006,6 @@ function renderRecords() {
     </div>
   `).join('');
 
-  rqPopulateOpponents();
-  rqUpdateOptions();
 }
 
 const RQ_MEASURES = {
@@ -5893,32 +6046,89 @@ const RQ_MEASURES = {
   ],
 };
 
-function rqPopulateOpponents() {
+function sqPopulateOpponents() {
   const opps = new Set();
   CRICKET_DATA.matches.forEach(m => opps.add(m.Opponent));
-  const sel = document.getElementById('rq-opponent');
+  const sel = document.getElementById('sq-opponent');
+  if (!sel) return;
   sel.innerHTML = '<option value="">Any opponent</option>' +
     [...opps].sort().map(o => `<option value="${o}">${o}</option>`).join('');
 }
 
-function rqUpdateOptions() {
-  const catEl = document.getElementById('rq-category');
-  const cat = (catEl && catEl.value) || 'batting';
-  const sel = document.getElementById('rq-measure');
-  if (!sel || !RQ_MEASURES[cat]) return;
-  sel.innerHTML = RQ_MEASURES[cat].map(m => `<option value="${m.key}">${m.label}</option>`).join('');
-  if (sel.onchange === null || sel.onchange === undefined) sel.onchange = rqToggleMinField;
-  rqToggleMinField();
+function sqPopulateYears() {
+  const years = new Set();
+  CRICKET_DATA.matches.forEach(m => years.add(m.Date.slice(0, 4)));
+  const sorted = [...years].sort();
+  const fromSel = document.getElementById('sq-yearfrom');
+  const toSel = document.getElementById('sq-yearto');
+  if (!fromSel || !toSel) return;
+  fromSel.innerHTML = '<option value="">Any</option>' + sorted.map(y => `<option value="${y}">${y}</option>`).join('');
+  toSel.innerHTML = '<option value="">Any</option>' + sorted.map(y => `<option value="${y}">${y}</option>`).join('');
 }
 
-function rqToggleMinField() {
-  const catEl = document.getElementById('rq-category');
-  const measureEl = document.getElementById('rq-measure');
-  const wrap = document.getElementById('rq-minwrap');
-  if (!catEl || !measureEl || !wrap) return;
+function sqUpdateOptions() {
+  const catEl = document.getElementById('sq-category');
+  const viewEl = document.getElementById('sq-view');
+  const cat = (catEl && catEl.value) || 'batting';
+  const view = (viewEl && viewEl.value) || 'leaderboard';
+  const sel = document.getElementById('sq-measure');
+  if (!sel || !RQ_MEASURES[cat]) return;
+
+  // Rate-based career measures (batting/bowling average, strike rate, economy)
+  // need a minimum-sample floor to mean anything, which doesn't translate to
+  // a single innings/spell — so they're leaderboard-only.
+  const measures = RQ_MEASURES[cat].filter(m => view === 'leaderboard' || !m.needsMin);
+  sel.innerHTML = measures.map(m => `<option value="${m.key}">${m.label}</option>`).join('');
+  sel.onchange = sqToggleMinField;
+
+  // Position filter only makes sense for batting
+  const posWrap = document.getElementById('sq-posWrap');
+  if (posWrap) posWrap.style.display = cat === 'batting' ? '' : 'none';
+
+  // Group-by only applies to the leaderboard view
+  const groupWrap = document.getElementById('sq-groupbywrap');
+  if (groupWrap) groupWrap.style.display = view === 'leaderboard' ? '' : 'none';
+
+  sqToggleMinField();
+}
+
+function sqToggleMinField() {
+  const catEl = document.getElementById('sq-category');
+  const viewEl = document.getElementById('sq-view');
+  const measureEl = document.getElementById('sq-measure');
+  const wrap = document.getElementById('sq-minwrap');
+  const label = document.getElementById('sq-minlabel');
+  if (!catEl || !viewEl || !measureEl || !wrap) return;
   const cat = catEl.value || 'batting';
+  const view = viewEl.value || 'leaderboard';
   const measure = RQ_MEASURES[cat] && RQ_MEASURES[cat].find(m => m.key === measureEl.value);
-  wrap.style.display = (measure && measure.needsMin) ? '' : 'none';
+  if (!measure) { wrap.style.display = 'none'; return; }
+
+  if (view === 'leaderboard') {
+    wrap.style.display = measure.needsMin ? '' : 'none';
+    if (label) label.textContent = (cat === 'bowling') ? 'Min spells' : 'Min innings';
+  } else {
+    // Innings/spell list — the same field doubles as a raw threshold filter
+    // on the chosen measure's own value (e.g. "Min 50" for Runs).
+    const listable = ['sum', 'max'].includes(measure.agg);
+    wrap.style.display = listable ? '' : 'none';
+    if (label) label.textContent = 'Min value';
+  }
+}
+
+function sqReset() {
+  ['sq-team','sq-opponent','sq-homeaway','sq-result','sq-innings','sq-position','sq-yearfrom','sq-yearto'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('sq-view').value = 'leaderboard';
+  document.getElementById('sq-category').value = 'batting';
+  document.getElementById('sq-min').value = 10;
+  sqUpdateOptions();
+  document.querySelector('#tblStatQuery tbody').innerHTML = '';
+  document.getElementById('sq-thead').innerHTML = '';
+  document.querySelector('#tblStatQueryList tbody').innerHTML = '';
+  document.getElementById('sq-list-thead').innerHTML = '';
 }
 
 function getGamesPlayedMap(filteredBat, filteredBowl) {
@@ -5936,15 +6146,47 @@ function getGamesPlayedMap(filteredBat, filteredBowl) {
   return counts;
 }
 
+// Shared filter step used by both the leaderboard and the list view —
+// applies every standard query filter (team, opponent, H/A, result,
+// innings, position, year range) to a category's rows.
+function sqApplyFilters(rows, cat) {
+  const team = document.getElementById('sq-team').value;
+  const opponent = document.getElementById('sq-opponent').value;
+  const homeAway = document.getElementById('sq-homeaway').value;
+  const result = document.getElementById('sq-result').value;
+  const innings = document.getElementById('sq-innings').value;
+  const position = document.getElementById('sq-position') ? document.getElementById('sq-position').value : '';
+  const yearFrom = document.getElementById('sq-yearfrom').value;
+  const yearTo = document.getElementById('sq-yearto').value;
+
+  if (cat === 'batting') rows = rows.filter(r => r.Dismissal !== 'DNB');
+  if (team) rows = rows.filter(r => r.Team === team);
+  if (opponent) rows = rows.filter(r => r.Opponent === opponent);
+  if (homeAway) rows = rows.filter(r => r['Home/Away'] === homeAway);
+  if (result) rows = rows.filter(r => r['W/L'] === result);
+  if (innings) rows = rows.filter(r => String(r.Innings) === innings);
+  if (cat === 'batting' && position) rows = rows.filter(r => String(Math.round(r.Pos)) === position);
+  if (yearFrom) rows = rows.filter(r => r.Date.slice(0, 4) >= yearFrom);
+  if (yearTo) rows = rows.filter(r => r.Date.slice(0, 4) <= yearTo);
+  return rows;
+}
+
 function runStatQuery() {
-  const cat = document.getElementById('rq-category').value || 'batting';
-  const measureKey = document.getElementById('rq-measure').value;
-  const groupBy = document.getElementById('rq-groupby').value || 'player';
-  const opponent = document.getElementById('rq-opponent').value;
-  const homeAway = document.getElementById('rq-homeaway') ? document.getElementById('rq-homeaway').value : '';
-  const result = document.getElementById('rq-result') ? document.getElementById('rq-result').value : '';
-  const innings = document.getElementById('rq-innings') ? document.getElementById('rq-innings').value : '';
-  const minInnings = document.getElementById('rq-min') ? (parseInt(document.getElementById('rq-min').value) || 1) : 1;
+  const cat = document.getElementById('sq-category').value || 'batting';
+  const view = document.getElementById('sq-view').value || 'leaderboard';
+  const leaderboardWrap = document.getElementById('sq-leaderboard-wrap');
+  const listWrap = document.getElementById('sq-list-wrap');
+  leaderboardWrap.style.display = view === 'leaderboard' ? '' : 'none';
+  listWrap.style.display = view === 'list' ? '' : 'none';
+
+  if (view === 'leaderboard') runStatQueryLeaderboard(cat);
+  else runStatQueryList(cat);
+}
+
+function runStatQueryLeaderboard(cat) {
+  const measureKey = document.getElementById('sq-measure').value;
+  const groupBy = document.getElementById('sq-groupby').value || 'player';
+  const minInnings = parseInt(document.getElementById('sq-min').value, 10) || 1;
   if (!RQ_MEASURES[cat]) return;
   const measure = RQ_MEASURES[cat].find(m => m.key === measureKey) || RQ_MEASURES[cat][0];
   if (!measure) return;
@@ -5956,25 +6198,25 @@ function runStatQuery() {
   };
   const nameField = {batting:'Batter', bowling:'Bowler', fielding:'Fielder'}[cat];
 
-  let rows = dataMap[cat];
-  if (cat === 'batting') rows = rows.filter(r => r.Dismissal !== 'DNB');
-  if (opponent) rows = rows.filter(r => r.Opponent === opponent);
-  if (homeAway) rows = rows.filter(r => r['Home/Away'] === homeAway);
-  if (result) rows = rows.filter(r => r['W/L'] === result);
-  if (innings) rows = rows.filter(r => String(r.Innings) === innings);
+  let rows = sqApplyFilters(dataMap[cat], cat);
 
   const groupKeyFn = groupBy === 'opponent'
     ? (r) => r[nameField] + ' \u2014 vs ' + r.Opponent
+    : groupBy === 'season'
+    ? (r) => r[nameField] + ' \u2014 ' + r.Date.slice(0, 4)
     : (r) => r[nameField];
 
   const agg = {};
   rows.forEach(r => {
     const key = groupKeyFn(r);
-    if (!agg[key]) agg[key] = {value:0, best:null, count:0, runsSum:0, ballsSum:0, outsSum:0, wktsSum:0, oversSum:0};
+    if (!agg[key]) agg[key] = {value:0, best:null, count:0, runsSum:0, ballsSum:0, outsSum:0, wktsSum:0, ballsBowledSum:0};
     const a = agg[key];
     a.count++;
     if (measure.agg === 'sum') {
-      a.value += (r[measure.field] || 0);
+      // "Overs Bowled" needs base-6 ball arithmetic, not a raw decimal sum —
+      // see oversToBalls/ballsToOvers for why (4.3 + 3.4 must be 8.1, not 7.7).
+      if (measure.field === 'Overs') a.ballsBowledSum += oversToBalls(r.Overs);
+      else a.value += (r[measure.field] || 0);
     } else if (measure.agg === 'count') {
       a.value++;
     } else if (measure.agg === 'threshold') {
@@ -5999,30 +6241,28 @@ function runStatQuery() {
       if (!['not out','retired not out'].includes((r.Dismissal||'').toLowerCase())) a.outsSum++;
     } else if (measure.agg === 'economy') {
       a.runsSum += (r.Runs || 0);
-      a.oversSum += (r.Overs || 0);
+      a.ballsBowledSum += oversToBalls(r.Overs);
     } else if (measure.agg === 'bowlingavg') {
       a.runsSum += (r.Runs || 0);
       a.wktsSum += (r.Wickets || 0);
     }
   });
 
-  // Finalise rate-based measures, applying the minimum-innings floor
-  if (['strikerate','battingavg','economy','bowlingavg'].includes(measure.agg)) {
-    Object.keys(agg).forEach(key => {
-      const a = agg[key];
-      if (a.count < minInnings) { a.value = null; return; }
-      if (measure.agg === 'strikerate') a.value = a.ballsSum > 0 ? parseFloat((a.runsSum / a.ballsSum * 100).toFixed(1)) : null;
-      else if (measure.agg === 'battingavg') a.value = a.outsSum > 0 ? parseFloat((a.runsSum / a.outsSum).toFixed(1)) : null;
-      else if (measure.agg === 'economy') a.value = a.oversSum > 0 ? parseFloat((a.runsSum / a.oversSum).toFixed(2)) : null;
-      else if (measure.agg === 'bowlingavg') a.value = a.wktsSum > 0 ? parseFloat((a.runsSum / a.wktsSum).toFixed(1)) : null;
-    });
-  }
+  // Finalise rate-based and ball-summed measures, applying the minimum floor
+  Object.keys(agg).forEach(key => {
+    const a = agg[key];
+    if (measure.field === 'Overs' && measure.agg === 'sum') { a.value = ballsToOvers(a.ballsBowledSum); return; }
+    if (!['strikerate','battingavg','economy','bowlingavg'].includes(measure.agg)) return;
+    if (a.count < minInnings) { a.value = null; return; }
+    if (measure.agg === 'strikerate') a.value = a.ballsSum > 0 ? parseFloat((a.runsSum / a.ballsSum * 100).toFixed(1)) : null;
+    else if (measure.agg === 'battingavg') a.value = a.outsSum > 0 ? parseFloat((a.runsSum / a.outsSum).toFixed(1)) : null;
+    else if (measure.agg === 'economy') { const trueOvers = a.ballsBowledSum/6; a.value = trueOvers > 0 ? parseFloat((a.runsSum / trueOvers).toFixed(2)) : null; }
+    else if (measure.agg === 'bowlingavg') a.value = a.wktsSum > 0 ? parseFloat((a.runsSum / a.wktsSum).toFixed(1)) : null;
+  });
 
-  // For fielding (grouped by player, not opponent-split), replace the raw
-  // dismissal-event count with actual games played, derived from batting+bowling appearances.
   let gamesPlayedMap = null;
   if (cat === 'fielding' && groupBy === 'player') {
-    gamesPlayedMap = getGamesPlayedMap(getFiltered(CRICKET_DATA.batting), getFiltered(CRICKET_DATA.bowling));
+    gamesPlayedMap = getGamesPlayedMap(sqApplyFilters(getFiltered(CRICKET_DATA.batting), 'batting'), sqApplyFilters(getFiltered(CRICKET_DATA.bowling), 'bowling'));
   }
 
   let results = Object.entries(agg)
@@ -6040,7 +6280,6 @@ function runStatQuery() {
       return yw - xw || xr - yr;
     });
   } else if (measure.agg === 'economy' || measure.agg === 'bowlingavg') {
-    // Lower is better for economy and bowling average
     results.sort((x,y) => (parseFloat(x.value)||9999) - (parseFloat(y.value)||9999));
   } else {
     results.sort((x,y) => (parseFloat(y.value)||0) - (parseFloat(x.value)||0));
@@ -6052,18 +6291,95 @@ function runStatQuery() {
   else if (cat === 'fielding') countLabel = (groupBy === 'player') ? 'Games Played' : 'Fielding Involvements';
   else if (cat === 'bowling') countLabel = 'Spells';
   else countLabel = 'Innings';
-  document.getElementById('rq-thead').innerHTML =
-    `<th>Rank</th><th>${groupBy==='opponent' ? 'Player \u2014 Opponent' : 'Player'}</th><th>${measure.label}</th><th>${countLabel}</th>`;
+  const groupLabel = groupBy === 'opponent' ? 'Player \u2014 Opponent' : groupBy === 'season' ? 'Player \u2014 Season' : 'Player';
+  document.getElementById('sq-thead').innerHTML =
+    `<th>Rank</th><th>${groupLabel}</th><th>${measure.label}</th><th>${countLabel}</th>`;
 
   document.querySelector('#tblStatQuery tbody').innerHTML = results.map((r, i) => `
     <tr>
       <td>${i+1}</td>
-      <td class="text-accent" style="cursor:pointer" onclick="goToPlayer('${r.name.split(' \u2014')[0]}')">${r.name}</td>
+      <td style="cursor:pointer;color:var(--accent)" onclick="goToPlayer('${r.name.split(' \u2014')[0]}')">${r.name}</td>
       <td><strong>${r.value}</strong></td>
       <td>${r.count}</td>
     </tr>
   `).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px;">No results for this combination</td></tr>';
 }
+
+function runStatQueryList(cat) {
+  const measureKey = document.getElementById('sq-measure').value;
+  const minVal = parseFloat(document.getElementById('sq-min').value);
+  if (!RQ_MEASURES[cat]) return;
+  const measure = RQ_MEASURES[cat].find(m => m.key === measureKey) || RQ_MEASURES[cat][0];
+  if (!measure) return;
+
+  const dataMap = {
+    batting: getFiltered(CRICKET_DATA.batting),
+    bowling: getFiltered(CRICKET_DATA.bowling),
+    fielding: getFiltered(CRICKET_DATA.fielding)
+  };
+  let rows = sqApplyFilters(dataMap[cat], cat);
+
+  // Apply the measure's own criterion to select which individual rows qualify
+  if (measure.agg === 'threshold') {
+    rows = rows.filter(r => (r[measure.field]||0) >= measure.min);
+  } else if (measure.agg === 'duck') {
+    rows = rows.filter(r => r.Runs === 0 && !['not out','retired not out'].includes((r.Dismissal||'').toLowerCase()));
+  } else if (measure.agg === 'dismissal') {
+    rows = rows.filter(r => r.Dismissal === measure.match);
+  } else if ((measure.agg === 'sum' || measure.agg === 'max') && !isNaN(minVal) && minVal > 0) {
+    rows = rows.filter(r => (r[measure.field]||0) >= minVal);
+  }
+
+  // Sort
+  if (measure.agg === 'bestbowl') {
+    rows = [...rows].sort((a,b) => (b.Wickets||0)-(a.Wickets||0) || (a.Runs||0)-(b.Runs||0));
+  } else if (measure.field) {
+    rows = [...rows].sort((a,b) => (b[measure.field]||0)-(a[measure.field]||0));
+  } else {
+    rows = [...rows].sort((a,b) => a.Date < b.Date ? 1 : -1);
+  }
+  rows = rows.slice(0, 100);
+
+  var thead, tbody = document.querySelector('#tblStatQueryList tbody');
+  if (cat === 'batting') {
+    document.getElementById('sq-list-thead').innerHTML =
+      '<th>Date</th><th>Team</th><th>Player</th><th>Opponent</th><th>Pos</th><th>Runs</th><th>Balls</th><th>SR</th><th>Dismissal</th><th>Result</th>';
+    tbody.innerHTML = rows.map(r => `<tr>
+      <td>${r.Date}</td><td><span class="badge badge-${r.Team==='1st'?'1st':'2nd'}">${r.Team}</span></td>
+      <td style="cursor:pointer;color:var(--accent)" onclick="goToPlayer('${r.Batter}')">${r.Batter}</td>
+      <td>${r.Opponent}</td><td>${r.Pos||'-'}</td>
+      <td class="highlight">${r.Runs}${r.Dismissal==='Not Out'?'*':''}</td>
+      <td>${r.Balls||'-'}</td><td>${typeof r.SR==='number'?r.SR.toFixed(1):'-'}</td>
+      <td>${r.Dismissal}</td><td><span class="badge badge-${r['W/L']==='W'?'w':'l'}">${r['W/L']}</span></td>
+    </tr>`).join('') || '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px;">No results for this combination</td></tr>';
+  } else if (cat === 'bowling') {
+    document.getElementById('sq-list-thead').innerHTML =
+      '<th>Date</th><th>Team</th><th>Player</th><th>Opponent</th><th>Overs</th><th>Runs</th><th>Wickets</th><th>Econ</th><th>Result</th>';
+    tbody.innerHTML = rows.map(r => `<tr>
+      <td>${r.Date}</td><td><span class="badge badge-${r.Team==='1st'?'1st':'2nd'}">${r.Team}</span></td>
+      <td style="cursor:pointer;color:var(--accent)" onclick="goToPlayer('${r.Bowler}')">${r.Bowler}</td>
+      <td>${r.Opponent}</td><td>${r.Overs}</td><td>${r.Runs||0}</td>
+      <td class="highlight">${r.Wickets||0}</td><td>${typeof r.Economy==='number'?r.Economy.toFixed(2):'-'}</td>
+      <td><span class="badge badge-${r['W/L']==='W'?'w':'l'}">${r['W/L']}</span></td>
+    </tr>`).join('') || '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px;">No results for this combination</td></tr>';
+  } else {
+    document.getElementById('sq-list-thead').innerHTML =
+      '<th>Date</th><th>Team</th><th>Player</th><th>Opponent</th><th>Dismissal</th><th>Bowler</th><th>Result</th>';
+    tbody.innerHTML = rows.map(r => {
+      const m = CRICKET_DATA.matches.find(mm => mm.Date === r.Date && mm.Team === r.Team && mm.Opponent === r.Opponent);
+      const res = m ? m.Result : null;
+      const resBadge = res ? '<span class="badge badge-' + (res==='W'?'w':'l') + '">' + res + '</span>' : '-';
+      return '<tr>' +
+        '<td>' + r.Date + '</td><td><span class="badge badge-' + (r.Team==='1st'?'1st':'2nd') + '">' + r.Team + '</span></td>' +
+        '<td style="cursor:pointer;color:var(--accent)" onclick="goToPlayer(\'' + r.Fielder + '\')">' + r.Fielder + '</td>' +
+        '<td>' + r.Opponent + '</td><td>' + r.Dismissal + '</td><td>' + (r.Bowler||'-') + '</td>' +
+        '<td>' + resBadge + '</td>' +
+      '</tr>';
+    }).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px;">No results for this combination</td></tr>';
+  }
+}
+
+
 
 
 
