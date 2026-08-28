@@ -32,7 +32,10 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 select,.filter-select{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.82rem;padding:5px 10px;border-radius:6px;cursor:pointer;outline:none;}
 select:hover{border-color:var(--accent);}
 .main{padding:20px 24px;overflow-x:hidden;}
-.page{display:none;}.page.active{display:block;}
+.page{display:none;}
+.page.active{display:block;animation:fadeInPage 0.22s ease;}
+@keyframes fadeInPage{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+@media (prefers-reduced-motion: reduce){.page.active{animation:none;}}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);}
@@ -68,7 +71,8 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 .tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--border);}
 .tab{background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:500;padding:9px 16px;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;margin-bottom:-1px;}
 .tab:hover{color:var(--text);}.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-.sub-page{display:none;}.sub-page.active{display:block;}
+.sub-page{display:none;}
+.sub-page.active{display:block;animation:fadeInPage 0.18s ease;}
 .search-box{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:7px 12px;border-radius:6px;outline:none;width:200px;}
 .search-box:focus{border-color:var(--accent);}
 .highlight{color:var(--accent2);font-weight:600;}
@@ -121,6 +125,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 .close-btn:hover{color:var(--text);}
 .clickable-row{cursor:pointer;}
 .clickable-row:hover td{color:var(--accent2);}
+.gs-result:hover{background:var(--surface2);}
 #on-this-day-card .table-card:hover{border-color:var(--accent);}
 
 /* DATA ENTRY */
@@ -195,6 +200,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 
   /* Header */
   .header{padding:0 16px;}
+  .search-btn-kbd{display:none;}
 
   /* Filters — stack vertically */
   .filters{padding:8px 16px;gap:8px;}
@@ -325,10 +331,11 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 </style>
 </head>
 <body>
-<div id="data-loading-overlay" style="position:fixed;inset:0;background:#0d1117;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px;">
-  <div style="width:44px;height:44px;border:3px solid #30363d;border-top-color:#c5202f;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+<div id="data-loading-overlay" style="position:fixed;inset:0;background:#0d1117;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:18px;">
+  <img src="logo.png" alt="Hessle CC" style="height:64px;width:auto;opacity:0;animation:fadeIn 0.5s ease forwards;filter:drop-shadow(0 2px 10px rgba(0,0,0,0.5));">
+  <div style="width:36px;height:36px;border:3px solid #30363d;border-top-color:#c5202f;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
   <div style="color:#8b949e;font-family:'DM Sans',sans-serif;font-size:0.85rem;letter-spacing:0.5px;">Loading match data&hellip;</div>
-  <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+  <style>@keyframes spin{to{transform:rotate(360deg)}}@keyframes fadeIn{to{opacity:1}}</style>
 </div>
 <div id="data-error-overlay" style="display:none;position:fixed;inset:0;background:#0d1117;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:12px;padding:24px;text-align:center;">
   <div style="color:#f85149;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;">Couldn't load data.json</div>
@@ -337,6 +344,10 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 
 <div class="header">
   <img src="logo.png" alt="Hessle CC" style="height:56px;width:auto;flex-shrink:0;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6))">
+  <button id="globalSearchBtn" onclick="openGlobalSearch()" title="Search (Ctrl+K)" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:8px;flex-shrink:0;font-family:'DM Sans',sans-serif;">
+    <span>Search</span>
+    <span class="search-btn-kbd" style="font-size:0.68rem;color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:1px 5px;">Ctrl K</span>
+  </button>
   <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
     <button class="nav-btn active" onclick="showPage('overview',this)">Overview</button>
     <button class="nav-btn" onclick="showPage('batting',this)">Batting</button>
@@ -361,6 +372,8 @@ tbody td{padding:8px 14px;white-space:nowrap;}
         <button class="nav-btn" onclick="showPage('awards',this)">Awards</button>
         <button class="nav-btn" onclick="showPage('records',this)">Records</button>
         <button class="nav-btn" onclick="showPage('bestxi',this)">Best XI</button>
+        <button class="nav-btn" onclick="showPage('seasonawards',this)">Season Awards</button>
+        <button class="nav-btn" onclick="showPage('methodology',this)">About &amp; Methodology</button>
       </div>
     </div>
     <div class="nav-dropdown" id="navDropdown-league">
@@ -377,6 +390,15 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 </div>
 <!-- Mobile nav overlay -->
 <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileNav()"></div>
+
+<div id="globalSearchOverlay" onclick="closeGlobalSearch(event)" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;align-items:flex-start;justify-content:center;padding:12vh 16px 0;">
+  <div onclick="event.stopPropagation()" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;width:100%;max-width:560px;max-height:65vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <input id="globalSearchInput" type="text" placeholder="Search players, opponents, pages..." autocomplete="off"
+      oninput="renderGlobalSearchResults(this.value)" onkeydown="globalSearchKeyNav(event)"
+      style="border:none;border-bottom:1px solid var(--border);background:none;color:var(--text);font-size:1.05rem;padding:16px 18px;outline:none;font-family:'DM Sans',sans-serif;">
+    <div id="globalSearchResults" style="overflow-y:auto;padding:6px"></div>
+  </div>
+</div>
 <div class="mobile-nav-drawer" id="mobileNavDrawer" role="dialog" aria-modal="true" aria-label="Mobile navigation menu">
   <div class="mobile-nav-header">
     <div class="logo" style="padding:0">HESSLE <span>CC</span></div>
@@ -406,6 +428,8 @@ tbody td{padding:8px 14px;white-space:nowrap;}
         <button class="mobile-nav-item" onclick="showPage('awards',this);closeMobileNav()">🏅 Awards</button>
         <button class="mobile-nav-item" onclick="showPage('records',this);closeMobileNav()">📜 Records</button>
         <button class="mobile-nav-item" onclick="showPage('bestxi',this);closeMobileNav()">⭐ Best XI</button>
+        <button class="mobile-nav-item" onclick="showPage('seasonawards',this);closeMobileNav()">🏆 Season Awards</button>
+        <button class="mobile-nav-item" onclick="showPage('methodology',this);closeMobileNav()">ℹ️ About &amp; Methodology</button>
       </div>
     </div>
     <div class="mobile-nav-section" id="mobileNavSection-league">
@@ -419,11 +443,6 @@ tbody td{padding:8px 14px;white-space:nowrap;}
   </div>
 </div>
 
-<div class="global-search-wrap" style="position:relative;">
-  <input class="global-search-input" id="globalSearch" placeholder="Search players, opponents..." autocomplete="off"
-    oninput="handleGlobalSearch(this.value)" onfocus="handleGlobalSearch(this.value)" onblur="setTimeout(()=>closeGlobalSearch(),200)">
-  <div class="global-search-results" id="globalSearchResults"></div>
-</div>
 <div class="filters">
   <div class="filter-group" style="flex:1;min-width:120px">
     <span class="filter-label">Year</span>
@@ -1186,6 +1205,88 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 </div>
 
 
+<div id="page-seasonawards" class="page">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px;flex-wrap:wrap;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:1px;">Team of the Season &amp; Season Awards</div>
+    <select id="saYear" onchange="renderSeasonAwards()" style="font-size:1rem;padding:8px 14px;"></select>
+  </div>
+  <div style="font-size:0.82rem;color:var(--muted);margin-bottom:20px">The whole club's season — 1st and 2nd XI combined. A balanced XI by role, not just the top 11 scorers. Share any award as an image.</div>
+
+  <div class="section-header">TEAM OF THE SEASON</div>
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title" id="sa-toty-title">Balanced XI by role</div>
+      <button onclick="shareSeasonTeamCard()" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 12px;cursor:pointer;font-size:0.75rem;font-weight:600">Share Team</button>
+    </div>
+    <div id="sa-toty-list" style="padding:8px 16px 16px"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:20px">SEASON AWARDS</div>
+  <div id="sa-awards-grid" style="display:flex;flex-direction:column;gap:8px"></div>
+</div>
+
+
+<div id="page-methodology" class="page">
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:1px;margin-bottom:4px;">About &amp; Methodology</div>
+  <div id="meth-updated" style="font-size:0.82rem;color:var(--muted);margin-bottom:24px"></div>
+
+  <div class="table-card" style="margin-bottom:16px"><div style="padding:16px 20px">
+    <div style="font-weight:700;color:var(--accent2);font-size:0.95rem;margin-bottom:8px">Where the data comes from</div>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;margin:0 0 10px">
+      Every figure on this site is built from two spreadsheets the club maintains: a match-by-match record of batting, bowling, fielding and wicketkeeping,
+      and a separate sheet tracking Man of the Match and Player of the Month. Nothing is estimated or guessed at the point of entry &mdash; it's transcribed from real scorecards.
+    </p>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;margin:0">
+      Every time the data is updated, new records are checked against what's already here rather than just appended &mdash; catching duplicate rows, inconsistent opponent
+      names (e.g. "Welton" vs "Welton CC"), and the odd typo'd date, before anything is merged in.
+    </p>
+  </div></div>
+
+  <div class="table-card" style="margin-bottom:16px"><div style="padding:16px 20px">
+    <div style="font-weight:700;color:var(--accent2);font-size:0.95rem;margin-bottom:8px">Strike rates on older innings</div>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;margin:0 0 10px">
+      Ball-by-ball data wasn't recorded for a meaningful share of older innings &mdash; particularly before 2022. Rather than showing those as a misleading Strike Rate of 0
+      (which would drag down every average that includes them), the balls faced are estimated from that player's own genuine career pace, but never allowed to exceed
+      the real number of balls actually bowled in that innings &mdash; so the estimate always stays consistent with the true match record. Innings built this way are
+      flagged internally, and a genuine duck always keeps its real Strike Rate of 0 regardless.
+    </p>
+  </div></div>
+
+  <div class="table-card" style="margin-bottom:16px"><div style="padding:16px 20px">
+    <div style="font-weight:700;color:var(--accent2);font-size:0.95rem;margin-bottom:8px">Overs and cricket arithmetic</div>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;margin:0">
+      Cricket records overs in base-6 notation &mdash; 4.3 means 4 overs and 3 balls, not a true decimal. Every total on this site (career overs bowled, economy rates,
+      strike rates) is built by converting to a real ball count first and only turning it back into the 4.3-style notation for display, so combining figures across
+      matches never produces an impossible value like 7.7 overs.
+    </p>
+  </div></div>
+
+  <div class="table-card" style="margin-bottom:16px"><div style="padding:16px 20px">
+    <div style="font-weight:700;color:var(--accent2);font-size:0.95rem;margin-bottom:8px">Live promotion &amp; relegation odds</div>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;margin:0">
+      The percentages on the League Table page aren't a fixed guess &mdash; they're recalculated fresh every time the page loads, by simulating the rest of the season
+      thousands of times using each team's actual current season win rate. As results come in and the table updates, the odds update with it automatically.
+    </p>
+  </div></div>
+
+  <div class="table-card"><div style="padding:16px 20px">
+    <div style="font-weight:700;color:var(--accent2);font-size:0.95rem;margin-bottom:8px">How Team of the Season is picked</div>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;margin:0 0 10px">
+      Both 1st and 2nd XI are combined into one club season. Every player is classified by role from their own numbers that year &mdash; genuine wicketkeepers need to
+      have kept in at least 3 separate matches, not just filled in once; everyone else is split into Batter, Bowler or All-rounder by how much of each they actually did.
+    </p>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;margin:0 0 10px">
+      To make the team at all, you need to have played a meaningful share of that season's matches (scaled to how much cricket was actually played that year, so
+      shorter seasons aren't unfairly emptied out), and to have cleared a genuine output bar for your role &mdash; batters need both a real run total and a real average,
+      not just a padded total built from a lot of failures; bowlers need a real wicket haul; all-rounders need a genuine amount of both.
+    </p>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;margin:0">
+      The XI is then filled to a normal cricket template &mdash; 5 batters, 1 keeper, 2 all-rounders, 3 bowlers &mdash; and shown in batting order, not ranked by score.
+    </p>
+  </div></div>
+</div>
+
+
 <div id="page-awards" class="page">
 
   <!-- SUMMARY KPIS -->
@@ -1762,6 +1863,8 @@ function renderAll() {
   safe(renderForm,'renderForm');
   safe(renderAllMatches,'renderAllMatches');
   safe(renderBestXI,'renderBestXI');
+  safe(renderSeasonAwards,'renderSeasonAwards');
+  safe(renderMethodologyMeta,'renderMethodologyMeta');
   safe(renderBatFirst,'renderBatFirst');
   safe(renderHomeAway,'renderHomeAway');
   safe(renderNRR,'renderNRR');
@@ -1873,6 +1976,138 @@ function toggleMobileNavSection(key) {
   var header = sec.querySelector('.mobile-nav-section-header');
   if (header) header.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
 }
+
+// ============================================================
+// GLOBAL SEARCH — quick jump to any player, opponent, or page.
+// ============================================================
+var _globalSearchIndex = null;
+var _globalSearchSelected = -1;
+
+function _buildGlobalSearchIndex() {
+  var pages = [
+    { label: 'Overview', page: 'overview' }, { label: 'Batting', page: 'batting' },
+    { label: 'Bowling', page: 'bowling' }, { label: 'Players', page: 'profiles' },
+    { label: 'Matches', page: 'matches' }, { label: 'Fielding', page: 'fielding' },
+    { label: 'Compare', page: 'compare' }, { label: 'Season', page: 'season' },
+    { label: 'Opponents', page: 'opponents' }, { label: 'Form', page: 'form' },
+    { label: 'Chase/Defend', page: 'chasing' }, { label: 'Stat Query', page: 'statquery' },
+    { label: 'Awards', page: 'awards' }, { label: 'Records', page: 'records' },
+    { label: 'Best XI', page: 'bestxi' }, { label: 'Season Awards', page: 'seasonawards' },
+    { label: 'League Table', page: 'league' }, { label: 'Route', page: 'route' },
+    { label: 'About & Methodology', page: 'methodology' },
+  ];
+  var playerNames = Array.from(new Set(
+    CRICKET_DATA.batting.map(function(r) { return r.Batter; })
+      .concat(CRICKET_DATA.bowling.map(function(r) { return r.Bowler; }))
+      .filter(Boolean)
+  )).sort();
+  var opponentNames = Array.from(new Set(CRICKET_DATA.matches.map(function(m) { return m.Opponent; }))).sort();
+
+  var items = [];
+  pages.forEach(function(p) { items.push({ type: 'Page', label: p.label, page: p.page }); });
+  playerNames.forEach(function(n) { items.push({ type: 'Player', label: n }); });
+  opponentNames.forEach(function(n) { items.push({ type: 'Opponent', label: n }); });
+  return items;
+}
+
+function openGlobalSearch() {
+  if (!_globalSearchIndex) _globalSearchIndex = _buildGlobalSearchIndex();
+  var overlay = document.getElementById('globalSearchOverlay');
+  overlay.style.display = 'flex';
+  var input = document.getElementById('globalSearchInput');
+  input.value = '';
+  renderGlobalSearchResults('');
+  setTimeout(function() { input.focus(); }, 30);
+}
+
+function closeGlobalSearch(e) {
+  if (e && e.target && e.target.id !== 'globalSearchOverlay') return;
+  document.getElementById('globalSearchOverlay').style.display = 'none';
+}
+
+function renderGlobalSearchResults(query) {
+  _globalSearchSelected = -1;
+  var q = (query || '').trim().toLowerCase();
+  var results;
+  if (!q) {
+    // No query yet — show a handful of pages as a helpful starting point.
+    results = _globalSearchIndex.filter(function(x) { return x.type === 'Page'; }).slice(0, 8);
+  } else {
+    results = _globalSearchIndex.filter(function(x) { return x.label.toLowerCase().includes(q); })
+      .sort(function(a, b) {
+        var aStarts = a.label.toLowerCase().indexOf(q) === 0 ? 0 : 1;
+        var bStarts = b.label.toLowerCase().indexOf(q) === 0 ? 0 : 1;
+        return aStarts - bStarts || a.label.length - b.label.length;
+      }).slice(0, 30);
+  }
+
+  var container = document.getElementById('globalSearchResults');
+  if (results.length === 0) {
+    container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:0.85rem">No matches</div>';
+    return;
+  }
+  container.innerHTML = results.map(function(r, i) {
+    return '<div class="gs-result" data-idx="' + i + '" onclick="selectGlobalSearchResult(' + i + ')" ' +
+      'style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer">' +
+      '<span>' + r.label + '</span>' +
+      '<span style="font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">' + r.type + '</span>' +
+    '</div>';
+  }).join('');
+  container._results = results;
+}
+
+function _highlightGlobalSearchRow(idx) {
+  var rows = document.querySelectorAll('.gs-result');
+  rows.forEach(function(row, i) {
+    row.style.background = i === idx ? 'var(--surface2)' : 'none';
+  });
+  if (rows[idx]) rows[idx].scrollIntoView({ block: 'nearest' });
+}
+
+function globalSearchKeyNav(e) {
+  var container = document.getElementById('globalSearchResults');
+  var results = container._results || [];
+  if (e.key === 'Escape') { closeGlobalSearch(); return; }
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _globalSearchSelected = Math.min(_globalSearchSelected + 1, results.length - 1);
+    _highlightGlobalSearchRow(_globalSearchSelected);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _globalSearchSelected = Math.max(_globalSearchSelected - 1, 0);
+    _highlightGlobalSearchRow(_globalSearchSelected);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    var idx = _globalSearchSelected >= 0 ? _globalSearchSelected : 0;
+    if (results[idx]) selectGlobalSearchResult(idx);
+  }
+}
+
+function selectGlobalSearchResult(idx) {
+  var container = document.getElementById('globalSearchResults');
+  var r = (container._results || [])[idx];
+  if (!r) return;
+  closeGlobalSearch();
+  if (r.type === 'Page') {
+    showPage(r.page, null);
+  } else if (r.type === 'Player') {
+    showPage('profiles', null);
+    setTimeout(function() {
+      var sel = document.getElementById('profileSelect');
+      if (sel) { sel.value = r.label; renderProfile(); }
+    }, 100);
+  } else if (r.type === 'Opponent') {
+    showPage('opponents', null);
+    setTimeout(function() { openOppDetail(r.label); }, 150);
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    openGlobalSearch();
+  }
+});
 
 function toggleMobileNav() {
   var open = document.getElementById('mobileNavDrawer').classList.toggle('open');
@@ -2261,7 +2496,7 @@ function renderBatStats() {
     <td class="highlight">${s.runs}</td><td>${s.hs}</td><td>${s.avg}</td><td>${s.sr}</td>
     <td>${s.fifties}</td><td>${s.hundreds}</td><td class="text-muted">${s.notOuts}</td>
     <td class="text-muted">${s.dnbs}</td><td>${s.fours}</td><td>${s.sixes}</td>
-  </tr>`).join('');
+  </tr>`).join('') || '<tr><td colspan="12" style="text-align:center;color:var(--muted);padding:24px;">No players meet this Min Innings threshold</td></tr>';
   if (typeof initTableLimit === 'function') initTableLimit('tblBatStats');
 }
 
@@ -2303,7 +2538,7 @@ function renderBowlStats() {
     <td><strong>${s.name}</strong></td><td>${s.matchCount}</td><td>${s.overs}</td>
     <td class="highlight">${s.wickets}</td><td>${s.runs}</td><td>${s.avg}</td>
     <td>${s.econ}</td><td>${s.sr}</td><td>${s.maidens}</td><td>${s.best}</td><td>${s.fiveWickets}</td>
-  </tr>`).join('');
+  </tr>`).join('') || '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px;">No bowlers meet this Min Wickets threshold</td></tr>';
   if (typeof initTableLimit === 'function') initTableLimit('tblBowlStats');
 }
 
@@ -4691,42 +4926,6 @@ function showMoreRows(tableId) {
 // ============================================================
 // GLOBAL SEARCH
 // ============================================================
-function handleGlobalSearch(q) {
-  const el = document.getElementById('globalSearchResults');
-  if(!q || q.length < 2) { el.classList.remove('open'); return; }
-  const ql = q.toLowerCase();
-  const results = [];
-  const batters  = [...new Set(CRICKET_DATA.batting.map(r=>r.Batter).filter(Boolean))];
-  const bowlers  = [...new Set(CRICKET_DATA.bowling.map(r=>r.Bowler).filter(Boolean))];
-  const allPlayers = [...new Set([...batters,...bowlers])];
-  allPlayers.filter(p=>p.toLowerCase().includes(ql)).slice(0,5).forEach(p=>
-    results.push({type:'Player', label:p, name:p})
-  );
-  const opponents = [...new Set(CRICKET_DATA.matches.map(r=>r.Opponent).filter(Boolean))];
-  opponents.filter(o=>o.toLowerCase().includes(ql)).slice(0,4).forEach(o=>
-    results.push({type:'Opponent', label:o, opp:o})
-  );
-  if(!results.length) {
-    el.innerHTML = '<div style="padding:12px 16px;color:var(--muted);font-size:0.85rem;">No results found</div>';
-  } else {
-    el.innerHTML = results.map(r=>{
-      const action = r.name ? 'goToPlayer(this.dataset.name)' : 'goToOpponent(this.dataset.opp)';
-      const dataAttr = r.name ? 'data-name="'+r.name.replace(/"/g,'&quot;')+'"' : 'data-opp="'+r.label.replace(/"/g,'&quot;')+'"';
-      return '<div class="search-result-item" '+dataAttr+' onclick="'+action+';closeGlobalSearch()">' +
-        '<span style="flex:1;font-size:0.88rem">'+r.label+'</span>' +
-        '<span class="search-result-type">'+r.type+'</span></div>';
-    }).join('');
-  }
-  el.classList.add('open');
-}
-
-function closeGlobalSearch() {
-  const el = document.getElementById('globalSearchResults');
-  if(el) el.classList.remove('open');
-  const inp = document.getElementById('globalSearch');
-  if(inp) inp.value = '';
-}
-
 function goToPlayer(name) {
   showPage('profiles', document.querySelector('.nav-btn:nth-child(8)'));
   setTimeout(()=>{
@@ -5687,8 +5886,12 @@ function renderRecentRecords() {
   }
 
   // ── Minor-stat breakdowns: every cumulative/single-event measure below is
-  // also tracked split by Home/Away, 1st/2nd Innings, and both combined —
-  // e.g. "Most Wickets — Home, 1st Innings" — not just the career-wide total.
+  // also tracked split by Home/Away, 1st/2nd Innings (and both combined), and
+  // separately by 1st/2nd XI — e.g. "Most Wickets — Home, 1st Innings" or
+  // "Most Runs — 1st XI" — not just the club-wide career-wide total. Team is
+  // deliberately kept as its own standalone split rather than combined with
+  // Home/Away/Innings too, since nesting all three quickly produces very
+  // thin, low-signal combinations rather than genuine highlights.
   var SPLIT_VARIANTS = [
     { label: null, filters: [] },
     { label: 'Home', filters: [{field:'Home/Away', value:'Home'}] },
@@ -5699,6 +5902,8 @@ function renderRecentRecords() {
     { label: 'Home, 2nd Innings', filters: [{field:'Home/Away', value:'Home'},{field:'Innings', value:2}] },
     { label: 'Away, 1st Innings', filters: [{field:'Home/Away', value:'Away'},{field:'Innings', value:1}] },
     { label: 'Away, 2nd Innings', filters: [{field:'Home/Away', value:'Away'},{field:'Innings', value:2}] },
+    { label: '1st XI', filters: [{field:'Team', value:'1st'}] },
+    { label: '2nd XI', filters: [{field:'Team', value:'2nd'}] },
   ];
   function applySplitFilters(rows, filters) {
     if (!filters.length) return rows;
@@ -6388,18 +6593,18 @@ function runStatQueryList(cat) {
 // ============================================================
 
 var LEAGUE_TABLE = [
-  {pos:1,  team:'Cottingham CC',        short:'Cottingham',    P:18, W:14, T:1, L:2,  pts:155, nrr: 1.83, isHessle:false},
-  {pos:2,  team:'Beverley Town CC',     short:'Beverley',      P:18, W:12, T:0, L:6,  pts:136, nrr: 0.95, isHessle:false},
-  {pos:3,  team:'Driffield Town CC',    short:'Driffield',     P:18, W:13, T:0, L:5,  pts:132, nrr: 0.92, isHessle:false},
-  {pos:4,  team:'Hessle CC',            short:'Hessle',        P:18, W:12, T:0, L:5,  pts:124, nrr: 0.42, isHessle:true},
-  {pos:5,  team:'Welton CC',            short:'Welton',        P:18, W:11, T:0, L:6,  pts:122, nrr: 0.81, isHessle:false},
-  {pos:6,  team:'North Ferriby CC',     short:'N. Ferriby',    P:18, W:9,  T:0, L:9,  pts:96,  nrr: 0.22, isHessle:false},
-  {pos:7,  team:'Kirkella CC',          short:'Kirkella',      P:18, W:7,  T:0, L:11, pts:90,  nrr:-0.61, isHessle:false},
-  {pos:8,  team:'Sutton-on-Hull CC',    short:'Sutton',        P:18, W:7,  T:1, L:10, pts:89,  nrr: 0.35, isHessle:false},
-  {pos:9,  team:'Walkington CC',        short:'Walkington',    P:18, W:6,  T:0, L:9,  pts:70,  nrr:-1.07, isHessle:false},
-  {pos:10, team:'Hull Strikers CC',     short:'Hull Strikers', P:18, W:6,  T:0, L:11, pts:68,  nrr:-0.60, isHessle:false},
-  {pos:11, team:'Cherry Burton CC',     short:'Cherry Burton', P:18, W:6,  T:0, L:12, pts:64,  nrr:-0.99, isHessle:false},
-  {pos:12, team:'Brandesburton CC',     short:'Brandesburton', P:18, W:2,  T:0, L:15, pts:36,  nrr:-2.20, isHessle:false},
+  {pos:1,  team:'Cottingham CC',        short:'Cottingham',    P:19, W:15, T:1, L:2,  pts:165, nrr: 1.92, isHessle:false},
+  {pos:2,  team:'Beverley Town CC',     short:'Beverley',      P:19, W:13, T:0, L:6,  pts:146, nrr: 1.11, isHessle:false},
+  {pos:3,  team:'Driffield Town CC',    short:'Driffield',     P:19, W:14, T:0, L:5,  pts:142, nrr: 0.97, isHessle:false},
+  {pos:4,  team:'Hessle CC',            short:'Hessle',        P:19, W:13, T:0, L:5,  pts:134, nrr: 0.53, isHessle:true},
+  {pos:5,  team:'Welton CC',            short:'Welton',        P:19, W:11, T:0, L:7,  pts:122, nrr: 0.57, isHessle:false},
+  {pos:6,  team:'Kirkella CC',          short:'Kirkella',      P:19, W:8,  T:0, L:11, pts:100, nrr:-0.42, isHessle:false},
+  {pos:7,  team:'North Ferriby CC',     short:'N. Ferriby',    P:19, W:9,  T:0, L:10, pts:96,  nrr: 0.05, isHessle:false},
+  {pos:8,  team:'Sutton-on-Hull CC',    short:'Sutton',        P:19, W:7,  T:1, L:11, pts:91,  nrr: 0.22, isHessle:false},
+  {pos:9,  team:'Hull Strikers CC',     short:'Hull Strikers', P:19, W:7,  T:0, L:11, pts:78,  nrr:-0.47, isHessle:false},
+  {pos:10, team:'Walkington CC',        short:'Walkington',    P:19, W:6,  T:0, L:10, pts:70,  nrr:-1.10, isHessle:false},
+  {pos:11, team:'Cherry Burton CC',     short:'Cherry Burton', P:19, W:6,  T:0, L:13, pts:64,  nrr:-1.10, isHessle:false},
+  {pos:12, team:'Brandesburton CC',     short:'Brandesburton', P:19, W:2,  T:0, L:16, pts:36,  nrr:-2.22, isHessle:false},
 ];
 
 // This league is decided by Points Per Game (PPG) — teams play an uneven number of
@@ -6471,11 +6676,6 @@ var RELG_SPOTS  = 2;
 // All-team remaining fixtures (excluding Hessle's own — those live in
 // HESSLE_REMAINING already and are simulated alongside these).
 var LEAGUE_FIXTURES_REMAINING = [
-  ["Beverley Town CC","North Ferriby CC"],
-  ["Cherry Burton CC","Kirkella CC"],
-  ["Sutton-on-Hull CC","Hull Strikers CC"],
-  ["Walkington CC","Driffield Town CC"],
-  ["Welton CC","Cottingham CC"],
   ["Beverley Town CC","Sutton-on-Hull CC"],
   ["Cottingham CC","Cherry Burton CC"],
   ["Driffield Town CC","Welton CC"],
@@ -6749,9 +6949,8 @@ function computeLiveOdds() {
 }
 
 // Confirmed remaining fixtures for Hessle in order
-// (Cherry Burton CC won 08 Aug, Driffield Town CC won 15 Aug — both removed from list)
+// (Cherry Burton CC won 08 Aug, Driffield Town CC won 15 Aug, Brandesburton CC won 22 Aug — all removed from list)
 var HESSLE_REMAINING = [
-  {opp:'Brandesburton CC',  ha:'H'},
   {opp:'Hull Strikers CC',  ha:'A'},
   {opp:'Sutton-on-Hull CC', ha:'A'},
   {opp:'Beverley Town CC',  ha:'H'},
@@ -6872,7 +7071,11 @@ function renderLeague(xi) {
   var scenEl = document.getElementById('league-scenarios');
   if (scenEl) {
     var scenHTML = '';
-    var sc_wins = is2nd ? [3, 2, 1, 0] : [4, 3, 2, 1];
+    // Derived from the real remaining-fixture count instead of a hardcoded
+    // number, so this never needs manually updating again as games are played.
+    var remainingCount = is2nd ? HESSLE_REMAINING_2ND.length : HESSLE_REMAINING.length;
+    var sc_wins = [];
+    for (var wCount = remainingCount; wCount >= 0 && sc_wins.length < 4; wCount--) sc_wins.push(wCount);
     sc_wins.forEach(function(wins) {
       var finalPts = hPts + wins * 10;
       var odds     = sc_odds[wins] || 0;
@@ -6880,7 +7083,7 @@ function renderLeague(xi) {
       scenHTML +=
         '<div class="kpi ' + kl + '">' +
           '<div class="kpi-val">' + odds + '%</div>' +
-          '<div class="kpi-label">Win ' + wins + '/' + (is2nd ? 3 : 4) + ' \u2192 ' + finalPts + 'pts</div>' +
+          '<div class="kpi-label">Win ' + wins + '/' + remainingCount + ' \u2192 ' + finalPts + 'pts</div>' +
         '</div>';
     });
     scenEl.innerHTML = scenHTML;
@@ -7006,10 +7209,6 @@ var FIXTURE_ODDS = {
 };
 
 var ROUTE_WEEKS = [
-  {date:'22 Aug 2026',hessle:{opp:'Brandesburton CC',ha:'H'},
-   watches:[{home:'Beverley Town CC',away:'North Ferriby CC',wantWin:'North Ferriby CC',key:true,why:'Beverley strong favourites at home - any slip here is valuable'},
-            {home:'Walkington CC',away:'Driffield Town CC',wantWin:'Walkington CC',key:true,why:'Driffield away at Walkington who have won their last two'}],
-   others:['Cherry Burton vs Kirkella','Sutton vs Hull Strikers','Welton vs Cottingham']},
   {date:'29 Aug 2026',hessle:{opp:'Hull Strikers CC',ha:'A'},
    watches:[{home:'Beverley Town CC',away:'Sutton-on-Hull CC',wantWin:'Sutton-on-Hull CC',key:true,why:'Sutton have been improving - a genuine upset candidate'},
             {home:'Driffield Town CC',away:'Welton CC',wantWin:'Welton CC',key:true,why:'Driffield host 4th-placed Welton - competitive and realistic upset'}],
@@ -7023,6 +7222,326 @@ var ROUTE_WEEKS = [
    others:['Brandesburton vs Cottingham','Kirkella vs Hull Strikers','Walkington vs Sutton','Welton vs Cherry Burton']},
 ];
 
+
+// ============================================================
+// SEASON AWARDS — a season's trophy cabinet: Team of the Season plus
+// individual award categories, each shareable as an image.
+// ============================================================
+var _seasonAwardsYearsPopulated = false;
+
+function renderSeasonAwards() {
+  var yearSel = document.getElementById('saYear');
+  if (!yearSel) return;
+
+  if (!_seasonAwardsYearsPopulated) {
+    var years = Array.from(new Set(CRICKET_DATA.matches.map(function(m) { return m.Date.slice(0, 4); }))).sort().reverse();
+    yearSel.innerHTML = years.map(function(y) { return '<option value="' + y + '">' + y + '</option>'; }).join('');
+    _seasonAwardsYearsPopulated = true;
+  }
+
+  var year = yearSel.value;
+
+  // Whole club, both XIs combined — no team filter.
+  var batF = CRICKET_DATA.batting.filter(function(r) { return r.Date.slice(0, 4) === year; });
+  var bowlF = CRICKET_DATA.bowling.filter(function(r) { return r.Date.slice(0, 4) === year; });
+  var fldF = CRICKET_DATA.fielding.filter(function(r) { return r.Date.slice(0, 4) === year; });
+  var kpF = CRICKET_DATA.keeping.filter(function(r) { return r.Date.slice(0, 4) === year; });
+  var motmF = CRICKET_DATA.motm.filter(function(r) { return r.Date.slice(0, 4) === year; });
+
+  // ── Team of the Season: a genuinely balanced XI, not just the top 11 by
+  // raw score. Every player is classified by role from their own season
+  // data (batting load vs bowling load vs any wicketkeeping), then the XI
+  // is filled against a normal cricket template: 5 batters, 1 keeper, 2
+  // all-rounders, 3 bowlers — falling back to the next-best player
+  // regardless of role if any bucket comes up short.
+  document.getElementById('sa-toty-title').textContent = 'Balanced XI by role — ' + year;
+  var allPlayers = Array.from(new Set(batF.map(function(r) { return r.Batter; }).concat(bowlF.map(function(r) { return r.Bowler; })).filter(Boolean)));
+
+  // A genuine squad regular should have played a reasonable slice of the
+  // season, not just turned out once or twice — otherwise the fallback fill
+  // below can end up including someone with a handful of matches and almost
+  // no output just to reach 11 names. The bar scales with how much cricket
+  // was actually played that year, so short/interrupted seasons aren't
+  // unfairly emptied out by a fixed number.
+  var seasonMatchCount = new Set(CRICKET_DATA.matches.filter(function(m) { return m.Date.slice(0, 4) === year; }).map(function(m) { return m.Date + m.Team + m.Opponent; })).size;
+  var minMatchesForEligibility = Math.max(4, Math.round(seasonMatchCount * 0.25));
+
+  var playerData = {};
+  allPlayers.forEach(function(p) {
+    var pBat = batF.filter(function(r) { return r.Batter === p; });
+    var pBowl = bowlF.filter(function(r) { return r.Bowler === p; });
+    var pFld = fldF.filter(function(r) { return r.Fielder === p; });
+    var pKp = kpF.filter(function(r) { return r.Keeper === p; });
+    var ms = new Set(
+      pBat.map(function(r) { return r.Date + r.Team + r.Opponent; })
+      .concat(pBowl.map(function(r) { return r.Date + r.Team + r.Opponent; }))
+    );
+    var matchCount = ms.size;
+    var impact = computeImpact(p, pBat, pBowl, pFld, pKp, motmF, matchCount);
+
+    var batInns = pBat.filter(function(r) { return r.Dismissal !== 'DNB' && typeof r.Runs === 'number'; }).length;
+    var battingOuts = pBat.filter(function(r) { return r.Dismissal !== 'DNB' && r.Dismissal !== 'Not Out' && typeof r.Runs === 'number'; }).length;
+    // A true average (runs per dismissal, not runs per innings) — a total can
+    // look respectable while hiding a string of failures padded by one good
+    // day. If they were never out, fall back to their raw total rather than
+    // an undefined average.
+    var trueBattingAvg = battingOuts > 0 ? impact.runs / battingOuts : impact.runs;
+    var bowlMatches = new Set(pBowl.map(function(r) { return r.Date + r.Team + r.Opponent; })).size;
+    var wkts = pBowl.reduce(function(s, r) { return s + (r.Wickets || 0); }, 0);
+    var wpm = bowlMatches > 0 ? wkts / bowlMatches : 0;
+    var battingAvgProxy = batInns > 0 ? impact.runs / batInns : 0;
+    // Count distinct MATCHES kept, not keeping dismissal records — someone
+    // with 3 catches in a single fill-in appearance shouldn't outrank a
+    // genuine season-long keeper who kept in several different matches.
+    var keptMatches = new Set(pKp.map(function(r) { return r.Date + r.Team + r.Opponent; })).size;
+    var hasKept = keptMatches >= 3;
+
+    var role;
+    if (hasKept) role = 'Keeper';
+    else {
+      var bowlsEnough = bowlMatches >= 3;
+      var batsEnough = batInns >= 3;
+      if (bowlsEnough && !batsEnough) role = 'Bowler';
+      else if (batsEnough && !bowlsEnough) role = 'Batter';
+      else if (bowlsEnough && batsEnough) {
+        if (wpm >= 1.0 && battingAvgProxy < 15) role = 'Bowler';
+        else if (wpm < 0.5 && battingAvgProxy >= 15) role = 'Batter';
+        else role = 'All-rounder';
+      } else {
+        // Not enough of either to call them a genuine specialist — rather
+        // than defaulting blindly to Batter, lean toward whichever
+        // discipline they actually contributed more value to, even on a
+        // small sample (roughly weighting a wicket like 20 runs).
+        role = (wkts * 20 > impact.runs) ? 'Bowler' : 'Batter';
+      }
+    }
+
+    playerData[p] = { player: p, role: role, impact: impact, matchCount: matchCount, batInns: batInns, wkts: wkts, trueBattingAvg: trueBattingAvg };
+  });
+
+  // Playing enough matches isn't the same as actually contributing while out
+  // there — someone can turn out regularly and still have a genuinely weak
+  // season. Require a sensible minimum output for the role they've been
+  // classified into (a keeper's primary value is glovework, so no batting
+  // bar there; a batter needs both a real base of runs AND a genuine
+  // average — a padded total from lots of low scores shouldn't count).
+  function meetsQualityBar(x) {
+    if (x.role === 'Keeper') return true;
+    if (x.role === 'Batter') return x.impact.runs >= 50 && x.trueBattingAvg >= 12;
+    if (x.role === 'Bowler') return x.wkts >= 5;
+    if (x.role === 'All-rounder') return x.impact.runs >= 30 && x.wkts >= 3;
+    return true;
+  }
+  var pool = Object.values(playerData).filter(function(x) { return x.matchCount >= minMatchesForEligibility && meetsQualityBar(x); });
+  function takeTop(fromRole, n, excludeSet) {
+    return pool.filter(function(x) { return x.role === fromRole && !excludeSet.has(x.player); })
+      .sort(function(a, b) { return b.impact.total - a.impact.total; }).slice(0, n);
+  }
+
+  var picked = [], pickedNames = new Set();
+  function addPicks(arr) { arr.forEach(function(x) { picked.push(x); pickedNames.add(x.player); }); }
+
+  addPicks(takeTop('Keeper', 1, pickedNames));
+  addPicks(takeTop('All-rounder', 2, pickedNames));
+  addPicks(takeTop('Bowler', 3, pickedNames));
+  addPicks(takeTop('Batter', 5, pickedNames));
+
+  // Fill any shortfall (e.g. not enough genuine all-rounders this season)
+  // from whoever's left, best impact score first, regardless of role.
+  if (picked.length < 11) {
+    var remaining = pool.filter(function(x) { return !pickedNames.has(x.player); })
+      .sort(function(a, b) { return b.impact.total - a.impact.total; });
+    while (picked.length < 11 && remaining.length) {
+      var next = remaining.shift();
+      picked.push(next); pickedNames.add(next.player);
+    }
+  }
+  // Display in a real batting order — openers through the top/middle order,
+  // then the keeper (a common slot for a genuine keeper-batter), then
+  // all-rounders, then bowlers at the tail — not just ranked by raw impact.
+  // Best player within each role still bats highest in that group.
+  var battingOrderTier = { 'Batter': 1, 'Keeper': 2, 'All-rounder': 3, 'Bowler': 4 };
+  picked.sort(function(a, b) {
+    return (battingOrderTier[a.role] - battingOrderTier[b.role]) || (b.impact.total - a.impact.total);
+  });
+
+  window._seasonTeamData = { xi: picked, year: year };
+
+  var totyList = document.getElementById('sa-toty-list');
+  if (picked.length === 0) {
+    totyList.innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);font-size:0.85rem">Not enough data for this season yet.</div>';
+  } else {
+    var roleColor = { Keeper: 'var(--purple)', 'All-rounder': 'var(--accent2)', Bowler: 'var(--blue)', Batter: 'var(--green)' };
+    totyList.innerHTML = picked.map(function(s, i) {
+      return '<div style="display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px solid var(--border)">' +
+        '<div style="width:24px;color:var(--muted);font-weight:700;font-size:0.85rem">' + (i + 1) + '</div>' +
+        '<div style="flex:1;min-width:0"><strong>' + s.player + '</strong> ' +
+          '<span style="font-size:0.65rem;color:' + (roleColor[s.role] || 'var(--muted)') + ';font-weight:700;letter-spacing:0.5px;text-transform:uppercase">' + s.role + '</span></div>' +
+        '<div style="font-size:0.78rem;color:var(--muted)">' + s.impact.runs + ' runs \u00b7 ' + s.impact.wickets + ' wkts \u00b7 ' + s.impact.field + ' field</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // ── Individual season awards (club-wide, both XIs combined) ──
+  var awards = [];
+
+  function topBy(rows, valueFn, playerFn, minCount) {
+    var totals = {}, counts = {};
+    rows.forEach(function(r) {
+      var p = playerFn(r);
+      if (!p) return;
+      totals[p] = (totals[p] || 0) + valueFn(r);
+      counts[p] = (counts[p] || 0) + 1;
+    });
+    var entries = Object.keys(totals).filter(function(p) { return !minCount || counts[p] >= minCount; });
+    if (!entries.length) return null;
+    entries.sort(function(a, b) { return totals[b] - totals[a]; });
+    return { player: entries[0], value: totals[entries[0]] };
+  }
+
+  var battingInns = batF.filter(function(r) { return r.Dismissal !== 'DNB' && typeof r.Runs === 'number'; });
+  var mostRuns = topBy(battingInns, function(r) { return r.Runs; }, function(r) { return r.Batter; });
+  if (mostRuns) awards.push({ label: 'Batter of the Season', value: mostRuns.value + ' runs', who: mostRuns.player, detail: year });
+
+  var avgTotals = {}, avgOuts = {}, avgCounts = {};
+  battingInns.forEach(function(r) {
+    avgTotals[r.Batter] = (avgTotals[r.Batter] || 0) + r.Runs;
+    if (r.Dismissal !== 'Not Out') avgOuts[r.Batter] = (avgOuts[r.Batter] || 0) + 1;
+    avgCounts[r.Batter] = (avgCounts[r.Batter] || 0) + 1;
+  });
+  var avgEntries = Object.keys(avgTotals).filter(function(p) { return avgCounts[p] >= 5 && avgOuts[p] > 0; })
+    .map(function(p) { return { p: p, avg: avgTotals[p] / avgOuts[p] }; }).sort(function(a, b) { return b.avg - a.avg; });
+  if (avgEntries.length) awards.push({ label: 'Best Batting Average', value: avgEntries[0].avg.toFixed(1), who: avgEntries[0].p, detail: 'Min 5 innings \u2014 ' + year });
+
+  var mostWkts = topBy(bowlF, function(r) { return r.Wickets || 0; }, function(r) { return r.Bowler; });
+  if (mostWkts) awards.push({ label: 'Bowler of the Season', value: mostWkts.value + ' wickets', who: mostWkts.player, detail: year });
+
+  var econRuns = {}, econBalls = {}, econCounts = {};
+  bowlF.forEach(function(r) {
+    econRuns[r.Bowler] = (econRuns[r.Bowler] || 0) + (r.Runs || 0);
+    econBalls[r.Bowler] = (econBalls[r.Bowler] || 0) + oversToBalls(r.Overs);
+    econCounts[r.Bowler] = (econCounts[r.Bowler] || 0) + 1;
+  });
+  var econEntries = Object.keys(econRuns).filter(function(p) { return econCounts[p] >= 5 && econBalls[p] > 0; })
+    .map(function(p) { return { p: p, econ: econRuns[p] / (econBalls[p] / 6) }; }).sort(function(a, b) { return a.econ - b.econ; });
+  if (econEntries.length) awards.push({ label: 'Best Economy Rate', value: econEntries[0].econ.toFixed(2), who: econEntries[0].p, detail: 'Min 5 spells \u2014 ' + year });
+
+  var mostField = topBy(fldF, function(r) { return (r.Dismissal === 'Caught' || r.Dismissal === 'Run Out') ? 1 : 0; }, function(r) { return r.Fielder; });
+  if (mostField) awards.push({ label: 'Fielder of the Season', value: mostField.value + ' dismissals', who: mostField.player, detail: year });
+
+  var mostMotm = topBy(motmF, function() { return 1; }, function(r) { return r.MOTM; });
+  if (mostMotm) awards.push({ label: 'Most Man of the Match Awards', value: mostMotm.value, who: mostMotm.player, detail: year });
+
+  var potmByYear = {};
+  CRICKET_DATA.potm.forEach(function(r) {
+    r.months.forEach(function(mo) {
+      if (mo.slice(-4) === year) potmByYear[r.player] = (potmByYear[r.player] || 0) + 1;
+    });
+  });
+  var potmEntries = Object.keys(potmByYear).sort(function(a, b) { return potmByYear[b] - potmByYear[a]; });
+  if (potmEntries.length) awards.push({ label: 'Most Player of the Month Awards', value: potmEntries[0], noWho: true, valueIsWinner: true, count: potmByYear[potmEntries[0]], detail: year });
+
+  window._seasonAwardsData = awards;
+  var grid = document.getElementById('sa-awards-grid');
+  if (awards.length === 0) {
+    grid.innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);font-size:0.85rem">Not enough data for this season yet.</div>';
+    return;
+  }
+  grid.innerHTML = awards.map(function(a, idx) {
+    var whoLine = a.valueIsWinner ? ('<strong>' + a.value + '</strong> \u2014 ' + a.count + ' wins') : ('<strong>' + a.who + '</strong> \u2014 ' + a.value);
+    return '<div class="table-card" style="margin-bottom:0"><div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
+      '<div>' +
+        '<div style="font-size:0.7rem;color:var(--accent2);font-weight:700;letter-spacing:0.5px;text-transform:uppercase">' + a.label + '</div>' +
+        '<div style="font-size:0.95rem;margin-top:2px">' + whoLine + '</div>' +
+        '<div style="font-size:0.78rem;color:var(--muted);margin-top:2px">' + a.detail + '</div>' +
+      '</div>' +
+      '<button onclick="shareSeasonAward(' + idx + ')" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;font-weight:600">Share</button>' +
+    '</div></div>';
+  }).join('');
+}
+
+function shareSeasonAward(idx) {
+  var a = (window._seasonAwardsData || [])[idx];
+  if (!a) return;
+  renderMilestoneCardCanvas({
+    statBig: a.valueIsWinner ? String(a.count) : String(a.value),
+    statLabel: a.label,
+    player: a.valueIsWinner ? a.value : a.who,
+    subtitle: a.valueIsWinner ? (a.count === 1 ? 'award win' : 'award wins') : '',
+    context: 'Season Award',
+    dateLabel: a.detail
+  });
+}
+
+function shareSeasonTeamCard() {
+  var data = window._seasonTeamData;
+  if (!data || !data.xi.length) return;
+  var W = 1080, H = 1350;
+  var canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  var ctx = canvas.getContext('2d');
+
+  function draw(logoImg) {
+    var grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, '#161b22'); grad.addColorStop(1, '#0d1117');
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#c5202f'; ctx.fillRect(0, 0, W, 12);
+    ctx.textAlign = 'center';
+    if (logoImg) ctx.drawImage(logoImg, W/2 - 70, 50, 140, 140);
+    ctx.fillStyle = '#8b949e';
+    ctx.font = '700 30px "DM Sans", sans-serif';
+    ctx.fillText('HESSLE CRICKET CLUB', W/2, 230);
+    ctx.fillStyle = '#f0a500';
+    ctx.font = '400 64px "Bebas Neue", sans-serif';
+    ctx.fillText('TEAM OF THE SEASON', W/2, 300);
+    ctx.fillStyle = '#e6edf3';
+    ctx.font = '600 32px "DM Sans", sans-serif';
+    ctx.fillText(data.year, W/2, 345);
+
+    var startY = 420;
+    data.xi.forEach(function(s, i) {
+      var y = startY + i * 78;
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#8b949e';
+      ctx.font = '700 28px "DM Sans", sans-serif';
+      ctx.fillText(String(i + 1), 100, y);
+      ctx.fillStyle = '#e6edf3';
+      ctx.font = '700 36px "DM Sans", sans-serif';
+      ctx.fillText(s.player, 150, y);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#8b949e';
+      ctx.font = '400 22px "DM Sans", sans-serif';
+      ctx.fillText(s.role.toUpperCase() + '  \u00b7  ' + s.impact.runs + ' runs \u00b7 ' + s.impact.wickets + ' wkts', W - 100, y);
+      ctx.textAlign = 'center';
+    });
+
+    _downloadCanvasAsImage(canvas, 'Team_of_the_Season_' + data.year);
+  }
+
+  var finish = function() {
+    var logo = document.querySelector('.header img');
+    if (!logo || !logo.src) { draw(null); return; }
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function() { draw(img); };
+    img.onerror = function() { draw(null); };
+    img.src = logo.src;
+  };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(finish).catch(finish);
+  else finish();
+}
+
+function renderMethodologyMeta() {
+  var el = document.getElementById('meth-updated');
+  if (!el) return;
+  var matches = CRICKET_DATA.matches;
+  if (!matches.length) return;
+  var latest = matches.reduce(function(a, b) { return a.Date > b.Date ? a : b; });
+  var d = new Date(latest.Date + 'T12:00:00');
+  var formatted = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  el.textContent = 'Data current through ' + formatted + ' \u2014 ' + matches.length + ' matches, ' +
+    CRICKET_DATA.batting.length + ' batting innings on record.';
+}
 
 function renderRoute() {
   var el = document.getElementById('route-weeks');
