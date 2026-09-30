@@ -380,7 +380,6 @@ tbody td{padding:8px 14px;white-space:nowrap;}
       <button class="nav-dropdown-btn" onclick="toggleNavDropdown('league')" aria-expanded="false" aria-haspopup="true">League <span class="nav-dropdown-caret">▾</span></button>
       <div class="nav-dropdown-menu">
         <button class="nav-btn" onclick="showPage('league',this)">Table</button>
-        <button class="nav-btn" onclick="showPage('route',this)">Route</button>
       </div>
     </div>
   </nav>
@@ -436,7 +435,6 @@ tbody td{padding:8px 14px;white-space:nowrap;}
       <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('league')">League <span class="mobile-nav-section-caret">▾</span></button>
       <div class="mobile-nav-section-items">
         <button class="mobile-nav-item" onclick="showPage('league',this);closeMobileNav()">🏆 Table</button>
-        <button class="mobile-nav-item" onclick="showPage('route',this);closeMobileNav()">🗺️ Route</button>
       </div>
     </div>
   </div>
@@ -1583,65 +1581,20 @@ tbody td{padding:8px 14px;white-space:nowrap;}
     <div class="kpi-row" id="league-kpis"></div>
     <div class="table-card">
       <div class="table-header">
-        <div class="table-title">Current Standing — 2026 Season</div>
+        <div class="table-title">Final Standings — 2026 Season</div>
         <div style="font-size:0.75rem;color:var(--muted);padding:4px 0">
-          <span style="display:inline-block;width:10px;height:10px;background:rgba(63,185,80,0.4);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Promotion zone&nbsp;&nbsp;
+          <span style="display:inline-block;width:10px;height:10px;background:rgba(63,185,80,0.4);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Promoted&nbsp;&nbsp;
           <span style="display:inline-block;width:10px;height:10px;background:rgba(88,166,255,0.25);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Hessle&nbsp;&nbsp;
-          <span style="display:inline-block;width:10px;height:10px;background:rgba(248,81,73,0.18);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Relegation zone
+          <span style="display:inline-block;width:10px;height:10px;background:rgba(248,81,73,0.18);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Relegated
         </div>
       </div>
       <div class="table-wrap">
         <table id="tblLeague">
-          <thead><tr><th>Pos</th><th>Team</th><th>P</th><th>W</th><th>T</th><th>L</th><th>Pts</th><th>Rem</th><th>Max</th><th>NRR</th><th>Promo %</th><th>Relg %</th></tr></thead>
+          <thead><tr><th>Pos</th><th>Team</th><th>P</th><th>W</th><th>T</th><th>L</th><th>Pts</th><th>NRR</th></tr></thead>
           <tbody id="league-tbody"></tbody>
         </table>
       </div>
     </div>
-    <div class="section-header" style="margin-top:20px">SCENARIO ANALYSIS — HESSLE OUTCOMES</div>
-    <div class="kpi-row" id="league-scenarios"></div>
-
-    <div class="section-header" style="margin-top:20px">LEAGUE EXPLORER — PICK ANY RESULT</div>
-    <div style="padding:0 0 10px;font-size:0.78rem;color:var(--muted)">
-      Pick a winner for any fixture involving a top-5 team — not just Hessle's own — and see every
-      team's promotion odds update live. Fixtures outside the top 5 are still simulated in the
-      background, just not shown here since they rarely swing promotion.
-    </div>
-    <div class="table-card">
-      <div class="table-header">
-        <div class="table-title">All Remaining Fixtures</div>
-        <button onclick="resetExplorerPicks()" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 12px;font-size:0.75rem;cursor:pointer">Reset all</button>
-      </div>
-      <div class="table-wrap">
-        <table id="tblExplorerFixtures" style="min-width:420px">
-          <thead><tr><th>Fixture</th><th style="text-align:center">Pick winner</th></tr></thead>
-          <tbody id="explorer-fixtures-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="table-card" style="margin-top:16px">
-      <div class="table-header">
-        <div class="table-title">Projected Finish</div>
-        <div id="explorer-pick-count" style="font-size:0.78rem;color:var(--muted)"></div>
-      </div>
-      <div class="table-wrap">
-        <table id="tblExplorerResults">
-          <thead><tr><th>Pos</th><th>Team</th><th>Pts</th><th>Promo %</th></tr></thead>
-          <tbody id="explorer-results-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="page-route" class="page">
-  <div class="section-header">ROUTE TO PROMOTION — 1ST XI</div>
-  <div style="padding:4px 0 12px;font-size:0.82rem;color:var(--muted);line-height:1.5">
-    Hessle need to win every remaining game AND see both Beverley and Driffield each drop 3+ results.
-    Here is what to watch each week beyond Hessle own result.
-  </div>
-  <div id="route-weeks"></div>
-  <div style="margin-top:8px;font-size:0.75rem;color:var(--muted);padding:0 2px">
-    Based on confirmed fixture schedule. Results marked automatically once match data is updated.
   </div>
 </div>
 
@@ -1807,7 +1760,6 @@ function initDashboard() {
     document.getElementById('batFormPlayer').innerHTML += `<option value="${b}">${b}</option>`;
   });
 
-  computeLiveOdds();
   sqPopulateOpponents();
   sqPopulateYears();
   sqUpdateOptions();
@@ -1880,8 +1832,6 @@ function renderAll() {
   safe(renderSquadDepth,'renderSquadDepth');
   safe(renderAwards,'renderAwards');
   safe(renderLeague,'renderLeague');
-  safe(renderRoute,'renderRoute');
-  safe(renderRoute,'renderRoute');
   safe(renderRecords,'renderRecords');
   safe(renderRecentRecords,'renderRecentRecords');
   safe(renderMilestoneTimeline,'renderMilestoneTimeline');
@@ -1993,7 +1943,7 @@ function _buildGlobalSearchIndex() {
     { label: 'Chase/Defend', page: 'chasing' }, { label: 'Stat Query', page: 'statquery' },
     { label: 'Awards', page: 'awards' }, { label: 'Records', page: 'records' },
     { label: 'Best XI', page: 'bestxi' }, { label: 'Season Awards', page: 'seasonawards' },
-    { label: 'League Table', page: 'league' }, { label: 'Route', page: 'route' },
+    { label: 'League Table', page: 'league' },
     { label: 'About & Methodology', page: 'methodology' },
   ];
   var playerNames = Array.from(new Set(
@@ -6246,7 +6196,7 @@ const RQ_MEASURES = {
   fielding: [
     {key:'catches', label:'Catches Taken', agg:'dismissal', match:'Caught'},
     {key:'runouts', label:'Run Outs', agg:'dismissal', match:'Run Out'},
-    {key:'stumpings', label:'Stumpings', agg:'dismissal', match:'Stumped'},
+    {key:'stumpings', label:'Stumpings', agg:'dismissal', match:'Stumping'},
     {key:'dismissals', label:'Total Dismissals Involved In', agg:'count'},
   ],
 };
@@ -6368,13 +6318,29 @@ function sqApplyFilters(rows, cat) {
   if (team) rows = rows.filter(r => r.Team === team);
   if (opponent) rows = rows.filter(r => r.Opponent === opponent);
   if (homeAway) rows = rows.filter(r => r['Home/Away'] === homeAway);
-  if (result) rows = rows.filter(r => r['W/L'] === result);
+  if (result) {
+    // Fielding (and any other category without its own W/L column) doesn't
+    // carry a result on the row itself — look it up from the match record
+    // instead of silently excluding every row, which is what happens when
+    // r['W/L'] is undefined for an entire category.
+    if (!_sqMatchResultLookup) {
+      _sqMatchResultLookup = {};
+      CRICKET_DATA.matches.forEach(function(m) {
+        _sqMatchResultLookup[m.Date + '|' + m.Team + '|' + m.Opponent] = m.Result;
+      });
+    }
+    rows = rows.filter(function(r) {
+      var wl = r['W/L'] !== undefined ? r['W/L'] : _sqMatchResultLookup[r.Date + '|' + r.Team + '|' + r.Opponent];
+      return wl === result;
+    });
+  }
   if (innings) rows = rows.filter(r => String(r.Innings) === innings);
   if (cat === 'batting' && position) rows = rows.filter(r => String(Math.round(r.Pos)) === position);
   if (yearFrom) rows = rows.filter(r => r.Date.slice(0, 4) >= yearFrom);
   if (yearTo) rows = rows.filter(r => r.Date.slice(0, 4) <= yearTo);
   return rows;
 }
+var _sqMatchResultLookup = null;
 
 function runStatQuery() {
   const cat = document.getElementById('sq-category').value || 'batting';
@@ -6388,6 +6354,25 @@ function runStatQuery() {
   else runStatQueryList(cat);
 }
 
+// "Fielding" as a category should mean every way a fielder can be involved
+// in a dismissal — catches and run-outs live in CRICKET_DATA.fielding, but
+// stumpings are recorded separately in CRICKET_DATA.keeping under a
+// 'Keeper' field. Build one merged, normalized row set so measures like
+// Stumpings and Total Dismissals actually see everything.
+var _sqFieldingRowsCache = null;
+function getSqFieldingRows() {
+  if (_sqFieldingRowsCache) return _sqFieldingRowsCache;
+  var fromFielding = CRICKET_DATA.fielding;
+  var fromKeeping = CRICKET_DATA.keeping.map(function(r) {
+    var copy = Object.assign({}, r);
+    copy.Fielder = copy.Keeper;
+    delete copy.Keeper;
+    return copy;
+  });
+  _sqFieldingRowsCache = fromFielding.concat(fromKeeping);
+  return _sqFieldingRowsCache;
+}
+
 function runStatQueryLeaderboard(cat) {
   const measureKey = document.getElementById('sq-measure').value;
   const groupBy = document.getElementById('sq-groupby').value || 'player';
@@ -6399,7 +6384,7 @@ function runStatQueryLeaderboard(cat) {
   const dataMap = {
     batting: getFiltered(CRICKET_DATA.batting),
     bowling: getFiltered(CRICKET_DATA.bowling),
-    fielding: getFiltered(CRICKET_DATA.fielding)
+    fielding: getFiltered(getSqFieldingRows())
   };
   const nameField = {batting:'Batter', bowling:'Bowler', fielding:'Fielder'}[cat];
 
@@ -6520,7 +6505,7 @@ function runStatQueryList(cat) {
   const dataMap = {
     batting: getFiltered(CRICKET_DATA.batting),
     bowling: getFiltered(CRICKET_DATA.bowling),
-    fielding: getFiltered(CRICKET_DATA.fielding)
+    fielding: getFiltered(getSqFieldingRows())
   };
   let rows = sqApplyFilters(dataMap[cat], cat);
 
@@ -6592,43 +6577,42 @@ function runStatQueryList(cat) {
 // LEAGUE TABLE PAGE
 // ============================================================
 
+// FINAL STANDINGS — season complete.
 var LEAGUE_TABLE = [
-  {pos:1,  team:'Cottingham CC',        short:'Cottingham',    P:19, W:15, T:1, L:2,  pts:165, nrr: 1.92, isHessle:false},
-  {pos:2,  team:'Beverley Town CC',     short:'Beverley',      P:19, W:13, T:0, L:6,  pts:146, nrr: 1.11, isHessle:false},
-  {pos:3,  team:'Driffield Town CC',    short:'Driffield',     P:19, W:14, T:0, L:5,  pts:142, nrr: 0.97, isHessle:false},
-  {pos:4,  team:'Hessle CC',            short:'Hessle',        P:19, W:13, T:0, L:5,  pts:134, nrr: 0.53, isHessle:true},
-  {pos:5,  team:'Welton CC',            short:'Welton',        P:19, W:11, T:0, L:7,  pts:122, nrr: 0.57, isHessle:false},
-  {pos:6,  team:'Kirkella CC',          short:'Kirkella',      P:19, W:8,  T:0, L:11, pts:100, nrr:-0.42, isHessle:false},
-  {pos:7,  team:'North Ferriby CC',     short:'N. Ferriby',    P:19, W:9,  T:0, L:10, pts:96,  nrr: 0.05, isHessle:false},
-  {pos:8,  team:'Sutton-on-Hull CC',    short:'Sutton',        P:19, W:7,  T:1, L:11, pts:91,  nrr: 0.22, isHessle:false},
-  {pos:9,  team:'Hull Strikers CC',     short:'Hull Strikers', P:19, W:7,  T:0, L:11, pts:78,  nrr:-0.47, isHessle:false},
-  {pos:10, team:'Walkington CC',        short:'Walkington',    P:19, W:6,  T:0, L:10, pts:70,  nrr:-1.10, isHessle:false},
-  {pos:11, team:'Cherry Burton CC',     short:'Cherry Burton', P:19, W:6,  T:0, L:13, pts:64,  nrr:-1.10, isHessle:false},
-  {pos:12, team:'Brandesburton CC',     short:'Brandesburton', P:19, W:2,  T:0, L:16, pts:36,  nrr:-2.22, isHessle:false},
+  {pos:1,  team:'Cottingham CC',        short:'Cottingham',    P:22, W:17, T:1, L:2,  pts:189, nrr: 2.01, isHessle:false},
+  {pos:2,  team:'Beverley Town CC',     short:'Beverley',      P:22, W:15, T:0, L:7,  pts:166, nrr: 0.90, isHessle:false},
+  {pos:3,  team:'Driffield Town CC',    short:'Driffield',     P:22, W:16, T:0, L:6,  pts:162, nrr: 0.88, isHessle:false},
+  {pos:4,  team:'Hessle CC',            short:'Hessle',        P:22, W:15, T:0, L:5,  pts:158, nrr: 0.61, isHessle:true},
+  {pos:5,  team:'Welton CC',            short:'Welton',        P:22, W:12, T:0, L:9,  pts:132, nrr: 0.29, isHessle:false},
+  {pos:6,  team:'Kirkella CC',          short:'Kirkella',      P:22, W:9,  T:0, L:11, pts:114, nrr:-0.35, isHessle:false},
+  {pos:7,  team:'Sutton-on-Hull CC',    short:'Sutton',        P:22, W:8,  T:1, L:13, pts:105, nrr: 0.26, isHessle:false},
+  {pos:8,  team:'Hull Strikers CC',     short:'Hull Strikers', P:22, W:9,  T:0, L:11, pts:102, nrr:-0.34, isHessle:false},
+  {pos:9,  team:'North Ferriby CC',     short:'N. Ferriby',    P:22, W:9,  T:0, L:12, pts:102, nrr:-0.07, isHessle:false},
+  {pos:10, team:'Walkington CC',        short:'Walkington',    P:22, W:7,  T:0, L:11, pts:84,  nrr:-0.97, isHessle:false},
+  {pos:11, team:'Cherry Burton CC',     short:'Cherry Burton', P:22, W:6,  T:0, L:15, pts:72,  nrr:-1.21, isHessle:false},
+  {pos:12, team:'Brandesburton CC',     short:'Brandesburton', P:22, W:2,  T:0, L:18, pts:42,  nrr:-2.11, isHessle:false},
 ];
 
-// This league is decided by Points Per Game (PPG) — teams play an uneven number of
-// remaining fixtures, so `rem` (games left) is taken directly from the real fixture
-// list rather than derived from a fixed season-total, which would be wrong here.
+// FINAL STANDINGS — season complete. Hessle CC 2nd XI finished 2nd, promoted
+// (PROMO_SPOTS_2ND = 2). This league is decided by Points Per Game (PPG).
 var LEAGUE_TABLE_2ND = [
-  {pos:1,  team:'Londesborough Park CC', short:'Londesborough', P:13, W:12, T:0, L:0,  pts:124, nrr: 4.63, isHessle:false, rem:4},
-  {pos:2,  team:'Hessle CC 2nd XI',      short:'Hessle 2nd',   P:14, W:11, T:0, L:3,  pts:112, nrr: 0.63, isHessle:true,  rem:3},
-  {pos:3,  team:'Humbleton CC',          short:'Humbleton',    P:13, W:9,  T:1, L:3,  pts:99,  nrr: 1.35, isHessle:false, rem:5},
-  {pos:4,  team:'South Holderness CC',   short:'S.Holderness', P:13, W:8,  T:0, L:4,  pts:82,  nrr: 1.27, isHessle:false, rem:4},
-  {pos:5,  team:'Dalton Holme CC',       short:'Dalton Holme', P:13, W:6,  T:1, L:6,  pts:71,  nrr:-0.06, isHessle:false, rem:5},
-  {pos:6,  team:'Old Hymerians CC',      short:'Old Hymerians',P:14, W:7,  T:0, L:7,  pts:76,  nrr:-0.10, isHessle:false, rem:4},
-  {pos:7,  team:'Beverley Town CC 5th',  short:'Beverley 5th', P:15, W:6,  T:0, L:8,  pts:72,  nrr:-0.79, isHessle:false, rem:3},
-  {pos:8,  team:'Kirkella CC 2nd XI',    short:'Kirkella 2nd', P:12, W:5,  T:0, L:7,  pts:54,  nrr:-1.49, isHessle:false, rem:5},
-  {pos:9,  team:'Cottingham CC 3rd XI',  short:'Cottingham 3rd',P:14, W:5, T:0, L:9,  pts:54,  nrr:-0.20, isHessle:false, rem:4},
-  {pos:10, team:'Swanland CC',           short:'Swanland',     P:14, W:4,  T:0, L:10, pts:54,  nrr:-1.05, isHessle:false, rem:4},
-  {pos:11, team:'Hutton Cranswick CC',   short:'Hutton Cr.',   P:12, W:4,  T:0, L:8,  pts:44,  nrr:-1.74, isHessle:false, rem:5},
-  {pos:12, team:'Eastrington CC',        short:'Eastrington',  P:13, W:3,  T:0, L:8,  pts:46,  nrr:-1.28, isHessle:false, rem:5},
-  {pos:13, team:'South Cave CC',         short:'South Cave',   P:12, W:3,  T:0, L:8,  pts:42,  nrr:-0.52, isHessle:false, rem:5},
+  {pos:1,  team:'Londesborough Park CC', short:'Londesborough', P:17, W:15, T:0, L:0,  pts:158, nrr: 4.43, isHessle:false, rem:0},
+  {pos:2,  team:'Hessle CC 2nd XI',      short:'Hessle 2nd',    P:17, W:14, T:0, L:3,  pts:142, nrr: 0.85, isHessle:true,  rem:0},
+  {pos:3,  team:'Humbleton CC',          short:'Humbleton',     P:18, W:11, T:1, L:5,  pts:123, nrr: 0.60, isHessle:false, rem:0},
+  {pos:4,  team:'South Holderness CC',   short:'S.Holderness',  P:17, W:11, T:0, L:4,  pts:116, nrr: 1.46, isHessle:false, rem:0},
+  {pos:5,  team:'Dalton Holme CC',       short:'Dalton Holme',  P:18, W:10, T:1, L:7,  pts:111, nrr:-0.03, isHessle:false, rem:0},
+  {pos:6,  team:'Beverley Town CC 5th',  short:'Beverley 5th',  P:18, W:7,  T:0, L:10, pts:84,  nrr:-0.63, isHessle:false, rem:0},
+  {pos:7,  team:'Swanland CC',           short:'Swanland',      P:18, W:6,  T:0, L:11, pts:82,  nrr:-0.80, isHessle:false, rem:0},
+  {pos:8,  team:'Old Hymerians CC',      short:'Old Hymerians', P:18, W:7,  T:0, L:11, pts:80,  nrr:-0.23, isHessle:false, rem:0},
+  {pos:9,  team:'South Cave CC',         short:'South Cave',    P:17, W:6,  T:0, L:10, pts:72,  nrr:-0.34, isHessle:false, rem:0},
+  {pos:10, team:'Cottingham CC 3rd XI',  short:'Cottingham 3rd',P:18, W:7,  T:0, L:11, pts:76,  nrr:-0.23, isHessle:false, rem:0},
+  {pos:11, team:'Kirkella CC 2nd XI',    short:'Kirkella 2nd',  P:17, W:6,  T:0, L:11, pts:64,  nrr:-1.39, isHessle:false, rem:0},
+  {pos:12, team:'Hutton Cranswick CC',   short:'Hutton Cr.',    P:17, W:5,  T:0, L:12, pts:62,  nrr:-1.18, isHessle:false, rem:0},
+  {pos:13, team:'Eastrington CC',        short:'Eastrington',   P:18, W:4,  T:0, L:12, pts:56,  nrr:-1.44, isHessle:false, rem:0},
 ];
 
-// Fallback values only — overwritten live by computeLiveOdds() on every page
-// load (see the simulator below). These stay here purely so the page has
-// sane numbers to show for the split-second before that runs.
+// Unused since the season ended and the live-odds engine was removed —
+// left in place harmlessly rather than risk disturbing nearby declarations.
 var MC_PROMO_2ND = [99.1, 81.7, 18.8, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 var MC_RELG_2ND  = [0.0,  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 var SCENARIO_ODDS_2ND = {3: 100.0, 2: 90.3, 1: 58.4, 0: 4.3};
@@ -6639,15 +6623,11 @@ var PROMO_SPOTS_2ND = 2;
 // (South Cave & Brantingham CC already played — removed from list; PPG-based odds, 11 Aug 2026)
 // This league is decided by Points Per Game (PPG), not raw points total — teams play
 // uneven numbers of games, so promotion odds are simulated on final PPG, not final points.
+// (Eastrington CC won 29 Aug, Old Hymerians CC won 5 Sep, Swanland CC won 12 Sep — all removed.
+// Hessle's 2nd XI season is now complete — no fixtures remaining.)
 var HESSLE_REMAINING_2ND = [
-  {opp:'Eastrington CC',   ha:'H', pts:46, swing:32.2},
-  {opp:'Old Hymerians CC', ha:'H', pts:76, swing:32.0},
-  {opp:'Swanland CC',      ha:'A', pts:54, swing:31.6},
 ];
 var FIXTURE_ODDS_2ND = {
-  'Eastrington CC':   {win:84.9, lose:52.7, swing:32.2},
-  'Old Hymerians CC': {win:84.8, lose:52.8, swing:32.0},
-  'Swanland CC':      {win:84.6, lose:53.0, swing:31.6},
 };
 
 var TOTAL_SEASON_GAMES = 22;
@@ -6668,24 +6648,15 @@ var RELG_SPOTS  = 2;
 //   3. LEAGUE_FIXTURES_REMAINING / LEAGUE_FIXTURES_REMAINING_2ND below —
 //      remove OTHER teams' played games (Hessle's own games are already
 //      covered by HESSLE_REMAINING and should NOT also appear here)
-// Nothing else needs to change — MC_PROMO, MC_RELG, COMBO_ODDS,
-// SCENARIO_ODDS and FIXTURE_ODDS (and their _2ND versions) are all
-// recomputed fresh on every page load by computeLiveOdds() below.
+// Unused since the season ended and the live-odds engine was removed —
+// MC_PROMO, MC_RELG, SCENARIO_ODDS and FIXTURE_ODDS (and their _2ND
+// versions) are left in place harmlessly rather than risk disturbing
+// nearby declarations still in use.
 // ════════════════════════════════════════════════════════════════════════
 
 // All-team remaining fixtures (excluding Hessle's own — those live in
 // HESSLE_REMAINING already and are simulated alongside these).
 var LEAGUE_FIXTURES_REMAINING = [
-  ["Beverley Town CC","Sutton-on-Hull CC"],
-  ["Cottingham CC","Cherry Burton CC"],
-  ["Driffield Town CC","Welton CC"],
-  ["Kirkella CC","Brandesburton CC"],
-  ["North Ferriby CC","Walkington CC"],
-  ["Beverley Town CC","Brandesburton CC"],
-  ["Cherry Burton CC","Walkington CC"],
-  ["Cottingham CC","Driffield Town CC"],
-  ["Hull Strikers CC","Welton CC"],
-  ["North Ferriby CC","Kirkella CC"],
   ["Brandesburton CC","Cottingham CC"],
   ["Driffield Town CC","North Ferriby CC"],
   ["Kirkella CC","Hull Strikers CC"],
@@ -6695,284 +6666,14 @@ var LEAGUE_FIXTURES_REMAINING = [
 var LEAGUE_FIXTURES_REMAINING_2ND = [
   ["Dalton Holme CC","Beverley Town CC"],
   ["Eastrington CC","Humbleton CC"],
-  ["Old Hymerians CC","Cottingham CC"],
   ["South Cave & Brantingham CC","Hutton Cranswick CC"],
   ["South Holderness CC","Kirkella CC"],
-  ["Dalton Holme CC","Eastrington CC"],
-  ["Humbleton CC","Cottingham CC"],
-  ["Hutton Cranswick CC","Kirkella CC"],
-  ["Londesborough Park CC","South Cave & Brantingham CC"],
-  ["Swanland CC","Old Hymerians CC"],
-  ["Cottingham CC","Hutton Cranswick CC"],
-  ["Dalton Holme CC","Kirkella CC"],
-  ["South Cave & Brantingham CC","Old Hymerians CC"],
-  ["South Holderness CC","Humbleton CC"],
-  ["Swanland CC","Londesborough Park CC"],
-  ["Dalton Holme CC","South Cave & Brantingham CC"],
-  ["Humbleton CC","Londesborough Park CC"],
-  ["Hutton Cranswick CC","Swanland CC"],
-  ["Kirkella CC","Beverley Town CC"],
-  ["South Holderness CC","Eastrington CC"],
-  ["Cottingham CC","South Holderness CC"],
-  ["Eastrington CC","South Cave & Brantingham CC"],
-  ["Humbleton CC","Kirkella CC"],
-  ["Hutton Cranswick CC","Dalton Holme CC"],
-  ["Londesborough Park CC","Beverley Town CC"]
+  ["Swanland CC","Londesborough Park CC"]
 ];
 
 // Full remaining-fixture list for a league, combining the "other teams"
 // list above with Hessle's own remaining games — built on demand (not as a
 // top-level constant) since HESSLE_REMAINING is declared further down.
-function getAllRemainingFixtures(is2nd) {
-  if (is2nd) {
-    return LEAGUE_FIXTURES_REMAINING_2ND.concat(
-      HESSLE_REMAINING_2ND.map(function(fx) { return ['Hessle CC 2nd XI', fx.opp]; })
-    );
-  }
-  return LEAGUE_FIXTURES_REMAINING.concat(
-    HESSLE_REMAINING.map(function(fx) { return ['Hessle CC', fx.opp]; })
-  );
-}
-
-// Season win-rate based team strength, capped away from 0%/100% so no
-// team is ever treated as a mathematical certainty either way.
-function lgStrength(t) {
-  var decisive = Math.max(1, t.W + t.L);
-  var wr = t.W / decisive;
-  return Math.min(0.95, Math.max(0.05, wr));
-}
-
-// Simulate the rest of the season nSims times; returns {promo:[...], relg:[...]}
-// arrays in the same order as `table`.
-function simulateLeagueOdds(table, fixtures, promoSpots, relegSpots, isPPG, nSims) {
-  nSims = nSims || 20000;
-  var teamIdx = {};
-  table.forEach(function(t, i) { teamIdx[t.team] = i; });
-  var strength = table.map(lgStrength);
-  var basePts = table.map(function(t) { return t.pts; });
-  var baseP   = table.map(function(t) { return t.P; });
-  var promoCount = table.map(function() { return 0; });
-  var relegCount = table.map(function() { return 0; });
-  var validFixtures = fixtures.filter(function(f) {
-    return teamIdx[f[0]] !== undefined && teamIdx[f[1]] !== undefined;
-  });
-
-  for (var s = 0; s < nSims; s++) {
-    var pts = basePts.slice();
-    var P = baseP.slice();
-    for (var f = 0; f < validFixtures.length; f++) {
-      var a = teamIdx[validFixtures[f][0]], b = teamIdx[validFixtures[f][1]];
-      var pa = strength[a] / (strength[a] + strength[b]);
-      if (Math.random() < pa) { pts[a] += 10; } else { pts[b] += 10; }
-      P[a]++; P[b]++;
-    }
-    var order = table.map(function(t, i) { return i; });
-    order.sort(function(i, j) {
-      var vi = isPPG ? pts[i] / Math.max(1, P[i]) : pts[i];
-      var vj = isPPG ? pts[j] / Math.max(1, P[j]) : pts[j];
-      return vj - vi;
-    });
-    for (var r = 0; r < order.length; r++) {
-      if (r < promoSpots) promoCount[order[r]]++;
-      if (relegSpots > 0 && r >= order.length - relegSpots) relegCount[order[r]]++;
-    }
-  }
-  return {
-    promo: promoCount.map(function(c) { return Math.round(1000 * c / nSims) / 10; }),
-    relg:  relegCount.map(function(c) { return Math.round(1000 * c / nSims) / 10; })
-  };
-}
-
-// Simulate every win/loss combination across Hessle's own remaining fixtures
-// (bit N = fixture N won), with all other fixtures simulated normally each
-// time. Returns {combo: {bits: pct}, scenario: {winCount: pct}, fixture: {opp: {win,lose,swing}}}
-// Same as simulateLeagueOdds, but any fixture with a forced result in `picks`
-// (picks[idx] === 0 or 1, meaning fixtures[idx][0] or [1] wins) is applied
-// directly to the starting points/games-played before simulating everything
-// else normally. Used by the interactive "League Explorer".
-function simulateLeagueOddsWithPicks(table, fixtures, picks, promoSpots, relegSpots, isPPG, nSims) {
-  nSims = nSims || 8000;
-  var teamIdx = {};
-  table.forEach(function(t, i) { teamIdx[t.team] = i; });
-  var strength = table.map(lgStrength);
-  var basePts = table.map(function(t) { return t.pts; });
-  var baseP   = table.map(function(t) { return t.P; });
-  var unpicked = [];
-
-  fixtures.forEach(function(f, idx) {
-    var a = teamIdx[f[0]], b = teamIdx[f[1]];
-    if (a === undefined || b === undefined) return;
-    var pick = picks[idx];
-    if (pick === 0) { basePts[a] += 10; baseP[a]++; baseP[b]++; }
-    else if (pick === 1) { basePts[b] += 10; baseP[a]++; baseP[b]++; }
-    else unpicked.push(f);
-  });
-
-  var promoCount = table.map(function() { return 0; });
-  var relegCount = table.map(function() { return 0; });
-  var pointsSum = table.map(function() { return 0; });
-
-  for (var s = 0; s < nSims; s++) {
-    var pts = basePts.slice();
-    var P = baseP.slice();
-    for (var f = 0; f < unpicked.length; f++) {
-      var a = teamIdx[unpicked[f][0]], b = teamIdx[unpicked[f][1]];
-      var pa = strength[a] / (strength[a] + strength[b]);
-      if (Math.random() < pa) { pts[a] += 10; } else { pts[b] += 10; }
-      P[a]++; P[b]++;
-    }
-    var order = table.map(function(t, i) { return i; });
-    order.sort(function(i, j) {
-      var vi = isPPG ? pts[i] / Math.max(1, P[i]) : pts[i];
-      var vj = isPPG ? pts[j] / Math.max(1, P[j]) : pts[j];
-      return vj - vi;
-    });
-    for (var r = 0; r < order.length; r++) {
-      if (r < promoSpots) promoCount[order[r]]++;
-      if (relegSpots > 0 && r >= order.length - relegSpots) relegCount[order[r]]++;
-    }
-    for (var i2 = 0; i2 < table.length; i2++) pointsSum[i2] += pts[i2];
-  }
-  return {
-    promo: promoCount.map(function(c) { return Math.round(1000 * c / nSims) / 10; }),
-    relg:  relegCount.map(function(c) { return Math.round(1000 * c / nSims) / 10; }),
-    avgPts: pointsSum.map(function(s2) { return Math.round(s2 / nSims); })
-  };
-}
-
-// Simulate every win/loss combination across Hessle's own remaining fixtures
-// (bit N = fixture N won), with all other fixtures simulated normally each
-// time. Returns {combo: {bits: pct}, scenario: {winCount: pct}, fixture: {opp: {win,lose,swing}}}
-function simulateHessleCombos(table, otherFixtures, hessleRemaining, hessleTeamName, promoSpots, isPPG, nPerCombo) {
-  nPerCombo = nPerCombo || 3000;
-  var teamIdx = {};
-  table.forEach(function(t, i) { teamIdx[t.team] = i; });
-  var hIdx = teamIdx[hessleTeamName];
-  var strength = table.map(lgStrength);
-  var basePts = table.map(function(t) { return t.pts; });
-  var baseP   = table.map(function(t) { return t.P; });
-  var validOther = otherFixtures.filter(function(f) {
-    return teamIdx[f[0]] !== undefined && teamIdx[f[1]] !== undefined;
-  });
-  var n = hessleRemaining.length;
-  var oppIdxList = hessleRemaining.map(function(fx) { return teamIdx[fx.opp]; });
-
-  var combo = {};
-  for (var bits = 0; bits < (1 << n); bits++) {
-    var hits = 0;
-    for (var s = 0; s < nPerCombo; s++) {
-      var pts = basePts.slice();
-      var P = baseP.slice();
-      for (var i = 0; i < n; i++) {
-        var oppIdx = oppIdxList[i];
-        if (oppIdx === undefined) continue;
-        var hessleWon = !!(bits & (1 << i));
-        if (hessleWon) { pts[hIdx] += 10; } else { pts[oppIdx] += 10; }
-        P[hIdx]++; P[oppIdx]++;
-      }
-      for (var f = 0; f < validOther.length; f++) {
-        var a = teamIdx[validOther[f][0]], b = teamIdx[validOther[f][1]];
-        var pa = strength[a] / (strength[a] + strength[b]);
-        if (Math.random() < pa) { pts[a] += 10; } else { pts[b] += 10; }
-        P[a]++; P[b]++;
-      }
-      var order = table.map(function(t, i) { return i; });
-      order.sort(function(i, j) {
-        var vi = isPPG ? pts[i] / Math.max(1, P[i]) : pts[i];
-        var vj = isPPG ? pts[j] / Math.max(1, P[j]) : pts[j];
-        return vj - vi;
-      });
-      if (order.slice(0, promoSpots).indexOf(hIdx) !== -1) hits++;
-    }
-    combo[bits] = Math.round(1000 * hits / nPerCombo) / 10;
-  }
-
-  // Derive SCENARIO_ODDS (grouped by win-count) from combo.
-  // combo[] values are already percentages (0-100), so just average + round
-  // to 1dp — do NOT re-apply the fraction->percentage scaling used above.
-  var scenario = {};
-  var groups = {};
-  for (var b = 0; b < (1 << n); b++) {
-    var wins = 0, bb = b;
-    while (bb) { wins += bb & 1; bb >>= 1; }
-    (groups[wins] = groups[wins] || []).push(combo[b]);
-  }
-  Object.keys(groups).forEach(function(w) {
-    var arr = groups[w];
-    scenario[w] = Math.round(10 * arr.reduce(function(a, b) { return a + b; }, 0) / arr.length) / 10;
-  });
-
-  // Derive FIXTURE_ODDS (per-fixture win/lose/swing) from combo
-  var fixture = {};
-  hessleRemaining.forEach(function(fx, i) {
-    var bit = 1 << i;
-    var winVals = [], loseVals = [];
-    for (var b = 0; b < (1 << n); b++) {
-      if (b & bit) winVals.push(combo[b]); else loseVals.push(combo[b]);
-    }
-    var avgWin = Math.round(10 * winVals.reduce(function(a, b) { return a + b; }, 0) / winVals.length) / 10;
-    var avgLose = Math.round(10 * loseVals.reduce(function(a, b) { return a + b; }, 0) / loseVals.length) / 10;
-    fixture[fx.opp] = { win: avgWin, lose: avgLose, swing: Math.round((avgWin - avgLose) * 10) / 10 };
-  });
-
-  return { combo: combo, scenario: scenario, fixture: fixture };
-}
-
-// Runs all simulations once and overwrites MC_PROMO/MC_RELG/COMBO_ODDS/
-// SCENARIO_ODDS/FIXTURE_ODDS (and _2ND versions) with fresh live numbers.
-// Called once during initDashboard(), before the first render.
-function computeLiveOdds() {
-  try {
-    var r1 = simulateLeagueOdds(LEAGUE_TABLE, LEAGUE_FIXTURES_REMAINING.concat(
-      HESSLE_REMAINING.map(function(fx) { return ['Hessle CC', fx.opp]; })
-    ), PROMO_SPOTS, RELG_SPOTS, false, 20000);
-    MC_PROMO = r1.promo;
-    MC_RELG  = r1.relg;
-
-    var h1 = simulateHessleCombos(LEAGUE_TABLE, LEAGUE_FIXTURES_REMAINING, HESSLE_REMAINING, 'Hessle CC', PROMO_SPOTS, false, 3000);
-    COMBO_ODDS = h1.combo;
-    SCENARIO_ODDS = h1.scenario;
-    FIXTURE_ODDS = h1.fixture;
-
-    var r2 = simulateLeagueOdds(LEAGUE_TABLE_2ND, LEAGUE_FIXTURES_REMAINING_2ND.concat(
-      HESSLE_REMAINING_2ND.map(function(fx) { return ['Hessle CC 2nd XI', fx.opp]; })
-    ), PROMO_SPOTS_2ND, 0, true, 20000);
-    MC_PROMO_2ND = r2.promo;
-    MC_RELG_2ND  = r2.relg;
-
-    var h2 = simulateHessleCombos(LEAGUE_TABLE_2ND, LEAGUE_FIXTURES_REMAINING_2ND, HESSLE_REMAINING_2ND, 'Hessle CC 2nd XI', PROMO_SPOTS_2ND, true, 3000);
-    SCENARIO_ODDS_2ND = h2.scenario;
-    FIXTURE_ODDS_2ND = h2.fixture;
-  } catch (e) {
-    console.error('computeLiveOdds failed, falling back to last-known static odds:', e);
-  }
-}
-
-// Confirmed remaining fixtures for Hessle in order
-// (Cherry Burton CC won 08 Aug, Driffield Town CC won 15 Aug, Brandesburton CC won 22 Aug — all removed from list)
-var HESSLE_REMAINING = [
-  {opp:'Hull Strikers CC',  ha:'A'},
-  {opp:'Sutton-on-Hull CC', ha:'A'},
-  {opp:'Beverley Town CC',  ha:'H'},
-];
-
-function lgRemaining(t) { return TOTAL_SEASON_GAMES - t.P; }
-function lgMax(t)       { return t.pts + lgRemaining(t) * 10; }
-function lgWinRate(t)   { return Math.min(0.93, t.W / Math.max(1, t.P - t.T)); }
-
-// P(X >= kMin) where X ~ Bin(n, p)
-function pbinom(n, kMin, p) {
-  if (kMin > n) return 0;
-  if (kMin <= 0) return 1;
-  var result = 0;
-  for (var k = kMin; k <= n; k++) {
-    var c = 1;
-    for (var i = 0; i < k; i++) c = c * (n - i) / (i + 1);
-    result += c * Math.pow(p, k) * Math.pow(1 - p, n - k);
-  }
-  return Math.min(1, Math.max(0, result));
-}
-
 function selectLeagueXI(xi) {
   window._leagueXI = xi; // persist so re-renders after toggle picks use correct xi
   document.getElementById('league-xi-picker').style.display = 'none';
@@ -6991,59 +6692,50 @@ function renderLeague(xi) {
   xi = xi || '1st';
   var is2nd    = xi === '2nd';
   var tbl      = is2nd ? LEAGUE_TABLE_2ND : LEAGUE_TABLE;
-  var mc_promo = is2nd ? MC_PROMO_2ND     : MC_PROMO;
-  var mc_relg  = is2nd ? MC_RELG_2ND      : MC_RELG;
-  var sc_odds  = is2nd ? SCENARIO_ODDS_2ND: SCENARIO_ODDS;
-  var totalSeason = is2nd ? TOTAL_SEASON_2ND : TOTAL_SEASON_GAMES;
-
-  // 2nd XI is PPG-based with uneven fixtures, so use each team's real `rem` count
-  // (from the actual fixture list) rather than a fixed season-total subtraction.
-  function lgRem2(t){ return is2nd && typeof t.rem === 'number' ? t.rem : (totalSeason - t.P); }
-  function lgMax2(t){ return t.pts + lgRem2(t)*10; }
 
   var hessleIdx = tbl.findIndex(function(t){ return t.isHessle; });
   var hessle   = tbl[hessleIdx];
-  var welton   = tbl[3] || tbl[hessleIdx];
-
-  var hRem     = lgRem2(hessle);
-  var hMax     = lgMax2(hessle);
   var hPts     = hessle.pts;
-  var promoOdds = mc_promo[hessleIdx] || 0;
+  var hPos     = hessle.pos;
+  var promoSpots = is2nd ? PROMO_SPOTS_2ND : PROMO_SPOTS;
 
-  // ── KPI row ───────────────────────────────────────────────
-  var gapTo2nd = (tbl[1] ? tbl[1].pts : 0) - hPts;
-  var klass    = promoOdds >= 15 ? 'green' : promoOdds >= 3 ? 'amber' : 'red';
-  var kpisEl   = document.getElementById('league-kpis');
+  // ── KPI row — season is complete, so this shows the final result, not odds ──
+  var promoted  = hPos <= promoSpots;
+  var relegated = !is2nd && hPos > tbl.length - RELG_SPOTS;
+  var resultLabel = promoted ? 'Promoted' : relegated ? 'Relegated' : 'Mid-table finish';
+  var resultClass = promoted ? 'green' : relegated ? 'red' : 'blue';
+
+  // Gap to the nearest thing that mattered: promotion line if missed it,
+  // or margin secured above the drop/3rd place if it was achieved.
+  var gapLabel, gapVal;
+  if (promoted) {
+    var next = tbl[promoSpots] || null; // first team outside the promotion spots
+    gapVal = next ? hPts - next.pts : 0;
+    gapLabel = 'Clear of 3rd by';
+  } else {
+    var lastPromo = tbl[promoSpots - 1];
+    gapVal = lastPromo ? lastPromo.pts - hPts : 0;
+    gapLabel = 'Missed promotion by';
+  }
+
+  var ordinal = function(n) { var s=['th','st','nd','rd'],v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); };
+
+  var kpisEl = document.getElementById('league-kpis');
   if (kpisEl) kpisEl.innerHTML =
-    '<div class="kpi blue"><div class="kpi-val">' + hPts + '</div><div class="kpi-label">Current Points</div></div>' +
-    '<div class="kpi"><div class="kpi-val">' + hRem + '</div><div class="kpi-label">Games Remaining</div></div>' +
-    '<div class="kpi"><div class="kpi-val">' + hMax + '</div><div class="kpi-label">Max Possible Pts</div></div>' +
-    '<div class="kpi amber"><div class="kpi-val">+' + gapTo2nd + '</div><div class="kpi-label">Gap to ' + (is2nd ? 'Londesborough' : 'Beverley') + '</div></div>' +
-    '<div class="kpi ' + klass + '"><div class="kpi-val">' + promoOdds + '%</div><div class="kpi-label">Promotion Odds</div></div>' +
-    (is2nd ? '<div class="kpi green"><div class="kpi-val">N/A</div><div class="kpi-label">No Relegation</div></div>' : '<div class="kpi green"><div class="kpi-val">0%</div><div class="kpi-label">Relegation Risk</div></div>');
+    '<div class="kpi blue"><div class="kpi-val">' + hPts + '</div><div class="kpi-label">Final Points</div></div>' +
+    '<div class="kpi"><div class="kpi-val">' + ordinal(hPos) + '</div><div class="kpi-label">Final Position</div></div>' +
+    '<div class="kpi amber"><div class="kpi-val">' + gapVal + ' pts</div><div class="kpi-label">' + gapLabel + '</div></div>' +
+    '<div class="kpi ' + resultClass + '"><div class="kpi-val">' + resultLabel + '</div><div class="kpi-label">Result</div></div>';
 
   // ── League table ──────────────────────────────────────────
   var tbody = document.getElementById('league-tbody');
   if (tbody) {
     tbody.innerHTML = '';
-    tbl.forEach(function(team, i) {
-      var rem      = lgRem2(team);
-      var max      = lgMax2(team);
-      var teamPromo = mc_promo[i] || 0;
-      var teamRelg  = mc_relg[i] || 0;
-
+    tbl.forEach(function(team) {
       var rowStyle = '';
       if (team.isHessle)       rowStyle = 'background:rgba(88,166,255,0.10);font-weight:600;';
-      else if (team.pos <= 2)  rowStyle = 'background:rgba(63,185,80,0.10);';
-      else if (!is2nd && team.pos >= 11) rowStyle = 'background:rgba(248,81,73,0.10);';
-
-      var promoCol = teamPromo >= 50 ? 'var(--green)'
-                   : teamPromo >= 20 ? 'var(--accent2)'
-                   : teamPromo >=  5 ? 'var(--muted)'
-                   : 'var(--red)';
-      var relegCol = teamRelg  <=  5 ? 'var(--green)'
-                   : teamRelg  <= 25 ? 'var(--accent2)'
-                   : 'var(--red)';
+      else if (team.pos <= promoSpots)  rowStyle = 'background:rgba(63,185,80,0.10);';
+      else if (!is2nd && team.pos > tbl.length - RELG_SPOTS) rowStyle = 'background:rgba(248,81,73,0.10);';
 
       tbody.innerHTML +=
         '<tr style="' + rowStyle + '">' +
@@ -7054,174 +6746,12 @@ function renderLeague(xi) {
         '<td>' + team.T + '</td>' +
         '<td>' + team.L + '</td>' +
         '<td><strong>' + team.pts + '</strong></td>' +
-        '<td>' + rem + '</td>' +
-        '<td style="color:var(--muted)">' + max + '</td>' +
         '<td style="color:' + (team.nrr >= 0 ? 'var(--green)' : 'var(--red)') + '">' +
           (team.nrr >= 0 ? '+' : '') + team.nrr.toFixed(2) + '</td>' +
-        '<td style="color:' + promoCol + ';font-weight:600">' + teamPromo + '%</td>' +
-        '<td style="color:' + relegCol + ';font-weight:600">' + teamRelg + '%</td>' +
         '</tr>';
     });
   }
-
-  // ── Scenario KPI cards ────────────────────────────────────
-  // Computed offline: P(Hessle promoted | wins exactly N of remaining 6)
-  // Direct clashes vs Beverley/Driffield assumed to be the priority wins.
-  // SCENARIO_ODDS is at module level
-  var scenEl = document.getElementById('league-scenarios');
-  if (scenEl) {
-    var scenHTML = '';
-    // Derived from the real remaining-fixture count instead of a hardcoded
-    // number, so this never needs manually updating again as games are played.
-    var remainingCount = is2nd ? HESSLE_REMAINING_2ND.length : HESSLE_REMAINING.length;
-    var sc_wins = [];
-    for (var wCount = remainingCount; wCount >= 0 && sc_wins.length < 4; wCount--) sc_wins.push(wCount);
-    sc_wins.forEach(function(wins) {
-      var finalPts = hPts + wins * 10;
-      var odds     = sc_odds[wins] || 0;
-      var kl       = odds >= 5 ? 'green' : odds >= 1 ? 'amber' : 'red';
-      scenHTML +=
-        '<div class="kpi ' + kl + '">' +
-          '<div class="kpi-val">' + odds + '%</div>' +
-          '<div class="kpi-label">Win ' + wins + '/' + remainingCount + ' \u2192 ' + finalPts + 'pts</div>' +
-        '</div>';
-    });
-    scenEl.innerHTML = scenHTML;
-  }
-
-  // ── League Explorer (all-teams what-if picker) ───────────
-  renderExplorer();
 }
-// ════════════════════════════════════════════════════════════════════════
-// LEAGUE EXPLORER — pick a hypothetical winner for ANY remaining fixture in
-// the league (not just Hessle's own) and see every team's promotion odds
-// update live. Picks are keyed by fixture index within getAllRemainingFixtures().
-// ════════════════════════════════════════════════════════════════════════
-window._explorerPicks = window._explorerPicks || {};
-
-function renderExplorer() {
-  var is2nd = window._leagueXI === '2nd';
-  var table = is2nd ? LEAGUE_TABLE_2ND : LEAGUE_TABLE;
-  var fixtures = getAllRemainingFixtures(is2nd);
-  var tbody = document.getElementById('explorer-fixtures-tbody');
-  if (!tbody) return;
-
-  // Only show fixtures involving a team currently in the top 5 — the rest
-  // still get simulated normally (see updateExplorerResults), they're just
-  // not worth cluttering the picker with since they rarely swing promotion.
-  var posByTeam = {};
-  table.forEach(function(t) { posByTeam[t.team] = t.pos; });
-  var top5Fixtures = [];
-  fixtures.forEach(function(f, idx) {
-    var posA = posByTeam[f[0]], posB = posByTeam[f[1]];
-    if ((posA && posA <= 5) || (posB && posB <= 5)) top5Fixtures.push({ f: f, idx: idx });
-  });
-
-  var picks = window._explorerPicks;
-  tbody.innerHTML = top5Fixtures.map(function(entry) {
-    var f = entry.f, idx = entry.idx;
-    var pick = picks[idx];
-    var aSel = pick === 0, bSel = pick === 1;
-    var btnA = '<button data-eidx="' + idx + '" data-side="0" onclick="toggleExplorerPick(this)" style="padding:4px 10px;border-radius:5px;border:1px solid ' +
-      (aSel ? 'var(--green);background:var(--green);color:#fff' : 'var(--border);background:none;color:var(--muted)') +
-      ';cursor:pointer;font-size:0.78rem;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + f[0] + '</button>';
-    var btnB = '<button data-eidx="' + idx + '" data-side="1" onclick="toggleExplorerPick(this)" style="padding:4px 10px;border-radius:5px;border:1px solid ' +
-      (bSel ? 'var(--green);background:var(--green);color:#fff' : 'var(--border);background:none;color:var(--muted)') +
-      ';cursor:pointer;font-size:0.78rem;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + f[1] + '</button>';
-    return '<tr><td style="font-size:0.75rem;color:var(--muted)">' + f[0] + ' vs ' + f[1] + '</td>' +
-      '<td style="text-align:center;white-space:nowrap">' + btnA + ' <span style="color:var(--muted);font-size:0.7rem">vs</span> ' + btnB + '</td></tr>';
-  }).join('');
-
-  updateExplorerResults();
-}
-
-function toggleExplorerPick(el) {
-  try {
-    var idx = el.getAttribute('data-eidx');
-    var side = parseInt(el.getAttribute('data-side'), 10);
-    var picks = window._explorerPicks;
-    picks[idx] = picks[idx] === side ? undefined : side;
-    renderExplorer();
-  } catch (e) {
-    console.error('toggleExplorerPick error:', e);
-  }
-}
-
-function resetExplorerPicks() {
-  window._explorerPicks = {};
-  renderExplorer();
-}
-
-function updateExplorerResults() {
-  var is2nd = window._leagueXI === '2nd';
-  var table = is2nd ? LEAGUE_TABLE_2ND : LEAGUE_TABLE;
-  var fixtures = getAllRemainingFixtures(is2nd);
-  var promoSpots = is2nd ? PROMO_SPOTS_2ND : PROMO_SPOTS;
-  var relegSpots = is2nd ? 0 : RELG_SPOTS;
-  var picks = window._explorerPicks;
-
-  var pickedCount = 0;
-  for (var k in picks) { if (picks[k] !== undefined) pickedCount++; }
-  var posByTeam = {};
-  table.forEach(function(t) { posByTeam[t.team] = t.pos; });
-  var pickableCount = fixtures.filter(function(f) {
-    var posA = posByTeam[f[0]], posB = posByTeam[f[1]];
-    return (posA && posA <= 5) || (posB && posB <= 5);
-  }).length;
-  var countEl = document.getElementById('explorer-pick-count');
-  if (countEl) countEl.textContent = pickedCount + ' of ' + pickableCount + ' fixtures picked';
-
-  var result = simulateLeagueOddsWithPicks(table, fixtures, picks, promoSpots, relegSpots, is2nd, 8000);
-
-  var rows = table.map(function(t, i) {
-    return { team: t.team, avgPts: result.avgPts[i], promo: result.promo[i], isHessle: t.isHessle };
-  });
-  rows.sort(function(a, b) { return b.avgPts - a.avgPts; });
-
-  var tbody = document.getElementById('explorer-results-tbody');
-  if (tbody) {
-    tbody.innerHTML = rows.map(function(r, i) {
-      var rowBg = r.isHessle ? 'background:rgba(88,166,255,0.08)' : '';
-      var promoColor = r.promo >= 50 ? 'var(--green)' : r.promo >= 15 ? 'var(--accent2)' : 'var(--muted)';
-      return '<tr style="' + rowBg + '"><td>' + (i + 1) + '</td><td>' + (r.isHessle ? '<strong>' + r.team + '</strong>' : r.team) + '</td>' +
-        '<td>' + r.avgPts + '</td><td style="color:' + promoColor + ';font-weight:700">' + r.promo + '%</td></tr>';
-    }).join('');
-  }
-}
-
-// ── Module-level constants (overwritten live by computeLiveOdds() below) ──
-var MC_PROMO = [90.2, 66.7, 37.9, 4.0, 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
-var MC_RELG  = [0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 10.5, 32.0, 57.5, 99.8];
-// Fallback values only — all of MC_PROMO, MC_RELG, COMBO_ODDS, SCENARIO_ODDS
-// and FIXTURE_ODDS below are overwritten live by computeLiveOdds() (defined
-// further up) on every page load, using the current LEAGUE_TABLE and
-// remaining-fixtures lists. These static numbers exist purely as a fallback
-// in case that simulation ever fails to run.
-var COMBO_ODDS = {0:0.0,1:0.0,2:0.0,3:0.0,4:0.0,5:0.0,6:0.0,7:0.0,8:0.0,9:0.0,10:0.0,11:0.0,12:0.0,13:0.0,14:0.0,15:1.0,16:0.0,17:0.0,18:0.0,19:0.2,20:0.0,21:0.1,22:0.0,23:8.4,24:0.0,25:0.1,26:0.0,27:8.2,28:0.0,29:7.8,30:2.7,31:48.1};
-// SCENARIO_ODDS derived from COMBO_ODDS averages (5 remaining fixtures)
-var SCENARIO_ODDS = {5: 48.1, 4: 5.6, 3: 0.0, 2: 0.0};
-var FIXTURE_ODDS = {
-  'Driffield Town CC': {win: 4.6, lose: 0.2, swing: 4.4},
-  'Brandesburton CC':  {win: 4.3, lose: 0.5, swing: 3.8},
-  'Hull Strikers CC':  {win: 4.3, lose: 0.5, swing: 3.8},
-  'Sutton-on-Hull CC': {win: 4.2, lose: 0.5, swing: 3.7},
-  'Beverley Town CC':  {win: 4.7, lose: 0.1, swing: 4.6},
-};
-
-var ROUTE_WEEKS = [
-  {date:'29 Aug 2026',hessle:{opp:'Hull Strikers CC',ha:'A'},
-   watches:[{home:'Beverley Town CC',away:'Sutton-on-Hull CC',wantWin:'Sutton-on-Hull CC',key:true,why:'Sutton have been improving - a genuine upset candidate'},
-            {home:'Driffield Town CC',away:'Welton CC',wantWin:'Welton CC',key:true,why:'Driffield host 4th-placed Welton - competitive and realistic upset'}],
-   others:['Cottingham vs Cherry Burton','Kirkella vs Brandesburton','N.Ferriby vs Walkington']},
-  {date:'05 Sep 2026',hessle:{opp:'Sutton-on-Hull CC',ha:'A'},
-   watches:[{home:'Beverley Town CC',away:'Brandesburton CC',wantWin:'Brandesburton CC',key:true,why:'Beverley host bottom side Brandesburton - stranger things have happened'},
-            {home:'Cottingham CC',away:'Driffield Town CC',wantWin:'Cottingham CC',key:true,why:'Driffield travel to leaders Cottingham who should win comfortably'}],
-   others:['Cherry Burton vs Walkington','Hull Strikers vs Welton','N.Ferriby vs Kirkella']},
-  {date:'12 Sep 2026',hessle:{opp:'Beverley Town CC',ha:'H'},
-   watches:[{home:'Driffield Town CC',away:'North Ferriby CC',wantWin:'North Ferriby CC',key:true,why:'Final day - if Hessle beat Beverley, a Driffield loss to N.Ferriby could seal it'}],
-   others:['Brandesburton vs Cottingham','Kirkella vs Hull Strikers','Walkington vs Sutton','Welton vs Cherry Burton']},
-];
-
 
 // ============================================================
 // SEASON AWARDS — a season's trophy cabinet: Team of the Season plus
@@ -7541,49 +7071,6 @@ function renderMethodologyMeta() {
   var formatted = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   el.textContent = 'Data current through ' + formatted + ' \u2014 ' + matches.length + ' matches, ' +
     CRICKET_DATA.batting.length + ' batting innings on record.';
-}
-
-function renderRoute() {
-  var el = document.getElementById('route-weeks');
-  if (!el) return;
-  // Match Hessle's actual results to each week by DATE, not just opponent name —
-  // teams are played twice (home & away) so opponent-only matching would incorrectly
-  // mark a future fixture as already played if an earlier meeting this season was a win.
-  var resultsByDate = {};
-  (CRICKET_DATA.matches||[]).forEach(function(m){
-    if (m.Team==='1st') resultsByDate[m.Date] = {opp: m.Opponent, result: m.Result};
-  });
-  var out = '';
-  ROUTE_WEEKS.forEach(function(week,wi){
-    var dateParts = week.date.split(' '); // e.g. "15 Aug 2026"
-    var monthMap = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
-    var isoDate = dateParts[2] + '-' + monthMap[dateParts[1]] + '-' + dateParts[0];
-    var actual = resultsByDate[isoDate];
-    var res = (actual && actual.opp === week.hessle.opp) ? actual.result : null;
-    var played=!!res,won=res==='W';
-    var statusLabel=played?(won?'WON':'LOST'):'UPCOMING';
-    var statusClass=played?(won?'route-status-win':'route-status-future'):'route-status-future';
-    out+='<div class="route-week" style="'+(played&&!won?'opacity:0.5;':'')+'">';
-    out+='<div class="route-week-header"><div class="route-week-date">Week '+(wi+1)+' &middot; '+week.date+'</div>';
-    out+='<span class="route-week-status '+statusClass+'">'+statusLabel+'</span></div>';
-    out+='<div class="route-hessle"><div class="route-hessle-label">Hessle</div>';
-    out+='<div class="route-hessle-match">'+week.hessle.ha+' vs '+week.hessle.opp+'</div>';
-    out+='<div class="route-hessle-badge">WIN REQUIRED</div></div>';
-    out+='<div class="route-watches"><div class="route-watch-title">Watch these results</div>';
-    week.watches.forEach(function(w){
-      out+='<div class="route-watch-row">';
-      out+='<div class="route-watch-key">'+(w.key?'&#128273;':'')+'</div>';
-      out+='<div style="flex:1"><div class="route-watch-teams">'+w.home+' vs '+w.away+'</div>';
-      out+='<div class="route-watch-want">Want <strong>'+w.wantWin+'</strong> to win &nbsp;&middot;&nbsp; <span style="font-size:0.72rem">'+w.why+'</span></div>';
-      out+='</div></div>';
-    });
-    out+='</div>';
-    if(week.others&&week.others.length){
-      out+='<div style="padding:0 16px 10px;font-size:0.74rem;color:var(--muted)">Other: '+week.others.join(' &middot; ')+'</div>';
-    }
-    out+='</div>';
-  });
-  el.innerHTML=out;
 }
 
 </script>
