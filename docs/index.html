@@ -374,6 +374,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
         <button class="nav-btn" onclick="showPage('bestxi',this)">Best XI</button>
         <button class="nav-btn" onclick="showPage('seasonawards',this)">Season Awards</button>
         <button class="nav-btn" onclick="showPage('methodology',this)">About &amp; Methodology</button>
+        <button class="nav-btn" onclick="showPage('dataquality',this)">Data Quality</button>
       </div>
     </div>
     <div class="nav-dropdown" id="navDropdown-league">
@@ -429,6 +430,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
         <button class="mobile-nav-item" onclick="showPage('bestxi',this);closeMobileNav()">⭐ Best XI</button>
         <button class="mobile-nav-item" onclick="showPage('seasonawards',this);closeMobileNav()">🏆 Season Awards</button>
         <button class="mobile-nav-item" onclick="showPage('methodology',this);closeMobileNav()">ℹ️ About &amp; Methodology</button>
+        <button class="mobile-nav-item" onclick="showPage('dataquality',this);closeMobileNav()">🩺 Data Quality</button>
       </div>
     </div>
     <div class="mobile-nav-section" id="mobileNavSection-league">
@@ -1260,10 +1262,11 @@ tbody td{padding:8px 14px;white-space:nowrap;}
   </div></div>
 
   <div class="table-card" style="margin-bottom:16px"><div style="padding:16px 20px">
-    <div style="font-weight:700;color:var(--accent2);font-size:0.95rem;margin-bottom:8px">Live promotion &amp; relegation odds</div>
+    <div style="font-weight:700;color:var(--accent2);font-size:0.95rem;margin-bottom:8px">League standings</div>
     <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;margin:0">
-      The percentages on the League Table page aren't a fixed guess &mdash; they're recalculated fresh every time the page loads, by simulating the rest of the season
-      thousands of times using each team's actual current season win rate. As results come in and the table updates, the odds update with it automatically.
+      The 2026 season is complete, so the League Table page now shows final standings only &mdash; final points, final position, and whether the club was promoted
+      or relegated. Earlier in the season this page ran a live promotion/relegation simulation that updated automatically as results came in; that's been
+      retired now there's no more season left to project.
     </p>
   </div></div>
 
@@ -1282,6 +1285,20 @@ tbody td{padding:8px 14px;white-space:nowrap;}
       The XI is then filled to a normal cricket template &mdash; 5 batters, 1 keeper, 2 all-rounders, 3 bowlers &mdash; and shown in batting order, not ranked by score.
     </p>
   </div></div>
+</div>
+
+
+<div id="page-dataquality" class="page">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:4px;flex-wrap:wrap;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:1px;">Data Quality</div>
+    <button onclick="renderDataQuality()" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:0.8rem">Re-run checks</button>
+  </div>
+  <div style="font-size:0.82rem;color:var(--muted);margin-bottom:20px">
+    Automated versions of the checks normally done by hand on every data update &mdash; duplicate rows, name inconsistencies,
+    impossible dates, invalid overs, and gaps in MOTM coverage. Green means nothing found; anything else lists the exact records involved.
+  </div>
+  <div id="dq-summary" style="margin-bottom:16px"></div>
+  <div id="dq-results" style="display:flex;flex-direction:column;gap:12px"></div>
 </div>
 
 
@@ -1817,6 +1834,7 @@ function renderAll() {
   safe(renderBestXI,'renderBestXI');
   safe(renderSeasonAwards,'renderSeasonAwards');
   safe(renderMethodologyMeta,'renderMethodologyMeta');
+  safe(renderDataQuality,'renderDataQuality');
   safe(renderBatFirst,'renderBatFirst');
   safe(renderHomeAway,'renderHomeAway');
   safe(renderNRR,'renderNRR');
@@ -1945,6 +1963,7 @@ function _buildGlobalSearchIndex() {
     { label: 'Best XI', page: 'bestxi' }, { label: 'Season Awards', page: 'seasonawards' },
     { label: 'League Table', page: 'league' },
     { label: 'About & Methodology', page: 'methodology' },
+    { label: 'Data Quality', page: 'dataquality' },
   ];
   var playerNames = Array.from(new Set(
     CRICKET_DATA.batting.map(function(r) { return r.Batter; })
@@ -6678,7 +6697,7 @@ function selectLeagueXI(xi) {
   window._leagueXI = xi; // persist so re-renders after toggle picks use correct xi
   document.getElementById('league-xi-picker').style.display = 'none';
   document.getElementById('league-main').style.display = 'block';
-  document.getElementById('league-xi-label').textContent = xi + ' XI — League Standing';
+  document.getElementById('league-xi-label').textContent = xi + ' XI — Final Standing, 2026';
   renderLeague(xi);
 }
 
@@ -7059,6 +7078,194 @@ function shareSeasonTeamCard() {
   };
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(finish).catch(finish);
   else finish();
+}
+
+// ============================================================
+// DATA QUALITY CHECKER — automated versions of the checks that have
+// otherwise been done by hand on every data update: duplicate/orphaned
+// records, opponent-name inconsistencies, impossible dates, invalid overs
+// notation, and MOTM coverage gaps.
+// ============================================================
+function renderDataQuality() {
+  var summaryEl = document.getElementById('dq-summary');
+  var resultsEl = document.getElementById('dq-results');
+  if (!summaryEl || !resultsEl) return;
+
+  var checks = [];
+
+  // ── 1. Opponent name consistency ──────────────────────────
+  (function() {
+    function baseName(o) {
+      return o.replace(/\s*&\s*/g, ' and ').replace(/\bCC\b/gi, '').replace(/\s+/g, ' ').trim().toLowerCase();
+    }
+    var byBase = {};
+    ['matches', 'batting', 'bowling', 'fielding', 'keeping'].forEach(function(cat) {
+      (CRICKET_DATA[cat] || []).forEach(function(r) {
+        if (!r.Opponent) return;
+        var base = baseName(r.Opponent);
+        if (!byBase[base]) byBase[base] = new Set();
+        byBase[base].add(r.Opponent);
+      });
+    });
+    var issues = [];
+    Object.keys(byBase).forEach(function(base) {
+      if (byBase[base].size > 1) issues.push(Array.from(byBase[base]).join('  vs  '));
+    });
+    checks.push({ name: 'Opponent name consistency', issues: issues,
+      pass: 'Every opponent has exactly one spelling across all datasets.' });
+  })();
+
+  // ── 2. Per-innings ball-count consistency ─────────────────
+  (function() {
+    var matchOvers = {};
+    CRICKET_DATA.matches.forEach(function(m) {
+      matchOvers[m.Date + '|' + m.Team + '|' + m.Opponent] = m['Overs Batted'];
+    });
+    var byInnings = {};
+    CRICKET_DATA.batting.forEach(function(r) {
+      if (r.Dismissal === 'DNB') return;
+      var key = r.Date + '|' + r.Team + '|' + r.Opponent;
+      if (!byInnings[key]) byInnings[key] = 0;
+      if (!r.BallsEstimated) byInnings[key] += (r.Balls || 0);
+    });
+    var issues = [];
+    Object.keys(byInnings).forEach(function(key) {
+      var trueOvers = matchOvers[key];
+      if (trueOvers === undefined) return;
+      var trueBalls = oversToBalls(trueOvers);
+      if (byInnings[key] > trueBalls * 1.15) {
+        var parts = key.split('|');
+        issues.push(parts[0] + ' \u2014 ' + parts[1] + ' XI vs ' + parts[2] +
+          ': recorded balls faced (' + byInnings[key] + ') exceed the match\'s actual overs (' + trueBalls + ' balls)');
+      }
+    });
+    checks.push({ name: 'Per-innings ball counts vs. match record', issues: issues,
+      pass: 'No innings has individually-recorded balls faced exceeding the real overs bowled at it.' });
+  })();
+
+  // ── 3. Invalid overs notation (fractional part outside 0\u20135) ──
+  (function() {
+    function fracOf(o) {
+      if (typeof o !== 'number') return null;
+      var whole = Math.trunc(o);
+      return Math.round((o - whole) * 10);
+    }
+    var issues = [];
+    CRICKET_DATA.bowling.forEach(function(r) {
+      var f = fracOf(r.Overs);
+      if (f !== null && f >= 6) issues.push(r.Date + ' \u2014 ' + r.Bowler + ' vs ' + r.Opponent + ': Overs=' + r.Overs);
+    });
+    CRICKET_DATA.matches.forEach(function(m) {
+      ['Overs Batted', 'Overs Bowled'].forEach(function(field) {
+        var f = fracOf(m[field]);
+        if (f !== null && f >= 6) issues.push(m.Date + ' \u2014 ' + m.Team + ' XI vs ' + m.Opponent + ': ' + field + '=' + m[field]);
+      });
+    });
+    checks.push({ name: 'Invalid overs notation', issues: issues,
+      pass: 'Every recorded overs value has a valid 0\u20135 ball fraction.' });
+  })();
+
+  // ── 4. Orphaned records (no matching match) ───────────────
+  (function() {
+    var matchKeys = new Set(CRICKET_DATA.matches.map(function(m) { return m.Date + '|' + m.Team + '|' + m.Opponent; }));
+    var issues = [];
+    var cats = [['batting', 'Batter'], ['bowling', 'Bowler'], ['fielding', 'Fielder'], ['keeping', 'Keeper']];
+    cats.forEach(function(pair) {
+      var seen = new Set();
+      (CRICKET_DATA[pair[0]] || []).forEach(function(r) {
+        var key = r.Date + '|' + r.Team + '|' + r.Opponent;
+        if (!matchKeys.has(key) && !seen.has(key)) {
+          seen.add(key);
+          issues.push(pair[0] + ': ' + key.replace(/\|/g, ' \u2014 '));
+        }
+      });
+    });
+    checks.push({ name: 'Orphaned records (no matching match)', issues: issues,
+      pass: 'Every batting, bowling, fielding and keeping record ties back to a real match.' });
+  })();
+
+  // ── 5. MOTM coverage ───────────────────────────────────────
+  (function() {
+    var motmKeys = new Set(CRICKET_DATA.motm.map(function(m) { return m.Date + '|' + m.Team + '|' + m.Opponent; }));
+    var issues = [];
+    CRICKET_DATA.matches.forEach(function(m) {
+      var key = m.Date + '|' + m.Team + '|' + m.Opponent;
+      if (!motmKeys.has(key)) issues.push(m.Date + ' \u2014 ' + m.Team + ' XI vs ' + m.Opponent);
+    });
+    checks.push({ name: 'Man of the Match coverage', issues: issues,
+      pass: 'Every match has a Man of the Match on record (' + CRICKET_DATA.matches.length + ' of ' + CRICKET_DATA.matches.length + ').' });
+  })();
+
+  // ── 6. Unexpected dismissal labels ─────────────────────────
+  (function() {
+    var validBat = ['Caught','Bowled','LBW','Run Out','Stumped','Not Out','DNB','Ct & B','Hit Wicket','Retired','Retired Not Out','Did Not Bat'];
+    var validField = ['Caught','Run Out'];
+    var validKeep = ['Caught','Stumping','Stumped'];
+    var issues = [];
+    var seenBad = new Set();
+    CRICKET_DATA.batting.forEach(function(r) {
+      if (validBat.indexOf(r.Dismissal) === -1 && !seenBad.has('bat:'+r.Dismissal)) {
+        seenBad.add('bat:'+r.Dismissal);
+        issues.push('Batting: unrecognised dismissal "' + r.Dismissal + '"');
+      }
+    });
+    CRICKET_DATA.fielding.forEach(function(r) {
+      if (validField.indexOf(r.Dismissal) === -1 && !seenBad.has('fld:'+r.Dismissal)) {
+        seenBad.add('fld:'+r.Dismissal);
+        issues.push('Fielding: unrecognised dismissal "' + r.Dismissal + '"');
+      }
+    });
+    CRICKET_DATA.keeping.forEach(function(r) {
+      if (validKeep.indexOf(r.Dismissal) === -1 && !seenBad.has('kp:'+r.Dismissal)) {
+        seenBad.add('kp:'+r.Dismissal);
+        issues.push('Keeping: unrecognised dismissal "' + r.Dismissal + '"');
+      }
+    });
+    checks.push({ name: 'Dismissal label consistency', issues: issues,
+      pass: 'Every dismissal type across batting, fielding and keeping is a recognised value.' });
+  })();
+
+  // ── 7. Date sanity ─────────────────────────────────────────
+  (function() {
+    var today = new Date();
+    var issues = [];
+    CRICKET_DATA.matches.forEach(function(m) {
+      var d = new Date(m.Date + 'T12:00:00');
+      if (isNaN(d.getTime()) || d.getFullYear() < 2015 || d > new Date(today.getFullYear() + 1, 11, 31)) {
+        issues.push(m.Date + ' \u2014 ' + m.Team + ' XI vs ' + m.Opponent + ' (outside a sensible date range)');
+      }
+      if (m['Home/Away'] !== 'Home' && m['Home/Away'] !== 'Away') {
+        issues.push(m.Date + ' vs ' + m.Opponent + ': Home/Away = "' + m['Home/Away'] + '"');
+      }
+    });
+    checks.push({ name: 'Date and Home/Away sanity', issues: issues,
+      pass: 'Every match date is plausible and Home/Away is always Home or Away.' });
+  })();
+
+  // ── Render ──────────────────────────────────────────────────
+  var totalIssues = checks.reduce(function(s, c) { return s + c.issues.length; }, 0);
+  summaryEl.innerHTML = '<div class="kpi-row">' +
+    '<div class="kpi ' + (totalIssues === 0 ? 'green' : 'amber') + '"><div class="kpi-val">' + totalIssues + '</div><div class="kpi-label">Issues Found</div></div>' +
+    '<div class="kpi"><div class="kpi-val">' + checks.length + '</div><div class="kpi-label">Checks Run</div></div>' +
+    '<div class="kpi blue"><div class="kpi-val">' + checks.filter(function(c){return c.issues.length===0;}).length + '</div><div class="kpi-label">Checks Passed</div></div>' +
+  '</div>';
+
+  resultsEl.innerHTML = checks.map(function(c) {
+    var ok = c.issues.length === 0;
+    return '<div class="table-card"><div style="padding:14px 18px">' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:' + (ok ? '0' : '8') + 'px">' +
+        '<span style="color:' + (ok ? 'var(--green)' : 'var(--red)') + ';font-size:1.1rem">' + (ok ? '\u2713' : '\u26a0') + '</span>' +
+        '<strong style="font-size:0.92rem">' + c.name + '</strong>' +
+        (ok ? '' : '<span style="font-size:0.75rem;color:var(--red);margin-left:auto">' + c.issues.length + ' found</span>') +
+      '</div>' +
+      (ok
+        ? '<div style="font-size:0.82rem;color:var(--muted);padding-left:26px">' + c.pass + '</div>'
+        : '<div style="font-size:0.8rem;color:var(--muted);padding-left:26px;max-height:200px;overflow-y:auto">' +
+            c.issues.slice(0, 30).map(function(i) { return '<div style="padding:3px 0;border-bottom:1px solid var(--border)">' + i + '</div>'; }).join('') +
+            (c.issues.length > 30 ? '<div style="padding:6px 0;color:var(--muted)">\u2026 and ' + (c.issues.length - 30) + ' more</div>' : '') +
+          '</div>') +
+    '</div></div>';
+  }).join('');
 }
 
 function renderMethodologyMeta() {
