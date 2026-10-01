@@ -1498,6 +1498,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
           <option value="batting">Batting</option>
           <option value="bowling">Bowling</option>
           <option value="fielding">Fielding</option>
+          <option value="war">WAR</option>
         </select>
       </div>
       <div class="filter-group">
@@ -6306,6 +6307,15 @@ const RQ_MEASURES = {
     {key:'stumpings', label:'Stumpings', agg:'dismissal', match:'Stumping'},
     {key:'dismissals', label:'Total Dismissals Involved In', agg:'count'},
   ],
+  // WAR is a season-level aggregate, not a per-innings stat, so it gets its
+  // own category rather than being scattered across batting/bowling/fielding
+  // — Total WAR in particular doesn't belong to just one of those disciplines.
+  war: [
+    {key:'wartotal', label:'Total WAR', agg:'war', component:'total'},
+    {key:'warbat', label:'Batting WAR', agg:'war', component:'bRAR'},
+    {key:'warbowl', label:'Bowling WAR', agg:'war', component:'bwRAR'},
+    {key:'warfield', label:'Fielding WAR', agg:'war', component:'fRAR'},
+  ],
 };
 
 function sqPopulateOpponents() {
@@ -6411,6 +6421,85 @@ function getGamesPlayedMap(filteredBat, filteredBowl) {
 // Shared filter step used by both the leaderboard and the list view —
 // applies every standard query filter (team, opponent, H/A, result,
 // innings, position, year range) to a category's rows.
+// WAR as a Stat Query measure — reuses the same per-scope computation as the
+// dedicated WAR Leaderboard page, but respects only Team and Year here since
+// WAR's replacement-level baselines are computed once per team+season, not
+// per innings, so opponent/home-away/innings/position filters don't apply.
+function renderStatQueryWar(cat, measure) {
+  const teamFilter = document.getElementById('sq-team').value;
+  const yearFrom = document.getElementById('sq-yearfrom').value;
+  const yearTo = document.getElementById('sq-yearto').value;
+  const groupBy = document.getElementById('sq-groupby').value || 'player';
+
+  const allYears = [...new Set(CRICKET_DATA.matches.map(m => m.Date.slice(0,4)))].sort();
+  let years;
+  if (yearFrom && yearTo) years = allYears.filter(y => y >= yearFrom && y <= yearTo);
+  else if (yearFrom) years = allYears.filter(y => y >= yearFrom);
+  else if (yearTo) years = allYears.filter(y => y <= yearTo);
+  else years = allYears; // no year filter set -> full career, matching "All Time" on the WAR page
+
+  const teams = teamFilter ? [teamFilter] : ['1st', '2nd'];
+  const RPW = getWarRPW();
+
+  function componentValue(perPlayerEntry) {
+    if (measure.component === 'total') return (perPlayerEntry.bRAR||0) + (perPlayerEntry.bwRAR||0) + (perPlayerEntry.fRAR||0);
+    return perPlayerEntry[measure.component] || 0;
+  }
+
+  let results;
+  if (groupBy === 'season') {
+    // One row per player-year-team — deliberately NOT summed across years,
+    // so the single best season anyone ever had can actually surface (e.g.
+    // "highest Batting WAR in a season"), rather than only ever seeing
+    // career totals.
+    const rows = [];
+    years.forEach(year => {
+      teams.forEach(team => {
+        const scope = computeWarForScope(year, team);
+        Object.keys(scope.perPlayer).forEach(p => {
+          const val = componentValue(scope.perPlayer[p]) / RPW;
+          const label = teams.length > 1 ? p + ' \u2014 ' + year + ' (' + team + ')' : p + ' \u2014 ' + year;
+          rows.push({ name: label, playerOnly: p, value: val.toFixed(2) });
+        });
+      });
+    });
+    results = rows.sort((x,y) => parseFloat(y.value) - parseFloat(x.value)).slice(0, 25);
+  } else {
+    // Player (or Opponent, treated the same — WAR has no opponent-level
+    // breakdown): sum across the whole selected year range, matching the
+    // dedicated WAR Leaderboard page's career/range behaviour.
+    const totals = {};
+    years.forEach(year => {
+      teams.forEach(team => {
+        const scope = computeWarForScope(year, team);
+        Object.keys(scope.perPlayer).forEach(p => {
+          if (!totals[p]) totals[p] = 0;
+          totals[p] += componentValue(scope.perPlayer[p]);
+        });
+      });
+    });
+    results = Object.keys(totals).map(p => ({ name: p, playerOnly: p, value: (totals[p]/RPW).toFixed(2) }))
+      .sort((x,y) => parseFloat(y.value) - parseFloat(x.value))
+      .slice(0, 25);
+  }
+
+  const scopeLabel = (teamFilter ? teamFilter + ' XI' : 'Both XIs') + ', ' +
+    (groupBy === 'season' ? 'by season' : (yearFrom || yearTo ? (yearFrom||allYears[0]) + '\u2013' + (yearTo||allYears[allYears.length-1]) : 'All Time'));
+
+  document.getElementById('sq-thead').innerHTML =
+    `<th>Rank</th><th>${groupBy === 'season' ? 'Player \u2014 Season' : 'Player'}</th><th>${measure.label}</th><th></th>`;
+  document.querySelector('#tblStatQuery tbody').innerHTML =
+    `<tr><td colspan="4" style="font-size:0.72rem;color:var(--muted);padding:6px 10px;background:var(--surface2)">Showing ${scopeLabel} \u2014 opponent, home/away, innings and position filters don't apply to WAR</td></tr>` +
+    (results.map((r, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td style="cursor:pointer;color:var(--accent)" onclick="goToPlayer('${r.playerOnly}')">${r.name}</td>
+      <td><strong>${r.value}</strong></td>
+      <td></td>
+    </tr>
+  `).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px;">No results for this selection</td></tr>');
+}
+
 function sqApplyFilters(rows, cat) {
   const team = document.getElementById('sq-team').value;
   const opponent = document.getElementById('sq-opponent').value;
@@ -6487,6 +6576,17 @@ function runStatQueryLeaderboard(cat) {
   if (!RQ_MEASURES[cat]) return;
   const measure = RQ_MEASURES[cat].find(m => m.key === measureKey) || RQ_MEASURES[cat][0];
   if (!measure) return;
+
+  // WAR is a season-level aggregate, not a per-innings stat — it can't be
+  // built from the same row-by-row loop as everything else here, since its
+  // replacement-level baselines depend on the whole team+season, not
+  // individual records. Only Team and Year filters apply to it; opponent,
+  // home/away, innings and position are meaningless for a value computed
+  // once per season.
+  if (measure.agg === 'war') {
+    renderStatQueryWar(cat, measure);
+    return;
+  }
 
   const dataMap = {
     batting: getFiltered(CRICKET_DATA.batting),
@@ -6608,6 +6708,15 @@ function runStatQueryList(cat) {
   if (!RQ_MEASURES[cat]) return;
   const measure = RQ_MEASURES[cat].find(m => m.key === measureKey) || RQ_MEASURES[cat][0];
   if (!measure) return;
+
+  // WAR has no individual match-level record to list — it's one number per
+  // player per season, not an event that happened in a specific innings.
+  if (measure.agg === 'war') {
+    document.getElementById('sq-list-thead').innerHTML = '<th>WAR is a season total, not a per-match event</th>';
+    document.querySelector('#tblStatQueryList tbody').innerHTML =
+      '<tr><td style="text-align:center;color:var(--muted);padding:24px;">Switch to Leaderboard view to see WAR \u2014 there\'s no individual match record to list for a season-level stat.</td></tr>';
+    return;
+  }
 
   const dataMap = {
     batting: getFiltered(CRICKET_DATA.batting),
@@ -7260,13 +7369,22 @@ function computeWarForScope(yearFilter, team) {
 
   // Replacement-level fielding: everyone who plays a match is expected to
   // contribute SOME general fielding value, at a baseline rate derived from
-  // this scope's own average dismissals per match appearance. Without this,
-  // fielding RAR could only ever add value (crediting catches) and never
-  // subtract it, so a player who fields for 50 matches without a single
-  // involvement looked identical to one who never plays at all — clearly
-  // wrong. Wicketkeeping is deliberately excluded from this baseline: only
-  // one person keeps per match, so it isn't something everyone is expected
-  // to do, and stays as pure bonus value on top.
+  // this scope's own average dismissals per OVER FIELDED — not per match
+  // played. Matches vary hugely in how many overs get bowled (from 17 to a
+  // full 45 this season alone), so a player who fields a full 45-over
+  // innings and one who fields a 17-over blowout had very different real
+  // opportunity, even though both count as "1 match" the same way. Run-outs
+  // are also weighted higher than catches here, consistent with the
+  // Fielder of the Season analysis — a more purely self-made play, not
+  // dependent on a bowler creating a false shot. Wicketkeeping is
+  // deliberately excluded from this baseline: only one person keeps per
+  // match, so it isn't something everyone is expected to do, and stays as
+  // pure bonus value on top.
+  var FIELDING_TYPE_WEIGHT = {'Caught': 1.0, 'Run Out': 1.5};
+  var matchOversLookup = {};
+  CRICKET_DATA.matches.filter(inScope).forEach(function(m) {
+    matchOversLookup[m.Date + '|' + m.Opponent] = m['Overs Bowled'] || 0;
+  });
   var matchesPlayed = {};
   [['batting','Batter'], ['bowling','Bowler'], ['fielding','Fielder']].forEach(function(pair) {
     CRICKET_DATA[pair[0]].filter(inScope).forEach(function(r) {
@@ -7276,9 +7394,16 @@ function computeWarForScope(yearFilter, team) {
       matchesPlayed[p].add(r.Date + '|' + r.Opponent);
     });
   });
-  var totalMatchAppearances = Object.keys(matchesPlayed).reduce(function(s,p){return s+matchesPlayed[p].size;}, 0);
-  var totalFieldingDismissals = fld.filter(function(r){return r.Dismissal==='Caught'||r.Dismissal==='Run Out';}).length;
-  var avgFieldingRate = totalMatchAppearances > 0 ? totalFieldingDismissals / totalMatchAppearances : 0;
+  var oversFielded = {};
+  Object.keys(matchesPlayed).forEach(function(p) {
+    oversFielded[p] = 0;
+    matchesPlayed[p].forEach(function(key) { oversFielded[p] += matchOversLookup[key] || 0; });
+  });
+  var totalOversFielded = Object.keys(oversFielded).reduce(function(s,p){return s+oversFielded[p];}, 0);
+  var totalWeightedFieldingDismissals = fld.reduce(function(s,r) {
+    return s + (FIELDING_TYPE_WEIGHT[r.Dismissal] || 0);
+  }, 0);
+  var avgFieldingRate = totalOversFielded > 0 ? totalWeightedFieldingDismissals / totalOversFielded : 0;
   var replacementFieldingRate = avgFieldingRate * 0.70;
 
   var RPW = getWarRPW();
@@ -7320,13 +7445,15 @@ function computeWarForScope(yearFilter, team) {
     bwRAR[p] = economyRAR + wicketValue;
   });
 
-  // General fielding RAR: actual dismissals vs. the replacement-level rate
-  // scaled by matches played — this is where negative fielding value comes from.
+  // General fielding RAR: weighted dismissals vs. the replacement-level rate
+  // scaled by overs actually fielded — this is where negative fielding
+  // value comes from.
   var fRAR = {};
   Object.keys(matchesPlayed).forEach(function(p) {
-    var actualDismissals = fld.filter(function(r){return r.Fielder===p && (r.Dismissal==='Caught'||r.Dismissal==='Run Out');}).length;
-    var expected = replacementFieldingRate * matchesPlayed[p].size;
-    fRAR[p] = (actualDismissals - expected) * runsPerWicket;
+    var actualWeighted = fld.filter(function(r){return r.Fielder===p;})
+      .reduce(function(s,r){return s + (FIELDING_TYPE_WEIGHT[r.Dismissal] || 0);}, 0);
+    var expected = replacementFieldingRate * oversFielded[p];
+    fRAR[p] = (actualWeighted - expected) * runsPerWicket;
   });
   // Keeping RAR: gets its OWN replacement-level baseline, calibrated to the
   // keeper-specific dismissal rate per match kept (roughly 7x the general
