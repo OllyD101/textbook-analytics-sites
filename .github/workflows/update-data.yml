@@ -1,0 +1,65 @@
+name: Update dashboard from Play-Cricket
+
+on:
+  schedule:
+    # GitHub runs schedules in UTC (UK summer time is UTC+1). Runs can start a few minutes late.
+    - cron: "*/30 12-22 * * 6,0"   # every 30 minutes, Saturday and Sunday afternoons and evenings
+    - cron: "0 21 * * 1-5"          # once each weekday evening (midweek games, late scorecard edits)
+  workflow_dispatch:                # "Run workflow" button in the Actions tab
+    inputs:
+      mode:
+        description: "dry_run = compare only, publish = update the site"
+        type: choice
+        options: [dry_run, publish]
+        default: dry_run
+      seasons:
+        description: "Seasons to check, e.g. 2026 (blank = current season)"
+        required: false
+
+permissions:
+  contents: write                   # needed to commit the updated data files
+
+concurrency:
+  group: update-dashboard-data      # never run two updates at once
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch and convert Play-Cricket scorecards
+        env:
+          PLAY_CRICKET_API_TOKEN: ${{ secrets.PLAY_CRICKET_API_TOKEN }}
+          PLAY_CRICKET_SITE_ID: ${{ vars.PLAY_CRICKET_SITE_ID }}
+          # Manual runs use the mode you pick; scheduled runs use the PIPELINE_MODE variable (dry_run until you switch it)
+          PIPELINE_MODE: ${{ github.event.inputs.mode || vars.PIPELINE_MODE || 'dry_run' }}
+          PIPELINE_SEASONS: ${{ github.event.inputs.seasons }}
+        run: python pipeline/run.py
+
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: update-report
+          path: pipeline/last_report.md
+          if-no-files-found: ignore
+
+      - name: Publish changes to the site
+        if: success()
+        run: |
+          git config user.name "dashboard-bot"
+          git config user.email "dashboard-bot@users.noreply.github.com"
+          git add docs/data.json docs/league.json pipeline/state.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "Nothing new to publish."
+          else
+            git commit -m "Update data from Play-Cricket ($(date -u +'%Y-%m-%d %H:%M') UTC)"
+            git push
+          fi
