@@ -1,0 +1,21 @@
+{
+  "mode": "dry_run",
+  "site_id": null,
+  "club_name_match": "Hessle",
+  "teams": {
+    "1st XI": "1st",
+    "2nd XI": "2nd"
+  },
+  "data_path": "docs/data.json",
+  "league_path": "docs/league.json",
+  "pause_seconds": 1.0,
+  "awards": {
+    "_help": "Man of the Match / Player of the Month by Match Value from this date. Earlier awards are never changed.",
+    "match_value_from": "2027-01-01",
+    "wicket_value": 15,
+    "catch_share": 0.25,
+    "runout_share": 0.5,
+    "tempo_weight": 0.5,
+    "potm_grace_days": 3
+  }
+}

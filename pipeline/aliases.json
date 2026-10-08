@@ -1,0 +1,11 @@
+{
+  "_help": "Play-Cricket name (left) -> name already used on the dashboard (right). Names that only differ by 'CC' or 'Cricket Club' match automatically.",
+  "opponents": {
+    "Sutton-on-Hull CC": "Sutton",
+    "Sutton on Hull CC": "Sutton",
+    "North Cave Coal Exporters CC": "NCCE",
+    "Bransholme & Kingswood CC": "Bransholme",
+    "Middleton & North Dalton CC": "Middleton & ND"
+  },
+  "players": {}
+}
