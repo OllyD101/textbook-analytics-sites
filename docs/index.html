@@ -453,6 +453,37 @@ button[onclick*="shareMilestoneCard"]:hover,button[onclick*="shareSeasonAward"]:
 @media(max-width:1000px){.pf-tables{grid-template-columns:1fr;}}
 .pf-tables .table-card{margin-bottom:0;}
 @media(max-width:640px){ .pf-stat-grid{grid-template-columns:1fr;} .pf-header{padding:16px;} .pf-tile-val{font-size:1.25rem;} }
+
+/* Compare page: player header cards, head-to-head stat cards with split bars, full-width charts */
+.cmp-top{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch;margin-bottom:14px;}
+.cmp-player-card{border:1px solid var(--border) !important;border-radius:12px;padding:16px 18px;background:var(--surface);}
+.cmp-player-card label{color:var(--muted) !important;}
+.cmp-vs{align-self:center;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--muted);padding:0 6px;}
+.cmp-meta{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin:10px 0 10px;}
+.cmp-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.cmp-tile-lead{box-shadow:inset 0 0 0 1px rgba(255,255,255,0.18);}
+.cmp-up{color:#e6edf3;font-size:0.7em;margin:0 3px;}
+.cmp-key{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;font-weight:700;margin:4px 2px 10px;}
+.cmp-key span:last-child{text-align:right;}
+.cmp-key-mid{font-weight:400;font-size:0.75rem;color:var(--muted);text-align:center;}
+.cmp-stats{grid-template-columns:repeat(2,minmax(0,1fr));}
+.cmp-stack{display:flex;flex-direction:column;gap:14px;}
+.cmp-stats .pf-stat-card{padding:14px 16px;}
+@media(max-width:900px){.cmp-stats{grid-template-columns:1fr;}}
+.cmp-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;column-gap:10px;padding:6px 0 7px;border-bottom:1px solid var(--border);}
+.cmp-row:last-child{border-bottom:none;}
+.cmp-v{font-size:1.02rem;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;}
+.cmp-v1{text-align:right;} .cmp-v2{text-align:left;}
+.cmp-v.lead{font-weight:800;color:#ffffff;} .cmp-v.trail{color:var(--muted);font-weight:500;}
+.cmp-l{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;text-align:center;}
+.cmp-bar{grid-column:1 / -1;height:4px;border-radius:2px;margin-top:5px;overflow:hidden;background:var(--cmp-c2,#8db8f2);opacity:0.85;}
+.cmp-bar span{display:block;height:100%;background:var(--cmp-c1,#3d7fe0);}
+[data-chart-role="batting"] .cmp-bar{--cmp-c1:#d63a46;--cmp-c2:#f08a92;}
+[data-chart-role="bowling"] .cmp-bar{--cmp-c1:#3d7fe0;--cmp-c2:#8db8f2;}
+[data-chart-role="fielding"] .cmp-bar{--cmp-c1:#2fa35a;--cmp-c2:#7fd6a0;}
+.cmp-charts{grid-template-columns:repeat(2,minmax(0,1fr));}
+@media(max-width:900px){ .cmp-top{grid-template-columns:1fr;} .cmp-vs{text-align:center;} .cmp-charts{grid-template-columns:1fr;} }
+@media(max-width:520px){ .cmp-tiles{grid-template-columns:repeat(2,minmax(0,1fr));} }
 </style>
 </head>
 <body>
@@ -942,15 +973,17 @@ button[onclick*="shareMilestoneCard"]:hover,button[onclick*="shareSeasonAward"]:
 <!-- COMPARE -->
 <div id="page-compare" class="page">
   <!-- Player selectors -->
-  <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:end;margin-bottom:24px;">
-    <div class="player-select-card" style="border-color:var(--green)">
-      <label style="color:var(--green)">Player 1</label>
+  <div class="cmp-top">
+    <div class="player-select-card cmp-player-card">
+      <label>Player 1</label>
       <select id="cmpPlayer1" onchange="renderCompare()" style="width:100%;font-size:0.95rem;padding:8px 12px;"><option value="">Select player...</option></select>
+      <div id="cmpHead1"></div>
     </div>
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--muted);text-align:center;padding:8px;">VS</div>
-    <div class="player-select-card" style="border-color:var(--blue)">
-      <label style="color:var(--blue)">Player 2</label>
+    <div class="cmp-vs">VS</div>
+    <div class="player-select-card cmp-player-card">
+      <label>Player 2</label>
       <select id="cmpPlayer2" onchange="renderCompare()" style="width:100%;font-size:0.95rem;padding:8px 12px;"><option value="">Select player...</option></select>
+      <div id="cmpHead2"></div>
     </div>
   </div>
 
@@ -2952,6 +2985,7 @@ function renderCompare() {
   const p1 = document.getElementById('cmpPlayer1').value;
   const p2 = document.getElementById('cmpPlayer2').value;
   const el = document.getElementById('compare-content');
+  ['cmpHead1', 'cmpHead2'].forEach(function(id, i) { var h = document.getElementById(id); if (h && !(i ? p2 : p1)) h.innerHTML = ''; });
   if(!p1 || !p2) { el.innerHTML='<div style="text-align:center;color:var(--muted);padding:40px;font-size:0.9rem;">Select two players above to compare</div>'; return; }
 
   const bs1 = computeBatStats(CRICKET_DATA.batting.filter(r=>r.Batter===p1))[0] || {name:p1,inn:0,runs:0,hs:0,avg:'-',sr:'-',fifties:0,hundreds:0,fours:0,sixes:0,notOuts:0,dnbs:0};
@@ -2973,24 +3007,51 @@ function renderCompare() {
   const wins2 = CRICKET_DATA.batting.filter(r=>r.Batter===p2&&r['W/L']==='W').length;
   const played2 = CRICKET_DATA.batting.filter(r=>r.Batter===p2&&(r['W/L']==='W'||r['W/L']==='L')).length;
 
-  // Helper: green = better (higher), red = worse (lower). flip=true means lower is better
-  function cell(v1, v2, flip=false) {
-    const n1=parseFloat(v1), n2=parseFloat(v2), valid=!isNaN(n1)&&!isNaN(n2)&&n1!==n2;
-    const win1 = valid && (flip ? n1<n2 : n1>n2);
-    const win2 = valid && (flip ? n2<n1 : n2>n1);
-    return [
-      `<span style="font-size:1.1rem;font-weight:700;color:${win1?'var(--green)':win2?'var(--red)':'var(--text)'}">${v1}${win1?' ▲':''}</span>`,
-      `<span style="font-size:1.1rem;font-weight:700;color:${win2?'var(--green)':win1?'var(--red)':'var(--text)'}">${v2}${win2?' ▲':''}</span>`
-    ];
+  // Who's ahead on each stat (flip = lower is better). Best figures: more wickets, then fewer runs.
+  function _num(v) { var n = parseFloat(String(v).replace('%', '')); return isNaN(n) ? null : n; }
+  function _lead(v1, v2, flip, kind) {
+    if (kind === 'best') {
+      var a = String(v1).split('/'), b = String(v2).split('/');
+      if (a.length < 2 || b.length < 2) return 0;
+      var w1 = +a[0], w2 = +b[0], r1 = +a[1], r2 = +b[1];
+      return w1 !== w2 ? (w1 > w2 ? 1 : 2) : (r1 !== r2 ? (r1 < r2 ? 1 : 2) : 0);
+    }
+    var n1 = _num(v1), n2 = _num(v2);
+    if (n1 === null || n2 === null || n1 === n2) return 0;
+    return (flip ? n1 < n2 : n1 > n2) ? 1 : 2;
   }
-
-  function statRow(label, v1, v2, flip=false) {
-    const [c1,c2] = cell(v1,v2,flip);
-    return `<tr>
-      <td style="text-align:right;padding:7px 12px">${c1}</td>
-      <td style="text-align:center;padding:7px 8px;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap">${label}</td>
-      <td style="text-align:left;padding:7px 12px">${c2}</td>
-    </tr>`;
+  function statRow(label, v1, v2, flip, kind) {
+    var lead = _lead(v1, v2, flip, kind), n1 = _num(v1), n2 = _num(v2), share = 50;
+    if (kind !== 'best' && n1 !== null && n2 !== null && (n1 > 0 || n2 > 0)) {
+      if (flip) { var i1 = n1 > 0 ? 1 / n1 : 0, i2 = n2 > 0 ? 1 / n2 : 0; share = (i1 + i2) ? i1 / (i1 + i2) * 100 : 50; }
+      else share = n1 / (n1 + n2) * 100;
+    } else if (lead) share = lead === 1 ? 65 : 35;
+    return '<div class="cmp-row">' +
+      '<div class="cmp-v cmp-v1' + (lead === 1 ? ' lead' : (lead === 2 ? ' trail' : '')) + '">' + (lead === 1 ? '<span class="cmp-up">▲</span>' : '') + v1 + '</div>' +
+      '<div class="cmp-l">' + label + '</div>' +
+      '<div class="cmp-v cmp-v2' + (lead === 2 ? ' lead' : (lead === 1 ? ' trail' : '')) + '">' + v2 + (lead === 2 ? '<span class="cmp-up">▲</span>' : '') + '</div>' +
+      '<div class="cmp-bar"><span style="width:' + share.toFixed(1) + '%"></span></div></div>';
+  }
+  function teamsOf(p) {
+    var t = new Set(CRICKET_DATA.batting.filter(function(r) { return r.Batter === p; }).map(function(r) { return r.Team; })
+      .concat(CRICKET_DATA.bowling.filter(function(r) { return r.Bowler === p; }).map(function(r) { return r.Team; })));
+    return ['1st', '2nd'].filter(function(x) { return t.has(x); }).join(' & ') || '—';
+  }
+  function tile(role, label, value, sub, lead) {
+    return '<div class="pf-tile' + (lead ? ' cmp-tile-lead' : '') + '" data-chart-role="' + role + '"><div class="pf-tile-label">' + label + (lead ? ' <span class="cmp-up">▲</span>' : '') + '</div>' +
+      '<div class="pf-tile-val">' + value + '</div>' + (sub ? '<div class="pf-tile-sub">' + sub + '</div>' : '') + '</div>';
+  }
+  function head(i, p, bs, bw, f, m) {
+    var o = i === 1 ? [bs2, bw2, f2] : [bs1, bw1, f1];
+    var L = function(v, ov, flip) { return _lead(v, ov, flip) === 1; };  // v = this player, ov = the other
+    var dis = f.catches + f.stumpings + f.runouts, odis = o[2].catches + o[2].stumpings + o[2].runouts;
+    return '<div class="cmp-meta">' + teamsOf(p) + ' XI · ' + m + ' matches</div><div class="cmp-tiles">' +
+      tile('batting', 'Runs', bs.runs, 'Avg ' + bs.avg, L(bs.runs, o[0].runs)) +
+      tile('batting', 'Strike rate', bs.sr, 'HS ' + bs.hs, L(bs.sr, o[0].sr)) +
+      tile('bowling', 'Wickets', bw.wickets, 'Best ' + bw.best, L(bw.wickets, o[1].wickets)) +
+      tile('bowling', 'Economy', bw.econ, 'Avg ' + bw.avg, L(bw.econ, o[1].econ, true)) +
+      tile('fielding', 'Dismissals', dis, f.catches + ' ct · ' + f.stumpings + ' st · ' + f.runouts + ' ro', L(dis, odis)) +
+      tile('club', 'Man of the Match', f.motm, '', L(f.motm, o[2].motm)) + '</div>';
   }
 
   // Batting runs by year for chart
@@ -2999,83 +3060,43 @@ function renderCompare() {
   const runsByYear2 = years.map(y=>CRICKET_DATA.batting.filter(r=>r.Batter===p2&&r.Date.slice(0,4)===y&&typeof r.Runs==='number').reduce((s,r)=>s+r.Runs,0));
   const wktsByYear1 = years.map(y=>CRICKET_DATA.bowling.filter(r=>r.Bowler===p1&&r.Date.slice(0,4)===y).reduce((s,r)=>s+(r.Wickets||0),0));
   const wktsByYear2 = years.map(y=>CRICKET_DATA.bowling.filter(r=>r.Bowler===p2&&r.Date.slice(0,4)===y).reduce((s,r)=>s+(r.Wickets||0),0));
+  // batting average and economy per season (null where the player didn't bat / bowl that year)
+  const avgByYear = p => years.map(y => { const s = computeBatStats(CRICKET_DATA.batting.filter(r=>r.Batter===p&&r.Date.slice(0,4)===y))[0]; const v = s ? parseFloat(s.avg) : NaN; return isNaN(v) ? null : v; });
+  const econByYear = p => years.map(y => { const s = computeBowlStats(CRICKET_DATA.bowling.filter(r=>r.Bowler===p&&r.Date.slice(0,4)===y))[0]; const v = s ? parseFloat(s.econ) : NaN; return isNaN(v) ? null : v; });
+  const avgByYear1 = avgByYear(p1), avgByYear2 = avgByYear(p2), econByYear1 = econByYear(p1), econByYear2 = econByYear(p2);
 
+  document.getElementById('cmpHead1').innerHTML = head(1, p1, bs1, bw1, f1, m1);
+  document.getElementById('cmpHead2').innerHTML = head(2, p2, bs2, bw2, f2, m2);
+  const winPct = (w, p) => p ? Math.round(w / p * 100) + '%' : '—';
   el.innerHTML = `
-    <!-- Names banner -->
-    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin-bottom:20px;" class="compare-vs-grid">
-      <div style="background:rgba(63,185,80,0.08);border:1px solid var(--green);border-radius:10px 0 0 10px;padding:16px 20px;">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--green)">${p1}</div>
-        <div style="font-size:0.72rem;color:var(--muted)">${m1} matches</div>
+    <div class="cmp-key"><span>${p1}</span><span class="cmp-key-mid">▲ marks who's ahead · the bar shows the split</span><span>${p2}</span></div>
+    <div class="pf-stats cmp-stats">
+      <div class="profile-card pf-stat-card" data-chart-role="batting">
+        <div class="profile-section-title" style="margin-top:0">Batting</div>
+        ${statRow('Innings', bs1.inn, bs2.inn)}${statRow('Runs', bs1.runs, bs2.runs)}${statRow('Highest Score', bs1.hs, bs2.hs)}
+        ${statRow('Average', bs1.avg, bs2.avg)}${statRow('Strike Rate', bs1.sr, bs2.sr)}${statRow('50s', bs1.fifties, bs2.fifties)}
+        ${statRow('100s', bs1.hundreds, bs2.hundreds)}${statRow('Not Outs', bs1.notOuts, bs2.notOuts)}${statRow('4s', bs1.fours, bs2.fours)}
+        ${statRow('6s', bs1.sixes, bs2.sixes)}${statRow('Win % (batting)', winPct(wins1, played1), winPct(wins2, played2))}
       </div>
-      <div style="background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;padding:0 20px;">
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--muted)">VS</span>
+      <div class="cmp-stack">
+      <div class="profile-card pf-stat-card" data-chart-role="bowling">
+        <div class="profile-section-title" style="margin-top:0">Bowling</div>
+        ${statRow('Wickets', bw1.wickets, bw2.wickets)}${statRow('Overs', bw1.overs, bw2.overs)}${statRow('Average', bw1.avg, bw2.avg, true)}
+        ${statRow('Economy', bw1.econ, bw2.econ, true)}${statRow('Strike Rate', bw1.sr, bw2.sr, true)}${statRow('Best Figures', bw1.best, bw2.best, false, 'best')}
+        ${statRow('5-Wkt Hauls', bw1.fiveWickets, bw2.fiveWickets)}${statRow('Maidens', bw1.maidens, bw2.maidens)}
       </div>
-      <div style="background:rgba(88,166,255,0.08);border:1px solid var(--blue);border-radius:0 10px 10px 0;padding:16px 20px;text-align:right;">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--blue)">${p2}</div>
-        <div style="font-size:0.72rem;color:var(--muted)">${m2} matches</div>
+      <div class="profile-card pf-stat-card" data-chart-role="fielding">
+        <div class="profile-section-title" style="margin-top:0">Fielding &amp; awards</div>
+        ${statRow('Catches', f1.catches, f2.catches)}${statRow('Stumpings', f1.stumpings, f2.stumpings)}
+        ${statRow('Run Outs', f1.runouts, f2.runouts)}${statRow('MoTM Awards', f1.motm, f2.motm)}
       </div>
-    </div>
-
-    <!-- Stat tables -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-
-      <!-- Batting -->
-      <div class="table-card">
-        <div class="table-header"><span class="table-title">⚾ Batting</span></div>
-        <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
-          <tbody>
-            ${statRow('Innings', bs1.inn, bs2.inn)}
-            ${statRow('Runs', bs1.runs, bs2.runs)}
-            ${statRow('Highest Score', bs1.hs, bs2.hs)}
-            ${statRow('Average', bs1.avg, bs2.avg)}
-            ${statRow('Strike Rate', bs1.sr, bs2.sr)}
-            ${statRow('50s', bs1.fifties, bs2.fifties)}
-            ${statRow('100s', bs1.hundreds, bs2.hundreds)}
-            ${statRow('Not Outs', bs1.notOuts, bs2.notOuts)}
-            ${statRow('4s', bs1.fours, bs2.fours)}
-            ${statRow('6s', bs1.sixes, bs2.sixes)}
-            ${statRow('Win % (batting)', played1?Math.round(wins1/played1*100)+'%':'—', played2?Math.round(wins2/played2*100)+'%':'—')}
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Bowling -->
-      <div class="table-card">
-        <div class="table-header"><span class="table-title">🏏 Bowling</span></div>
-        <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
-          <tbody>
-            ${statRow('Wickets', bw1.wickets, bw2.wickets)}
-            ${statRow('Overs', bw1.overs, bw2.overs)}
-            ${statRow('Average', bw1.avg, bw2.avg, true)}
-            ${statRow('Economy', bw1.econ, bw2.econ, true)}
-            ${statRow('Strike Rate', bw1.sr, bw2.sr, true)}
-            ${statRow('Best Figures', bw1.best, bw2.best)}
-            ${statRow('5-Wkt Hauls', bw1.fiveWickets, bw2.fiveWickets)}
-            ${statRow('Maidens', bw1.maidens, bw2.maidens)}
-          </tbody>
-        </table>
-        <div class="table-header" style="margin-top:0;border-top:1px solid var(--border)"><span class="table-title">🧤 Fielding & Awards</span></div>
-        <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
-          <tbody>
-            ${statRow('Catches', f1.catches, f2.catches)}
-            ${statRow('Stumpings', f1.stumpings, f2.stumpings)}
-            ${statRow('Run Outs', f1.runouts, f2.runouts)}
-            ${statRow('MoTM Awards', f1.motm, f2.motm)}
-          </tbody>
-        </table>
       </div>
     </div>
-
-    <!-- Charts -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-      <div class="chart-card">
-        <div class="chart-title">Runs per Season</div>
-        <div class="chart-wrap"><canvas id="cmpChartRuns"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Wickets per Season</div>
-        <div class="chart-wrap"><canvas id="cmpChartWkts"></canvas></div>
-      </div>
+    <div class="pf-charts cmp-charts">
+      <div class="chart-card"><div class="chart-title">Runs per Season</div><div class="chart-wrap"><canvas id="cmpChartRuns"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Batting Average by Season</div><div class="chart-wrap"><canvas id="cmpChartAvg"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Wickets per Season</div><div class="chart-wrap"><canvas id="cmpChartWkts"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Economy by Season</div><div class="chart-wrap"><canvas id="cmpChartEcon"></canvas></div></div>
     </div>
   `;
 
@@ -3087,6 +3108,14 @@ function renderCompare() {
     makeChart('cmpChartWkts',{type:'bar',data:{labels:years,datasets:[
       {label:p1,data:wktsByYear1,backgroundColor:'rgba(63,185,80,0.7)'},
       {label:p2,data:wktsByYear2,backgroundColor:'rgba(88,166,255,0.7)'}
+    ]},options:chartOpts()});
+    makeChart('cmpChartAvg',{type:'line',data:{labels:years,datasets:[
+      {label:p1,data:avgByYear1,borderColor:'#c5202f',backgroundColor:'rgba(197,32,47,0.1)',tension:0.3,spanGaps:true},
+      {label:p2,data:avgByYear2,borderColor:'#c5202f',backgroundColor:'rgba(197,32,47,0.1)',tension:0.3,spanGaps:true}
+    ]},options:chartOpts()});
+    makeChart('cmpChartEcon',{type:'line',data:{labels:years,datasets:[
+      {label:p1,data:econByYear1,borderColor:'#c5202f',backgroundColor:'rgba(197,32,47,0.1)',tension:0.3,spanGaps:true},
+      {label:p2,data:econByYear2,borderColor:'#c5202f',backgroundColor:'rgba(197,32,47,0.1)',tension:0.3,spanGaps:true}
     ]},options:chartOpts()});
 
   },150);
