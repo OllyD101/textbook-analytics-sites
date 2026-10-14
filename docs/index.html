@@ -219,7 +219,7 @@ tbody td{padding:8px 14px;white-space:nowrap;}
   /* Charts — single column */
   .charts-grid{grid-template-columns:1fr;gap:12px;}
   .chart-card{padding:14px;}
-  .chart-wrap{height:200px;}
+  .chart-wrap{height:270px;}
 
   /* Tables — horizontal scroll with touch */
   .table-wrap{-webkit-overflow-scrolling:touch;}
@@ -537,6 +537,99 @@ body.mc-lock{overflow:hidden;}
   .mc-table{font-size:0.8rem;} .mc-table td, .mc-table th{padding:5px 4px;}
   .mc-facts{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
+
+.kpi[style*="--kpi-strip"]::before{background:var(--kpi-strip) !important;}
+
+/* Phones: match lists become compact cards (date · XI · venue · result / opponent / score · MoTM) */
+@media(max-width:640px){
+  #tblMatches thead, #tblAllMatches thead{display:none;}
+  #tblMatches, #tblAllMatches, #tblMatches tbody, #tblAllMatches tbody{display:block;width:100%;}
+  #tblMatches tbody tr:not(.show-more-row), #tblAllMatches tbody tr:not(.show-more-row){
+    display:grid;grid-template-columns:auto auto 1fr auto;grid-template-areas:"date xi ha res" "opp opp opp opp" "sc sc motm motm";
+    align-items:center;gap:4px 8px;padding:10px 12px;border-bottom:1px solid var(--border);}
+  #tblMatches tbody tr td, #tblAllMatches tbody tr td{padding:0 !important;border:none !important;text-align:left !important;background:none !important;position:static !important;box-shadow:none !important;}
+  #tblMatches td:nth-child(1), #tblAllMatches td:nth-child(1){grid-area:date;font-size:0.8rem;color:var(--muted);}
+  #tblMatches td:nth-child(2), #tblAllMatches td:nth-child(2){grid-area:xi;}
+  #tblMatches td:nth-child(3), #tblAllMatches td:nth-child(3){grid-area:opp;font-weight:700;font-size:0.98rem;}
+  #tblMatches td:nth-child(4), #tblAllMatches td:nth-child(4){grid-area:ha;font-size:0.78rem;color:var(--muted);}
+  #tblMatches td:nth-child(5), #tblAllMatches td:nth-child(5){grid-area:res;justify-self:end;}
+  #tblMatches td:nth-child(6), #tblAllMatches td:nth-child(6){grid-area:sc;font-weight:600;font-variant-numeric:tabular-nums;}
+  #tblMatches td:nth-child(7), #tblAllMatches td:nth-child(7){grid-area:sc;margin-left:var(--mc-scw,62px);font-variant-numeric:tabular-nums;color:var(--muted);}
+  #tblMatches td:nth-child(7)::before, #tblAllMatches td:nth-child(7)::before{content:'v ';color:var(--muted);}
+  #tblMatches td:nth-child(8), #tblAllMatches td:nth-child(8){grid-area:motm;justify-self:end;}
+  #tblMatches tr.show-more-row, #tblAllMatches tr.show-more-row{display:block;}
+  #tblMatches tr.show-more-row td, #tblAllMatches tr.show-more-row td{display:block;text-align:center !important;padding:10px !important;}
+}
+
+/* Chase/Defend: games open their match card; band tables hint they're clickable */
+.table-hint{font-weight:400;font-size:0.75rem;color:var(--muted);}
+#tblBestChases tbody tr:not(.show-more-row), #tblFailedChases tbody tr:not(.show-more-row), #tblBestDef tbody tr:not(.show-more-row),
+#tblDefLost tbody tr:not(.show-more-row), #tblChaseBandDetail tbody tr, #tblDefBandDetail tbody tr, #tblChaseBands tbody tr, #tblDefBands tbody tr{cursor:pointer;}
+#tblBestChases tbody tr:hover td, #tblFailedChases tbody tr:hover td, #tblBestDef tbody tr:hover td, #tblDefLost tbody tr:hover td,
+#tblChaseBandDetail tbody tr:hover td, #tblDefBandDetail tbody tr:hover td, #tblChaseBands tbody tr:hover td, #tblDefBands tbody tr:hover td{background:var(--surface2);}
+
+/* Hessle-dle */
+.nav-play{color:var(--text) !important;font-weight:700;}
+.hd-wrap{max-width:820px;margin:0 auto;}
+.hd-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+.hd-title{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:1px;line-height:1;color:var(--text);}
+.hd-sub{color:var(--muted);font-size:0.88rem;margin-top:4px;}
+.hd-head-btns{display:flex;gap:8px;}
+.hd-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;font-size:0.85rem;font-weight:600;cursor:pointer;}
+.hd-btn:hover{border-color:var(--muted);}
+.hd-modes{display:inline-flex;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px;margin-bottom:12px;}
+.hd-mode-btn{background:none;border:none;color:var(--muted);padding:6px 14px;border-radius:999px;font-size:0.82rem;font-weight:600;cursor:pointer;}
+.hd-mode-btn.active{background:var(--accent);color:#fff;}
+.hd-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px;font-size:0.88rem;color:var(--muted);line-height:1.55;}
+.hd-panel p{margin:0 0 8px;} .hd-panel strong{color:var(--text);}
+.hd-legend{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 10px;color:var(--text);}
+.hd-legend .hd-tile{width:26px;height:26px;min-height:0;font-size:0.8rem;animation:none;}
+.hd-input-row{display:flex;gap:8px;margin-bottom:6px;}
+#hd-input{flex:1;min-width:0;font-size:1rem;padding:10px 12px;}
+.hd-go{padding:10px 18px;width:auto !important;flex:0 0 auto;}
+.hd-msg{min-height:1.3em;font-size:0.85rem;color:var(--muted);margin-bottom:8px;}
+.hd-msg strong{color:var(--text);}
+.hd-board{display:flex;flex-direction:column;gap:6px;}
+.hd-row{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(7,minmax(0,1fr));gap:6px;align-items:stretch;}
+.hd-row-head .hd-th, .hd-row-head .hd-name{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);text-align:center;padding:0 2px;}
+.hd-row-head .hd-name{text-align:left;}
+.hd-name{display:flex;align-items:center;font-weight:700;font-size:0.9rem;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;}
+.hd-name-ok{color:#7fd6a0;}
+.hd-tile{position:relative;display:flex;align-items:center;justify-content:center;min-height:46px;border-radius:8px;font-weight:700;font-size:0.9rem;color:#fff;
+  font-variant-numeric:tabular-nums;}
+.hd-row-new .hd-tile{animation:hdFlip 0.45s ease both;}
+.hd-ok{background:#2fa35a;} .hd-close{background:#3d7fe0;} .hd-no{background:#2b313b;color:#c9d1d9;}
+.hd-blank{background:var(--surface);border:1px dashed var(--border);animation:none;}
+.hd-arrow{margin-left:3px;font-size:0.85rem;opacity:0.9;}
+@keyframes hdFlip{from{transform:rotateX(90deg);opacity:0;}to{transform:rotateX(0);opacity:1;}}
+@media(prefers-reduced-motion:reduce){.hd-tile{animation:none;}}
+.hd-done{margin-top:14px;background:var(--surface);border:1px solid var(--border);border-top-width:3px;border-radius:12px;padding:16px 18px;text-align:center;}
+.hd-done-won{border-top-color:#2fa35a;} .hd-done-lost{border-top-color:#c8202f;}
+.hd-done-h{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:1px;color:var(--text);}
+.hd-done-p{color:var(--muted);margin-bottom:12px;} .hd-done-p strong{color:var(--text);}
+.hd-card{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin-bottom:14px;}
+.hd-card div{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px;display:flex;flex-direction:column;gap:2px;}
+.hd-card span{font-size:0.66rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);font-weight:700;}
+.hd-card strong{font-size:1.05rem;color:var(--text);}
+.hd-done-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.hd-note{font-size:0.78rem;color:var(--muted);margin-top:10px;}
+.hd-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;text-align:center;}
+.hd-stat-v{font-size:1.6rem;font-weight:800;color:var(--text);} .hd-stat-l{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;}
+.hd-dist{display:flex;flex-direction:column;gap:4px;}
+.hd-dist-row{display:flex;align-items:center;gap:8px;} .hd-dist-row span{width:12px;color:var(--text);font-weight:700;}
+.hd-dist-bar{background:#3d7fe0;color:#fff;font-weight:700;font-size:0.78rem;padding:2px 6px;border-radius:4px;text-align:right;}
+@media(max-width:560px){
+  .hd-row{grid-template-columns:minmax(0,1.25fr) repeat(7,minmax(0,1fr));gap:3px;}
+  .hd-tile{min-height:40px;font-size:0.72rem;border-radius:6px;}
+  .hd-arrow{font-size:0.7rem;margin-left:1px;}
+  .hd-name{font-size:0.74rem;}
+  .hd-row-head .hd-th{font-size:0.55rem;letter-spacing:0;}
+  .hd-title{font-size:2rem;}
+  .hd-input-row{flex-wrap:wrap;}
+  #hd-input{flex:1 1 100%;}
+  .hd-go, #hd-hint-btn{flex:1 1 0;}
+  .hd-stat-v{font-size:1.3rem;}
+}
 </style>
 </head>
 <body>
@@ -587,6 +680,7 @@ body.mc-lock{overflow:hidden;}
         <button class="nav-btn" onclick="showPage('dataquality',this)">Data Quality</button>
       </div>
     </div>
+    <button class="nav-btn nav-play" onclick="showPage('hessledle',this)">Hessle-dle</button>
     <div class="nav-dropdown" id="navDropdown-league">
       <button class="nav-dropdown-btn" onclick="toggleNavDropdown('league')" aria-expanded="false" aria-haspopup="true">League <span class="nav-dropdown-caret">▾</span></button>
       <div class="nav-dropdown-menu">
@@ -620,6 +714,7 @@ body.mc-lock{overflow:hidden;}
     <button class="mobile-nav-item" onclick="showPage('bowling',this);closeMobileNav()">⚾ Bowling</button>
     <button class="mobile-nav-item" onclick="showPage('profiles',this);closeMobileNav()">👤 Players</button>
     <button class="mobile-nav-item" onclick="showPage('matches',this);closeMobileNav()">📋 Matches</button>
+    <button class="mobile-nav-item" onclick="showPage('hessledle',this);closeMobileNav()">🎯 Hessle-dle</button>
     <div class="mobile-nav-section" id="mobileNavSection-stats">
       <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('stats')" aria-expanded="false">Stats <span class="mobile-nav-section-caret">▾</span></button>
       <div class="mobile-nav-section-items">
@@ -1235,7 +1330,7 @@ body.mc-lock{overflow:hidden;}
       <div class="chart-card"><div class="chart-title">Matches Played by Target Band</div><div class="chart-wrap"><canvas id="chartChasePlayed"></canvas></div></div>
     </div>
     <div class="table-card">
-      <div class="table-header"><span class="table-title">Chasing Record by Target Band</span></div>
+      <div class="table-header"><span class="table-title">Chasing Record by Target Band <span class="table-hint">— click a band to see its games</span></span></div>
       <div class="table-wrap"><table id="tblChaseBands"><thead><tr>
         <th onclick="sortTable('tblChaseBands',0)">Target Band</th>
         <th onclick="sortTable('tblChaseBands',1)">Played</th>
@@ -1264,7 +1359,7 @@ body.mc-lock{overflow:hidden;}
   <div id="chasing-best" class="sub-page">
     <div class="table-card">
       <div class="table-header"><span class="table-title">Best Successful Chases</span></div>
-      <div class="table-wrap"><table id="tblBestChases"><thead><tr>
+      <div class="table-wrap"><table id="tblBestChases" data-limit="10"><thead><tr>
         <th onclick="sortTable('tblBestChases',0)">Date</th>
         <th onclick="sortTable('tblBestChases',1)">XI</th>
         <th onclick="sortTable('tblBestChases',2)">Opponent</th>
@@ -1281,7 +1376,7 @@ body.mc-lock{overflow:hidden;}
   <div id="chasing-failed" class="sub-page">
     <div class="table-card">
       <div class="table-header"><span class="table-title">Near Misses — Closest Failed Chases</span></div>
-      <div class="table-wrap"><table id="tblFailedChases"><thead><tr>
+      <div class="table-wrap"><table id="tblFailedChases" data-limit="10"><thead><tr>
         <th onclick="sortTable('tblFailedChases',0)">Date</th>
         <th onclick="sortTable('tblFailedChases',1)">XI</th>
         <th onclick="sortTable('tblFailedChases',2)">Opponent</th>
@@ -1302,7 +1397,7 @@ body.mc-lock{overflow:hidden;}
       <div class="chart-card"><div class="chart-title">Matches by Score Band</div><div class="chart-wrap"><canvas id="chartDefPlayed"></canvas></div></div>
     </div>
     <div class="table-card">
-      <div class="table-header"><span class="table-title">Defending Record by Score Band</span></div>
+      <div class="table-header"><span class="table-title">Defending Record by Score Band <span class="table-hint">— click a band to see its games</span></span></div>
       <div class="table-wrap"><table id="tblDefBands"><thead><tr>
         <th onclick="sortTable('tblDefBands',0)">Score Band</th>
         <th onclick="sortTable('tblDefBands',1)">Played</th>
@@ -1330,8 +1425,8 @@ body.mc-lock{overflow:hidden;}
   <!-- BEST DEFENCES -->
   <div id="chasing-defbest" class="sub-page">
     <div class="table-card">
-      <div class="table-header"><span class="table-title">Best Defences — Highest Score Successfully Defended</span></div>
-      <div class="table-wrap"><table id="tblBestDef"><thead><tr>
+      <div class="table-header"><span class="table-title">Best Defences — Lowest Totals Successfully Defended</span></div>
+      <div class="table-wrap"><table id="tblBestDef" data-limit="10"><thead><tr>
         <th onclick="sortTable('tblBestDef',0)">Date</th>
         <th onclick="sortTable('tblBestDef',1)">XI</th>
         <th onclick="sortTable('tblBestDef',2)">Opponent</th>
@@ -1345,7 +1440,7 @@ body.mc-lock{overflow:hidden;}
     </div>
     <div class="table-card" style="margin-top:16px">
       <div class="table-header"><span class="table-title">Scores That Weren't Enough — Highest Scores That Still Lost</span></div>
-      <div class="table-wrap"><table id="tblDefLost"><thead><tr>
+      <div class="table-wrap"><table id="tblDefLost" data-limit="10"><thead><tr>
         <th onclick="sortTable('tblDefLost',0)">Date</th>
         <th onclick="sortTable('tblDefLost',1)">XI</th>
         <th onclick="sortTable('tblDefLost',2)">Opponent</th>
@@ -1445,6 +1540,41 @@ body.mc-lock{overflow:hidden;}
 </div>
 </div>
 
+
+<div id="page-hessledle" class="page">
+  <div class="hd-wrap">
+    <div class="hd-head">
+      <div>
+        <div class="hd-title">Hessle-dle</div>
+        <div class="hd-sub">Guess the mystery Hessle player in six goes. <span id="hd-daynum"></span></div>
+      </div>
+      <div class="hd-head-btns">
+        <button class="hd-btn" onclick="hdToggle('help')">How to play</button>
+        <button class="hd-btn" onclick="hdToggle('stats')">Your stats</button>
+      </div>
+    </div>
+    <div class="hd-modes">
+      <button class="hd-mode-btn active" id="hd-mode-daily" onclick="hdSetMode('daily')">Today's player</button>
+      <button class="hd-mode-btn" id="hd-mode-practice" onclick="hdSetMode('practice')">Practice</button>
+    </div>
+    <div id="hd-help" class="hd-panel" style="display:none">
+      <p>Every day there's a new mystery player — the same for everyone. Type a name and press <strong>Guess</strong>. Each tile compares your guess with the mystery player:</p>
+      <div class="hd-legend"><span class="hd-tile hd-ok">✓</span> exact &nbsp; <span class="hd-tile hd-close">≈</span> close &nbsp; <span class="hd-tile hd-no">✗</span> not close &nbsp; ↑ ↓ = the answer is higher / lower</div>
+      <p><strong>XI</strong> is the side they mostly played for (1st, 2nd or Both). <strong>Role</strong> is batter, bowler or all-rounder (as on their profile). <strong>Debut</strong> is their first season. Close means within a season, about 10% of the matches, runs or wickets, or one Man of the Match award.</p>
+      <p>Stuck after three guesses? A hint shows their initials. <strong>Practice</strong> gives you a random player any time without touching your streak.</p>
+    </div>
+    <div id="hd-stats" class="hd-panel" style="display:none"></div>
+    <div class="hd-input-row" id="hd-input-row">
+      <input id="hd-input" list="hd-names" placeholder="Type a player's name…" autocomplete="off" onkeydown="if(event.key==='Enter'){hdGuess();}">
+      <datalist id="hd-names"></datalist>
+      <button class="btn-primary hd-go" onclick="hdGuess()">Guess</button>
+      <button class="hd-btn" id="hd-hint-btn" onclick="hdHint()" style="display:none">Hint</button>
+    </div>
+    <div id="hd-msg" class="hd-msg"></div>
+    <div id="hd-board" class="hd-board"></div>
+    <div id="hd-result"></div>
+  </div>
+</div>
 
 <div id="page-methodology" class="page">
   <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:1px;margin-bottom:4px;">About &amp; Methodology</div>
@@ -2123,12 +2253,7 @@ function initDashboard() {
 
   renderAll();
 
-  // Mobile: reduce chart heights for better fit + init swipe tabs
-  if(window.innerWidth <= 768) {
-    document.querySelectorAll('.chart-wrap').forEach(el => {
-      el.style.height = '180px';
-    });
-  }
+  // (Phone chart heights now come from the stylesheet: 270px, more for sideways bar charts with many names)
 
   // Close mobile nav on back button / escape
   document.addEventListener('keydown', e => { if(e.key==='Escape') closeMobileNav(); });
@@ -2306,6 +2431,7 @@ function _buildGlobalSearchIndex() {
     { label: 'About & Methodology', page: 'methodology' },
     { label: 'Data Quality', page: 'dataquality' },
     { label: 'WAR Leaderboard', page: 'warleaderboard' },
+    { label: 'Hessle-dle (guess the player)', page: 'hessledle' },
   ];
   var playerNames = Array.from(new Set(
     CRICKET_DATA.batting.map(function(r) { return r.Batter; })
@@ -2612,6 +2738,13 @@ function clubChartStyle(canvas, config) {
   }
   // calmer axes: faint horizontal gridlines only, no vertical lines on bar charts
   var o = config.options = config.options || {};
+  // phones: sideways bar charts get ~24px per bar so every name is labelled
+  if (o.indexAxis === 'y' && type === 'bar' && window.matchMedia('(max-width: 768px)').matches) {
+    var nBars = ((config.data && config.data.labels) || []).length;
+    var wrap = canvas.parentElement;
+    if (wrap && nBars) wrap.style.height = Math.max(270, nBars * 24 + 60) + 'px';
+    o.scales = o.scales || {}; o.scales.y = o.scales.y || {}; o.scales.y.ticks = o.scales.y.ticks || {}; o.scales.y.ticks.autoSkip = false;
+  }
   var sc = o.scales || {};
   Object.keys(sc).forEach(function(k) {
     var a = sc[k] || {};
@@ -2866,13 +2999,13 @@ function renderOverview() {
       ${prevStats ? kpiTrend(winPct, prevStats.winPct) : ''}
       <canvas id="spark-winpct" class="kpi-sparkline" width="80" height="24"></canvas>
     </div>
-    <div class="kpi blue">
+    <div class="kpi" style="--kpi-strip:#d63a46">
       <div class="kpi-val">${avgRS}</div>
       <div class="kpi-label">Avg Runs Scored</div>
       ${prevStats ? kpiTrend(avgRS, prevStats.avgScored) : ''}
       <canvas id="spark-scored" class="kpi-sparkline" width="80" height="24"></canvas>
     </div>
-    <div class="kpi">
+    <div class="kpi" style="--kpi-strip:#3d7fe0">
       <div class="kpi-val">${avgRC}</div>
       <div class="kpi-label">Avg Runs Conceded</div>
       ${prevStats ? kpiTrend(avgRC, prevStats.avgConceded, true) : ''}
@@ -4950,8 +5083,7 @@ function renderChasing() {
     <td>${b.avgT}</td>
     <td>${b.avgC}</td>
     <td class="${b.avgDef>0?'text-red':'text-green'}">${b.avgDef>0?'+'+b.avgDef:b.avgDef}</td>
-  </tr>    <td style='color:var(--accent);font-size:0.75rem'>→ view games</td>
-    </tr>`).join('');
+  </tr>`).join('');
 
   // Helper: top scorer for a match
   function topScorer(r) {
@@ -5092,8 +5224,8 @@ function renderDefending() {
     return `${t.Batter.split(' ').pop()} ${t.Runs}${no?'*':''}`;
   }
 
-  // Best defences — won, sorted by score desc
-  const bestDef = [...won].sort((a,b)=>(b['Runs Scored']||0)-(a['Runs Scored']||0));
+  // Best defences — won, lowest total defended first (defending a small score is the achievement)
+  const bestDef = [...won].sort((a,b)=>(a['Runs Scored']||0)-(b['Runs Scored']||0));
   document.querySelector('#tblBestDef tbody').innerHTML = bestDef.map(r=>{
     const margin = (r['Runs Scored']||0)-(r['Runs Conceded']||0);
     const wktsLeft = 10-(r['Wickets Taken']||0);
@@ -5869,8 +6001,8 @@ function renderOverviewSparklines() {
   // Filter out nulls for valid seasons
   function validVals(arr){return arr.filter(function(v){return v!==null;});}
   drawSparkline('spark-winpct',   validVals(winPcts),    '#3fb950');
-  drawSparkline('spark-scored',   validVals(avgScored),  '#58a6ff');
-  drawSparkline('spark-conceded', validVals(avgConceded),'#f85149');
+  drawSparkline('spark-scored',   validVals(avgScored),  '#d63a46');   // runs scored = batting red
+  drawSparkline('spark-conceded', validVals(avgConceded),'#3d7fe0');   // runs conceded = bowling blue
 }
 
 
@@ -6210,6 +6342,16 @@ function openChaseBand(idx) {
   panel.style.display = 'block';
   panel.scrollIntoView({behavior:'smooth', block:'start'});
 }
+
+// Games listed on Chase/Defend open their match card (columns start Date | XI | Opponent)
+var MATCH_ROW_TABLES = ['tblBestChases', 'tblFailedChases', 'tblBestDef', 'tblDefLost', 'tblChaseBandDetail', 'tblDefBandDetail'];
+document.addEventListener('click', function(e) {
+  var tr = e.target.closest && e.target.closest('tbody tr');
+  if (!tr || tr.classList.contains('show-more-row')) return;
+  var t = tr.closest('table'); if (!t || MATCH_ROW_TABLES.indexOf(t.id) === -1 || tr.cells.length < 3) return;
+  var date = tr.cells[0].textContent.trim(), team = (tr.cells[1].textContent.match(/1st|2nd/) || [])[0], opp = tr.cells[2].textContent.trim();
+  if (date && team && opp) openMatchDetail(date, opp, team);
+});
 
 function closeChaseBandDetail() {
   document.getElementById('chase-band-detail').style.display = 'none';
@@ -8561,7 +8703,39 @@ document.addEventListener('keydown', function(e) { if (e.key !== 'Enter' && e.ke
 // "Show more" for tables marked data-limit, and on phones the player-name
 // column stays in place while scrolling sideways. Runs after any re-render.
 var NUM_CELL = /^[+\-\u2212]?[\d,]*\.?\d+[*%]?$|^\d+\/\d+$|^[\-\u2013\u2014]$/;
+// ── Chart grids: choose the number of columns that leaves no empty slots
+// (4 charts -> 2 x 2, 9 -> 3 x 3, 10 -> 5 rows of 2). If nothing divides evenly,
+// the last chart stretches to fill its row. Phones keep their single column.
+function layoutChartGrids() {
+  document.querySelectorAll('.charts-grid, .pf-charts').forEach(function(g) {
+    if (g.offsetParent === null) return;
+    var kids = Array.prototype.filter.call(g.children, function(k) { return k.offsetParent !== null || getComputedStyle(k).display !== 'none'; })
+      .filter(function(k) { return getComputedStyle(k).display !== 'none'; });
+    kids.forEach(function(k) { k.style.removeProperty('grid-column'); });
+    var n = kids.length;
+    var minW = g.classList.contains('pf-charts') ? 360 : 380, gap = parseFloat(getComputedStyle(g).columnGap) || 16;
+    g.style.removeProperty('grid-template-columns');
+    var maxCols = Math.max(1, Math.floor((g.clientWidth + gap) / (minW + gap)));
+    if (maxCols <= 1 || n <= 1) return;
+    maxCols = Math.min(maxCols, n);
+    var best = maxCols, bestEmpty = 99;
+    for (var c = maxCols; c >= 2; c--) {
+      var empty = (c - n % c) % c;
+      if (empty < bestEmpty) { best = c; bestEmpty = empty; }
+      if (empty === 0) break;
+    }
+    g.style.setProperty('grid-template-columns', 'repeat(' + best + ', minmax(0, 1fr))', 'important');
+    if (bestEmpty) {
+      // stretch the visually last chart (CSS order aware) across the leftover space
+      var last = kids.map(function(k, i) { return { k: k, o: parseInt(getComputedStyle(k).order, 10) || 0, i: i }; })
+        .sort(function(a, b) { return a.o - b.o || a.i - b.i; }).pop().k;
+      last.style.setProperty('grid-column', 'span ' + (bestEmpty + 1), 'important');
+    }
+  });
+}
+
 function polishTables() {
+  try { layoutChartGrids(); } catch (e) { console.warn('layoutChartGrids', e); }
   var narrow = window.matchMedia('(max-width: 768px)').matches;
   document.querySelectorAll('.table-wrap table').forEach(function(t) {
     if (!t.tBodies[0] || t.offsetParent === null) return;
@@ -8632,6 +8806,192 @@ function polishTables() {
   function schedule() { if (pending) return; pending = true; setTimeout(function() { pending = false; try { polishTables(); } catch (e) { console.warn('polishTables', e); } }, 60); }
   new MutationObserver(schedule).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
   window.addEventListener('resize', function() { document.querySelectorAll('.table-wrap table').forEach(function(t) { delete t.dataset.polished; }); schedule(); });
+})();
+
+
+// ============================================================
+// HESSLE-DLE — a daily guess-the-player game
+// ============================================================
+var HD = { pool: null, guessable: null, info: null, mode: 'daily', answer: null, guesses: [], done: false, won: false, hint: false, key: null };
+var HD_MAX = 6, HD_LAUNCH = '2026-10-14', HD_MIN_ANSWER = 15, HD_MIN_GUESS = 5;
+var HD_ATTRS = [
+  { k: 'xi', label: 'XI' }, { k: 'role', label: 'Role' }, { k: 'debut', label: 'Debut' }, { k: 'matches', label: 'Matches' },
+  { k: 'runs', label: 'Runs' }, { k: 'wkts', label: 'Wkts' }, { k: 'motm', label: 'MoTM' }
+];
+function hdStore(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
+function hdToday() {  // calendar date in the UK, so the player changes at UK midnight
+  var parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+  var g = function(t) { return parts.find(function(x) { return x.type === t; }).value; };
+  return g('year') + '-' + g('month') + '-' + g('day');
+}
+function hdDayNumber(key) { return Math.round((Date.parse(key + 'T12:00:00Z') - Date.parse(HD_LAUNCH + 'T12:00:00Z')) / 86400000) + 1; }
+function hdRole(p) {  // same rules as the player profile badge
+  var batM = new Set(CRICKET_DATA.batting.filter(function(r) { return r.Batter === p && r.Dismissal !== 'DNB'; }).map(function(r) { return r.Date + '|' + r.Team; })).size;
+  var bw = CRICKET_DATA.bowling.filter(function(r) { return r.Bowler === p; });
+  var bowlM = new Set(bw.map(function(r) { return r.Date + '|' + r.Team; })).size;
+  var wpm = bw.reduce(function(t, r) { return t + (r.Wickets || 0); }, 0) / Math.max(bowlM, 1);
+  var meaningful = bowlM >= 5 && wpm >= 0.7, pct = bowlM / Math.max(bowlM + batM, 1);
+  if (meaningful && bowlM > batM && wpm >= 1.0) return 'Bowler';
+  if (meaningful && pct >= 0.30 && batM >= 5) return 'All-rounder';
+  return 'Batter';
+}
+function hdBuild() {
+  if (HD.info) return;
+  var apps = {}, add = function(p, r) { if (!p) return; (apps[p] = apps[p] || {}); apps[p][r.Date + '|' + r.Team] = r.Team; };
+  [['batting', 'Batter'], ['bowling', 'Bowler'], ['fielding', 'Fielder'], ['keeping', 'Keeper']].forEach(function(x) { CRICKET_DATA[x[0]].forEach(function(r) { add(r[x[1]], r); }); });
+  var info = {};
+  Object.keys(apps).forEach(function(p) {
+    var keys = Object.keys(apps[p]), n = keys.length, n1 = keys.filter(function(k) { return apps[p][k] === '1st'; }).length;
+    var runs = CRICKET_DATA.batting.reduce(function(t, r) { return t + (r.Batter === p && typeof r.Runs === 'number' ? r.Runs : 0); }, 0);
+    var wkts = CRICKET_DATA.bowling.reduce(function(t, r) { return t + (r.Bowler === p ? (r.Wickets || 0) : 0); }, 0);
+    info[p] = { name: p, matches: n, xi: n1 / n >= 0.8 ? '1st' : (n1 / n <= 0.2 ? '2nd' : 'Both'), role: hdRole(p), runs: runs, wkts: wkts,
+                debut: Math.min.apply(null, keys.map(function(k) { return +k.slice(0, 4); })),
+                motm: CRICKET_DATA.motm.filter(function(r) { return r.MOTM === p; }).length };
+  });
+  HD.info = info;
+  HD.guessable = Object.keys(info).filter(function(p) { return info[p].matches >= HD_MIN_GUESS; }).sort();
+  // answers: a fixed shuffle of established players, walked one per day
+  var pool = Object.keys(info).filter(function(p) { return info[p].matches >= HD_MIN_ANSWER; }).sort();
+  var seed = 20261015; function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+  for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(rnd() * (i + 1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+  HD.pool = pool;
+  document.getElementById('hd-names').innerHTML = HD.guessable.map(function(p) { return '<option value="' + p.replace(/"/g, '&quot;') + '">'; }).join('');
+}
+function hdCompare(g, a, k) {
+  var gv = g[k], av = a[k];
+  if (k === 'xi') return gv === av ? 'ok' : ((gv === 'Both' || av === 'Both') ? 'close' : 'no');
+  if (k === 'role') return gv === av ? 'ok' : ((gv === 'All-rounder' || av === 'All-rounder') ? 'close' : 'no');
+  if (gv === av) return 'ok';
+  var diff = Math.abs(gv - av);
+  var near = { debut: diff <= 1, matches: diff <= Math.max(5, av * 0.1), runs: diff <= Math.max(100, av * 0.1), wkts: diff <= Math.max(5, av * 0.1), motm: diff <= 1 }[k];
+  return near ? 'close' : 'no';
+}
+function hdFmt(k, v) {
+  if (k === 'role') return { 'Batter': 'BAT', 'Bowler': 'BOWL', 'All-rounder': 'AR' }[v] || v;
+  if ((k === 'runs') && v >= 1000) return (v / 1000).toFixed(1).replace('.0', '') + 'k';
+  return v;
+}
+function hdTile(g, a, k, i) {
+  var res = hdCompare(g, a, k), arrow = '';
+  if (res !== 'ok' && ['debut', 'matches', 'runs', 'wkts', 'motm'].indexOf(k) !== -1) arrow = a[k] > g[k] ? '↑' : '↓';
+  return '<div class="hd-tile hd-' + res + '" style="animation-delay:' + (i * 0.08) + 's" title="' + k + '">' + hdFmt(k, g[k]) + (arrow ? '<span class="hd-arrow">' + arrow + '</span>' : '') + '</div>';
+}
+function hdSetMode(m) {
+  HD.mode = m;
+  document.getElementById('hd-mode-daily').classList.toggle('active', m === 'daily');
+  document.getElementById('hd-mode-practice').classList.toggle('active', m === 'practice');
+  hdStart();
+}
+function hdStart() {
+  hdBuild();
+  if (HD.mode === 'daily') {
+    HD.key = hdToday();
+    var n = hdDayNumber(HD.key);
+    HD.answer = HD.pool[((n - 1) % HD.pool.length + HD.pool.length) % HD.pool.length];
+    var saved = hdStore('hd-day-' + HD.key) || {};
+    HD.guesses = (saved.guesses || []).filter(function(g) { return HD.info[g]; }); HD.done = !!saved.done; HD.won = !!saved.won; HD.hint = !!saved.hint;
+    document.getElementById('hd-daynum').textContent = '#' + n;
+  } else {
+    var opts = HD.pool.filter(function(p) { return p !== HD.answer; });
+    HD.answer = opts[Math.floor(Math.random() * opts.length)]; HD.guesses = []; HD.done = false; HD.won = false; HD.hint = false; HD.key = null;
+    document.getElementById('hd-daynum').textContent = '(practice)';
+  }
+  document.getElementById('hd-msg').textContent = '';
+  hdRender();
+}
+function hdSave() { if (HD.mode === 'daily') hdStore('hd-day-' + HD.key, { guesses: HD.guesses, done: HD.done, won: HD.won, hint: HD.hint }); }
+function hdGuess() {
+  if (HD.done) return;
+  var inp = document.getElementById('hd-input'), msg = document.getElementById('hd-msg');
+  var typed = (inp.value || '').trim().toLowerCase();
+  var name = HD.guessable.find(function(p) { return p.toLowerCase() === typed; });
+  if (!name) { msg.textContent = typed ? "That name isn't in the list — pick one from the suggestions." : 'Type a player\u2019s name first.'; return; }
+  if (HD.guesses.indexOf(name) !== -1) { msg.textContent = 'You\u2019ve already guessed ' + name + '.'; return; }
+  msg.textContent = ''; inp.value = '';
+  HD.guesses.push(name);
+  if (name === HD.answer) { HD.done = true; HD.won = true; }
+  else if (HD.guesses.length >= HD_MAX) { HD.done = true; HD.won = false; }
+  if (HD.done && HD.mode === 'daily') hdRecord();
+  HD.justGuessed = true; hdSave(); hdRender(); HD.justGuessed = false;
+}
+function hdHint() { HD.hint = true; hdSave(); hdRender(); }
+function hdRecord() {
+  var st = hdStore('hd-stats') || { played: 0, wins: 0, streak: 0, best: 0, dist: [0, 0, 0, 0, 0, 0], last: null };
+  if (st.last === HD.key) return;  // already counted today
+  var prev = new Date(Date.parse(HD.key + 'T12:00:00Z') - 86400000).toISOString().slice(0, 10);
+  st.played++;
+  if (HD.won) { st.wins++; st.streak = (st.last === prev && st.lastWon) ? st.streak + 1 : 1; st.dist[HD.guesses.length - 1]++; }
+  else st.streak = 0;
+  st.best = Math.max(st.best, st.streak); st.last = HD.key; st.lastWon = HD.won;
+  hdStore('hd-stats', st);
+}
+function hdShareText() {
+  var n = hdDayNumber(HD.key), a = HD.info[HD.answer];
+  var rows = HD.guesses.map(function(g) { return HD_ATTRS.map(function(x) { return { ok: '🟩', close: '🟦', no: '⬛' }[hdCompare(HD.info[g], a, x.k)]; }).join(''); });
+  return 'Hessle-dle #' + n + ' ' + (HD.won ? HD.guesses.length : 'X') + '/' + HD_MAX + (HD.hint ? ' (hint)' : '') + '\n' + rows.join('\n') + '\nhttps://textbookanalytics.co.uk/?page=hessledle';
+}
+function hdShare() {
+  var text = hdShareText(), btn = document.getElementById('hd-share');
+  var done = function() { if (btn) { btn.textContent = 'Copied!'; setTimeout(function() { btn.textContent = 'Share result'; }, 1800); } };
+  if (navigator.share && /Mobi|Android|iPhone/i.test(navigator.userAgent)) { navigator.share({ text: text }).catch(function() {}); return; }
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function() { prompt('Copy your result:', text); });
+  else prompt('Copy your result:', text);
+}
+function hdCountdown() {
+  var el = document.getElementById('hd-next'); if (!el) return;
+  var now = new Date(), parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).formatToParts(now);
+  var g = function(t) { return +parts.find(function(x) { return x.type === t; }).value; };
+  var left = 86400 - (g('hour') % 24) * 3600 - g('minute') * 60 - g('second');
+  el.textContent = String(Math.floor(left / 3600)).padStart(2, '0') + ':' + String(Math.floor(left % 3600 / 60)).padStart(2, '0') + ':' + String(left % 60).padStart(2, '0');
+}
+setInterval(hdCountdown, 1000);
+function hdToggle(which) {
+  ['help', 'stats'].forEach(function(w) { var el = document.getElementById('hd-' + w); el.style.display = (w === which && el.style.display === 'none') ? 'block' : 'none'; });
+  if (which === 'stats') {
+    var st = hdStore('hd-stats') || { played: 0, wins: 0, streak: 0, best: 0, dist: [0, 0, 0, 0, 0, 0] };
+    var mx = Math.max.apply(null, st.dist.concat([1]));
+    document.getElementById('hd-stats').innerHTML = '<div class="hd-stat-row">' +
+      [['Played', st.played], ['Win %', st.played ? Math.round(st.wins / st.played * 100) : 0], ['Streak', st.streak], ['Best streak', st.best]].map(function(x) {
+        return '<div class="hd-stat"><div class="hd-stat-v">' + x[1] + '</div><div class="hd-stat-l">' + x[0] + '</div></div>'; }).join('') + '</div>' +
+      '<div class="hd-dist">' + st.dist.map(function(c, i) { return '<div class="hd-dist-row"><span>' + (i + 1) + '</span><div class="hd-dist-bar" style="width:' + Math.max(8, c / mx * 100) + '%">' + c + '</div></div>'; }).join('') + '</div>' +
+      '<div class="hd-note">Saved on this device only.</div>';
+  }
+}
+function hdRender() {
+  var a = HD.info[HD.answer];
+  var head = '<div class="hd-row hd-row-head"><div class="hd-name">Player</div>' + HD_ATTRS.map(function(x) { return '<div class="hd-th">' + x.label + '</div>'; }).join('') + '</div>';
+  var rows = HD.guesses.map(function(g, gi_) {
+    var gi = HD.info[g], fresh = HD.justGuessed && gi_ === HD.guesses.length - 1;
+    return '<div class="hd-row' + (fresh ? ' hd-row-new' : '') + '"><div class="hd-name' + (g === HD.answer ? ' hd-name-ok' : '') + '">' + g + '</div>' + HD_ATTRS.map(function(x, i) { return hdTile(gi, a, x.k, i); }).join('') + '</div>';
+  }).join('');
+  var empty = ''; for (var i = HD.guesses.length; i < HD_MAX; i++) empty += '<div class="hd-row hd-row-empty"><div class="hd-name">&nbsp;</div>' + HD_ATTRS.map(function() { return '<div class="hd-tile hd-blank"></div>'; }).join('') + '</div>';
+  document.getElementById('hd-board').innerHTML = head + rows + empty;
+  document.getElementById('hd-input-row').style.display = HD.done ? 'none' : 'flex';
+  var hintBtn = document.getElementById('hd-hint-btn');
+  hintBtn.style.display = (!HD.done && !HD.hint && HD.guesses.length >= 3) ? 'inline-block' : 'none';
+  var msg = document.getElementById('hd-msg');
+  if (HD.hint && !HD.done) msg.innerHTML = 'Hint: their initials are <strong>' + HD.answer.split(' ').map(function(w) { return w[0]; }).join('.') + '.</strong>';
+  var res = document.getElementById('hd-result');
+  if (!HD.done) { res.innerHTML = ''; return; }
+  res.innerHTML = '<div class="hd-done ' + (HD.won ? 'hd-done-won' : 'hd-done-lost') + '">' +
+    '<div class="hd-done-h">' + (HD.won ? ['Incredible — first go!', 'Brilliant!', 'Great guess!', 'Nicely done!', 'Got there!', 'Phew — last go!'][HD.guesses.length - 1] : 'Not this time') + '</div>' +
+    '<div class="hd-done-p">' + (HD.won ? 'You got' : 'It was') + ' <strong>' + a.name + '</strong>' + (HD.won ? ' in ' + HD.guesses.length + '/' + HD_MAX : '') + '</div>' +
+    '<div class="hd-card">' + [['XI', a.xi], ['Role', a.role], ['Debut', a.debut], ['Matches', a.matches], ['Runs', a.runs], ['Wickets', a.wkts], ['MoTM', a.motm]].map(function(x) {
+      return '<div><span>' + x[0] + '</span><strong>' + x[1] + '</strong></div>'; }).join('') + '</div>' +
+    '<div class="hd-done-btns"><button class="btn-primary" onclick="goToPlayer(\'' + a.name.replace(/'/g, "\\'") + '\')">View profile</button>' +
+    (HD.mode === 'daily' ? '<button class="hd-btn" id="hd-share" onclick="hdShare()">Share result</button>' : '') +
+    '<button class="hd-btn" onclick="hdSetMode(\'practice\')">' + (HD.mode === 'daily' ? 'Practice' : 'Play another') + '</button></div>' +
+    (HD.mode === 'daily' ? '<div class="hd-note">Next player in <span id="hd-next"></span></div>' : '') + '</div>';
+  hdCountdown();
+}
+(function() {  // start the game the first time the page is shown
+  var started = false;
+  var obs = new MutationObserver(function() {
+    var pg = document.getElementById('page-hessledle');
+    if (!started && pg && pg.classList.contains('active') && typeof CRICKET_DATA !== 'undefined' && CRICKET_DATA && CRICKET_DATA.matches) { started = true; hdStart(); }
+  });
+  document.addEventListener('DOMContentLoaded', function() { var pg = document.getElementById('page-hessledle'); if (pg) obs.observe(pg, { attributes: true, attributeFilter: ['class'] }); });
+  if (document.readyState !== 'loading') { var pg = document.getElementById('page-hessledle'); if (pg) obs.observe(pg, { attributes: true, attributeFilter: ['class'] }); }
 })();
 
 function renderMethodologyMeta() {
