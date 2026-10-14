@@ -730,6 +730,12 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
   .gr-answers{grid-template-columns:1fr;}
   #gr-overlay{padding:12px;}
 }
+
+.gr-perfect{margin:14px auto 4px;max-width:520px;}
+.gr-perfect-h{font-size:0.92rem;color:var(--muted);margin-bottom:10px;} .gr-perfect-h strong{color:var(--text);}
+.gr-board-small{gap:5px;} .gr-board-small .gr-head{min-height:48px;font-size:0.68rem;padding:5px;}
+.gr-board-small .gr-pname{font-size:0.72rem;} .gr-board-small .gr-rar{font-size:0.66rem;}
+.gr-perfect-cell{background:rgba(200,32,47,0.12);border-color:rgba(200,32,47,0.5);} .gr-perfect-cell .gr-rar{color:#f0717b;}
 </style>
 </head>
 <body>
@@ -1726,7 +1732,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
     </div>
     <div id="gr-help" class="hd-panel" style="display:none">
       <p>Every square sits under a <strong>column</strong> and beside a <strong>row</strong>. Tap a square and name a Hessle player who fits <strong>both</strong>. You have <strong>nine guesses</strong> — a wrong name still uses one — and each player can only be used once.</p>
-      <p><strong>Rarity</strong> rewards obscure picks: each correct square scores how common your player is among everyone who could have filled it (weighted by games played). An empty square scores 100. <strong>Lower is better</strong> — a perfect, original grid scores well under 100.</p>
+      <p><strong>Rarity</strong> rewards obscure picks. Each correct square scores the share of possible answers who've played <em>as many games or fewer</em> than your pick: the most obvious player is always <strong>100%</strong>, someone in the middle of the pack about <strong>50%</strong>, and the least-known close to <strong>0%</strong>. An empty square scores 100. Add up the nine — <strong>lower is better</strong>. After you finish, <em>Perfect grid</em> shows the lowest score possible that day.</p>
       <p>All stats come from the club's records since <span class="gr-start">2018</span>. Every grid is checked so every square has at least two answers and the whole grid can be solved with nine different players.</p>
     </div>
     <div id="gr-stats" class="hd-panel" style="display:none"></div>
@@ -9555,10 +9561,56 @@ function grStart() {
   grRender();
 }
 function grSave() { if (GR.mode === 'daily') hdStore('gr-day-' + GR.key, { cells: GR.cells, left: GR.left, done: GR.done }); }
+// Rarity = the share of possible answers for this square who've played as many games or fewer than your pick.
+// The most obvious answer is always 100%, a middle-of-the-pack pick about 50%, the least-known near 0% —
+// evenly spread however many players fit the square.
 function grRarity(i, name) {
-  var r = GR.grid.rows[Math.floor(i / 3)], c = GR.grid.cols[i % 3], el = grEligible(r, c);
-  var tot = el.reduce(function(t, n) { return t + GR.P[n].matches; }, 0);
-  return Math.max(1, Math.round(GR.P[name].matches / tot * 100));
+  var r = GR.grid.rows[Math.floor(i / 3)], c = GR.grid.cols[i % 3], el = grEligible(r, c), m = GR.P[name].matches;
+  var atMost = el.filter(function(n) { return GR.P[n].matches <= m; }).length;
+  return Math.max(1, Math.round(atMost / el.length * 100));
+}
+// The perfect grid: nine different players giving the lowest possible total rarity.
+// Solved as an assignment problem (Hungarian algorithm) so a player shared by two squares goes where it helps most.
+function grPerfect() {
+  var cellsEl = [];
+  GR.grid.rows.forEach(function(r) { GR.grid.cols.forEach(function(c) { cellsEl.push(grEligible(r, c)); }); });
+  var players = []; cellsEl.forEach(function(el) { el.forEach(function(n) { if (players.indexOf(n) === -1) players.push(n); }); });
+  var n = 9, m = players.length, BIG = 1e12;
+  // cost = rarity as scored in the game (whole %), with the exact share as a tie-break
+  var cost = cellsEl.map(function(el, i) {
+    return players.map(function(pl) { if (el.indexOf(pl) === -1) return BIG; return grRarity(i, pl) * 1e6 + GR.P[pl].matches; });
+  });
+  var u = new Array(n + 1).fill(0), v = new Array(m + 1).fill(0), pm = new Array(m + 1).fill(0), way = new Array(m + 1).fill(0);
+  for (var i = 1; i <= n; i++) {
+    pm[0] = i; var j0 = 0, minv = new Array(m + 1).fill(Infinity), used = new Array(m + 1).fill(false);
+    do {
+      used[j0] = true; var i0 = pm[j0], delta = Infinity, j1 = 0;
+      for (var j = 1; j <= m; j++) if (!used[j]) {
+        var cur = cost[i0 - 1][j - 1] - u[i0] - v[j];
+        if (cur < minv[j]) { minv[j] = cur; way[j] = j0; }
+        if (minv[j] < delta) { delta = minv[j]; j1 = j; }
+      }
+      for (var j2 = 0; j2 <= m; j2++) { if (used[j2]) { u[pm[j2]] += delta; v[j2] -= delta; } else minv[j2] -= delta; }
+      j0 = j1;
+    } while (pm[j0] !== 0);
+    do { var jw = way[j0]; pm[j0] = pm[jw]; j0 = jw; } while (j0);
+  }
+  var out = new Array(9);
+  for (var jj = 1; jj <= m; jj++) if (pm[jj]) out[pm[jj] - 1] = { name: players[jj - 1], rarity: grRarity(pm[jj] - 1, players[jj - 1]) };
+  return out;
+}
+function grShowPerfect(btn) {
+  var box = document.getElementById('gr-perfect'); if (!box) return;
+  if (box.style.display === 'block') { box.style.display = 'none'; if (btn) btn.textContent = 'Perfect grid'; return; }
+  var best = grPerfect(), tot = best.reduce(function(t, c) { return t + c.rarity; }, 0), g = GR.grid;
+  var head = function(c) { return '<div class="gr-head" data-chart-role="' + c.role + '"><span>' + c.label + '</span></div>'; };
+  var html = '<div class="gr-corner">\u2b50</div>' + g.cols.map(head).join('');
+  g.rows.forEach(function(r, ri) { html += head(r); g.cols.forEach(function(c, ci) { var x = best[ri * 3 + ci];
+    html += '<div class="gr-cell gr-filled gr-perfect-cell" title="' + x.name + '"><div class="gr-pname">' + x.name + '</div><div class="gr-rar">' + x.rarity + '%</div></div>'; }); });
+  box.innerHTML = '<div class="gr-perfect-h">The perfect grid: rarity <strong>' + tot + '</strong> · yours: <strong>' + grScore() + '</strong></div>' +
+    '<div class="gr-board gr-board-small">' + html + '</div>' +
+    '<div class="hd-note">The rarest valid player for each square, with nobody used twice — the lowest score possible today.</div>';
+  box.style.display = 'block'; if (btn) btn.textContent = 'Hide perfect grid';
 }
 function grScore() { return GR.cells.reduce(function(t, c) { return t + (c ? c.rarity : 100); }, 0); }
 function grRender() {
@@ -9655,9 +9707,11 @@ function grResult() {
   res.innerHTML = '<div class="hd-done ' + (n === 9 ? 'hd-done-won' : 'hd-done-lost') + '"><div class="hd-done-h">' + head + '</div>' +
     '<div class="hd-done-p">' + n + '/9 squares · rarity <strong>' + sc + '</strong> (lower is better)</div>' +
     '<div class="hd-done-btns">' + (GR.mode === 'daily' ? '<button class="btn-primary" id="gr-share" onclick="grShare()">Share result</button>' : '') +
-    '<button class="hd-btn" onclick="this.parentNode.nextSibling.style.display=\'grid\';this.remove()">See answers</button>' +
+    '<button class="hd-btn" onclick="grShowPerfect(this)">Perfect grid</button>' +
+    '<button class="hd-btn" onclick="var a=document.getElementById(\'gr-answers\');a.style.display=\'grid\';this.remove()">See answers</button>' +
     '<button class="hd-btn" onclick="grSetMode(\'practice\')">' + (GR.mode === 'daily' ? 'Practice grid' : 'Another grid') + '</button></div>' +
-    '<div class="gr-answers" style="display:none">' + answers + '</div>' +
+    '<div id="gr-perfect" class="gr-perfect" style="display:none"></div>' +
+    '<div class="gr-answers" id="gr-answers" style="display:none">' + answers + '</div>' +
     (GR.mode === 'daily' ? '<div class="hd-note">Next grid in <span id="hd-next-grid"></span></div>' : '') + '</div>';
   grCountdown();
 }
