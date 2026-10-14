@@ -572,8 +572,8 @@ body.mc-lock{overflow:hidden;}
 .nav-play{color:var(--text) !important;font-weight:700;}
 .hd-wrap{max-width:820px;margin:0 auto;}
 .hd-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
-.hd-title{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:1px;line-height:1;color:var(--text);}
-.hd-sub{color:var(--muted);font-size:0.88rem;margin-top:4px;}
+.hd-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1px;color:var(--text);}
+.hd-sub{color:var(--muted);font-size:0.82rem;margin-top:2px;}
 .hd-head-btns{display:flex;gap:8px;}
 .hd-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;font-size:0.85rem;font-weight:600;cursor:pointer;}
 .hd-btn:hover{border-color:var(--muted);}
@@ -585,7 +585,11 @@ body.mc-lock{overflow:hidden;}
 .hd-legend{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 10px;color:var(--text);}
 .hd-legend .hd-tile{width:26px;height:26px;min-height:0;font-size:0.8rem;animation:none;}
 .hd-input-row{display:flex;gap:8px;margin-bottom:6px;}
-#hd-input{flex:1;min-width:0;font-size:1rem;padding:10px 12px;}
+#hd-input{flex:1;min-width:0;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:1rem;padding:9px 12px;border-radius:6px;outline:none;-webkit-appearance:none;appearance:none;}
+#hd-input::placeholder{color:var(--muted);}
+#hd-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(200,32,47,0.2);}
+.hd-input-row{align-items:stretch;}
+.hd-input-row .hd-go, .hd-input-row .hd-btn{border-radius:6px;align-self:stretch !important;height:auto !important;margin:0 !important;}
 .hd-go{padding:10px 18px;width:auto !important;flex:0 0 auto;}
 .hd-msg{min-height:1.3em;font-size:0.85rem;color:var(--muted);margin-bottom:8px;}
 .hd-msg strong{color:var(--text);}
@@ -624,11 +628,107 @@ body.mc-lock{overflow:hidden;}
   .hd-arrow{font-size:0.7rem;margin-left:1px;}
   .hd-name{font-size:0.74rem;}
   .hd-row-head .hd-th{font-size:0.55rem;letter-spacing:0;}
-  .hd-title{font-size:2rem;}
   .hd-input-row{flex-wrap:wrap;}
-  #hd-input{flex:1 1 100%;}
   .hd-go, #hd-hint-btn{flex:1 1 0;}
   .hd-stat-v{font-size:1.3rem;}
+}
+
+/* Hessle-dle name suggestions */
+.hd-input-wrap{position:relative;flex:1;min-width:0;display:flex;}
+.hd-input-wrap #hd-input{flex:1;width:100%;}
+.hd-suggest{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:60;background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  box-shadow:0 14px 34px rgba(0,0,0,0.5);max-height:264px;overflow-y:auto;padding:4px;}
+.hd-suggest.open{display:block;}
+.hd-sug{padding:9px 12px;border-radius:6px;font-size:0.92rem;color:var(--muted);cursor:pointer;}
+.hd-sug strong{color:var(--text);font-weight:700;}
+.hd-sug:not(:has(strong)){color:var(--text);}
+.hd-sug:hover, .hd-sug.active{background:var(--surface2);color:var(--text);}
+.hd-sug.active{box-shadow:inset 3px 0 0 var(--accent);}
+.hd-sug-empty{padding:10px 12px;font-size:0.85rem;color:var(--muted);}
+@media(max-width:560px){ .hd-input-wrap{flex:1 1 100%;} .hd-sug{padding:11px 12px;} }
+
+/* Higher or Lower */
+.hl-wrap{max-width:860px;margin:0 auto;}
+.hl-score{display:flex;gap:10px;}
+.hl-score div{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 14px;text-align:center;min-width:70px;}
+.hl-score span{display:block;font-size:1.4rem;font-weight:800;color:var(--text);line-height:1.1;font-variant-numeric:tabular-nums;}
+.hl-score small{font-size:0.66rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);font-weight:700;}
+.hl-question{text-align:center;color:var(--muted);font-size:0.95rem;margin:6px 0 14px;}
+.hl-question strong{color:var(--text);}
+.hl-cards{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch;}
+.hl-card{background:var(--surface);border:1px solid var(--border);border-top-width:4px;border-radius:12px;padding:20px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;
+  transition:box-shadow .2s, border-color .2s;animation:hlIn .35s ease both;}
+#hl-card-a{animation-name:hlSlide;}
+@keyframes hlIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+@keyframes hlSlide{from{opacity:.4;transform:translateX(24px);}to{opacity:1;transform:none;}}
+@media(prefers-reduced-motion:reduce){.hl-card{animation:none;}}
+.hl-meta{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:700;}
+.hl-name{font-size:1.35rem;font-weight:800;color:var(--text);line-height:1.2;}
+.hl-val{font-size:2.8rem;font-weight:800;color:var(--text);line-height:1.1;font-variant-numeric:tabular-nums;min-height:3.1rem;}
+.hl-mark{font-size:1.6rem;}
+.hl-cat{margin-top:-2px;}
+.hl-vs{align-self:center;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--muted);width:46px;height:46px;border-radius:50%;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;background:var(--surface2);}
+.hl-btns{display:flex;flex-direction:column;gap:8px;width:100%;max-width:220px;margin-top:8px;}
+.hl-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:11px 14px;font-size:1rem;font-weight:700;cursor:pointer;}
+.hl-btn:hover{border-color:var(--muted);background:#252c38;}
+.hl-btns-done{visibility:hidden;}
+.hl-right{box-shadow:0 0 0 2px #2fa35a inset;} .hl-right .hl-mark{color:#7fd6a0;}
+.hl-wrong{box-shadow:0 0 0 2px #d63a46 inset;} .hl-wrong .hl-mark{color:#f08a92;}
+.hl-card .chart-chip{font-size:0.7rem;padding:4px 10px;}
+@media(max-width:560px){
+  .hl-cards{grid-template-columns:1fr;gap:8px;}
+  .hl-vs{justify-self:center;width:38px;height:38px;font-size:1.3rem;}
+  .hl-card{padding:14px;} .hl-val{font-size:2.2rem;min-height:2.5rem;} .hl-name{font-size:1.15rem;}
+  .hl-btns{flex-direction:row;max-width:none;} .hl-btn{flex:1;}
+  .hl-score div{min-width:58px;padding:5px 10px;}
+}
+
+/* Hessle Grid */
+.gr-wrap{max-width:760px;margin:0 auto;}
+.gr-status{display:flex;justify-content:space-between;font-size:0.85rem;color:var(--muted);margin:2px 2px 10px;}
+.gr-status strong{color:var(--text);font-size:1rem;}
+.gr-board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
+.gr-corner{display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:var(--muted);}
+.gr-head{display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;border-radius:10px;background:var(--surface);border:1px solid var(--border);border-top-width:3px;
+  font-size:0.8rem;font-weight:700;color:var(--text);line-height:1.25;min-height:64px;}
+.gr-board > .gr-head:nth-child(5n+5), .gr-board > .gr-head:nth-child(9), .gr-board > .gr-head:nth-child(13){border-top-width:1px;border-left-width:3px;}
+.gr-head[data-chart-role="batting"]{border-color:var(--border);border-top-color:#d63a46;border-left-color:#d63a46;}
+.gr-head[data-chart-role="bowling"]{border-color:var(--border);border-top-color:#3d7fe0;border-left-color:#3d7fe0;}
+.gr-head[data-chart-role="fielding"]{border-color:var(--border);border-top-color:#2fa35a;border-left-color:#2fa35a;}
+.gr-head[data-chart-role="club"], .gr-head[data-chart-role="team"]{border-color:var(--border);border-top-color:#c8202f;border-left-color:#c8202f;}
+.gr-cell{aspect-ratio:1/1;border-radius:10px;background:var(--surface2);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:6px;cursor:pointer;color:var(--muted);font-family:inherit;min-width:0;}
+button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
+.gr-plus{font-size:1.8rem;font-weight:300;opacity:0.6;}
+.gr-filled{background:rgba(47,163,90,0.16);border-color:rgba(47,163,90,0.55);cursor:default;}
+.gr-pname{font-weight:700;color:var(--text);font-size:0.86rem;text-align:center;line-height:1.2;overflow:hidden;}
+.gr-rar{margin-top:4px;font-size:0.72rem;font-weight:700;color:#7fd6a0;}
+.gr-missed{cursor:default;opacity:0.55;background:repeating-linear-gradient(45deg,var(--surface2),var(--surface2) 6px,var(--surface) 6px,var(--surface) 12px);}
+.gr-giveup{text-align:center;margin-top:12px;}
+#gr-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:2100;align-items:flex-start;justify-content:center;padding:8vh 16px 16px;}
+#gr-overlay.open{display:flex;}
+.gr-modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;width:100%;max-width:520px;max-height:80vh;display:flex;flex-direction:column;padding:14px;gap:10px;box-shadow:0 24px 60px rgba(0,0,0,0.55);}
+.gr-modal-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.gr-crit{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.gr-tag{font-size:0.8rem;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--surface2);border:1px solid var(--border);color:var(--text);}
+.gr-tag[data-chart-role="batting"]{border-color:#d63a46;} .gr-tag[data-chart-role="bowling"]{border-color:#3d7fe0;}
+.gr-tag[data-chart-role="fielding"]{border-color:#2fa35a;} .gr-tag[data-chart-role="club"], .gr-tag[data-chart-role="team"]{border-color:#c8202f;}
+.gr-x{font-size:0.78rem;color:var(--muted);}
+.gr-modal #gr-input{flex:1;width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:1rem;padding:9px 12px;border-radius:6px;outline:none;}
+.gr-modal #gr-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(200,32,47,0.2);}
+.gr-sug-list{overflow-y:auto;max-height:46vh;border:1px solid var(--border);border-radius:8px;padding:4px;background:var(--bg,#0d1117);}
+.gr-modal-foot{font-size:0.78rem;color:var(--muted);}
+.gr-modal-foot strong{color:var(--text);}
+.gr-answers{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0 4px;text-align:left;}
+.gr-ans{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:0.78rem;}
+.gr-ans-h{font-weight:700;color:var(--text);margin-bottom:3px;} .gr-ans-h span{color:var(--muted);font-weight:500;}
+.gr-ans-l{color:var(--muted);line-height:1.4;}
+@media(max-width:560px){
+  .gr-board{gap:5px;} .gr-head{font-size:0.62rem;padding:5px;min-height:52px;border-radius:8px;}
+  .gr-cell{border-radius:8px;padding:4px;} .gr-pname{font-size:0.66rem;} .gr-rar{font-size:0.62rem;margin-top:2px;}
+  .gr-answers{grid-template-columns:1fr;}
+  #gr-overlay{padding:12px;}
 }
 </style>
 </head>
@@ -680,7 +780,14 @@ body.mc-lock{overflow:hidden;}
         <button class="nav-btn" onclick="showPage('dataquality',this)">Data Quality</button>
       </div>
     </div>
-    <button class="nav-btn nav-play" onclick="showPage('hessledle',this)">Hessle-dle</button>
+    <div class="nav-dropdown" id="navDropdown-games">
+      <button class="nav-dropdown-btn nav-play" onclick="toggleNavDropdown('games')" aria-expanded="false" aria-haspopup="true">Games <span class="nav-dropdown-caret">▾</span></button>
+      <div class="nav-dropdown-menu">
+        <button class="nav-btn" onclick="showPage('hessledle',this)">Hessle-dle</button>
+        <button class="nav-btn" onclick="showPage('higherlower',this)">Higher or Lower</button>
+        <button class="nav-btn" onclick="showPage('grid',this)">Hessle Grid</button>
+      </div>
+    </div>
     <div class="nav-dropdown" id="navDropdown-league">
       <button class="nav-dropdown-btn" onclick="toggleNavDropdown('league')" aria-expanded="false" aria-haspopup="true">League <span class="nav-dropdown-caret">▾</span></button>
       <div class="nav-dropdown-menu">
@@ -714,7 +821,6 @@ body.mc-lock{overflow:hidden;}
     <button class="mobile-nav-item" onclick="showPage('bowling',this);closeMobileNav()">⚾ Bowling</button>
     <button class="mobile-nav-item" onclick="showPage('profiles',this);closeMobileNav()">👤 Players</button>
     <button class="mobile-nav-item" onclick="showPage('matches',this);closeMobileNav()">📋 Matches</button>
-    <button class="mobile-nav-item" onclick="showPage('hessledle',this);closeMobileNav()">🎯 Hessle-dle</button>
     <div class="mobile-nav-section" id="mobileNavSection-stats">
       <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('stats')" aria-expanded="false">Stats <span class="mobile-nav-section-caret">▾</span></button>
       <div class="mobile-nav-section-items">
@@ -737,6 +843,14 @@ body.mc-lock{overflow:hidden;}
         <button class="mobile-nav-item" onclick="showPage('seasonawards',this);closeMobileNav()">🏆 Season Awards</button>
         <button class="mobile-nav-item" onclick="showPage('methodology',this);closeMobileNav()">ℹ️ About &amp; Methodology</button>
         <button class="mobile-nav-item" onclick="showPage('dataquality',this);closeMobileNav()">🩺 Data Quality</button>
+      </div>
+    </div>
+    <div class="mobile-nav-section" id="mobileNavSection-games">
+      <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('games')" aria-expanded="false">Games <span class="mobile-nav-section-caret">▾</span></button>
+      <div class="mobile-nav-section-items">
+        <button class="mobile-nav-item" onclick="showPage('hessledle',this);closeMobileNav()">🎯 Hessle-dle</button>
+        <button class="mobile-nav-item" onclick="showPage('higherlower',this);closeMobileNav()">↕️ Higher or Lower</button>
+        <button class="mobile-nav-item" onclick="showPage('grid',this);closeMobileNav()">#️⃣ Hessle Grid</button>
       </div>
     </div>
     <div class="mobile-nav-section" id="mobileNavSection-league">
@@ -1546,7 +1660,7 @@ body.mc-lock{overflow:hidden;}
     <div class="hd-head">
       <div>
         <div class="hd-title">Hessle-dle</div>
-        <div class="hd-sub">Guess the mystery Hessle player in six goes. <span id="hd-daynum"></span></div>
+        <div class="hd-sub">Guess the mystery Hessle player in six goes. <span id="hd-daynum"></span> · <span class="hd-since">Stats since <span class="hd-start">2018</span></span></div>
       </div>
       <div class="hd-head-btns">
         <button class="hd-btn" onclick="hdToggle('help')">How to play</button>
@@ -1560,19 +1674,66 @@ body.mc-lock{overflow:hidden;}
     <div id="hd-help" class="hd-panel" style="display:none">
       <p>Every day there's a new mystery player — the same for everyone. Type a name and press <strong>Guess</strong>. Each tile compares your guess with the mystery player:</p>
       <div class="hd-legend"><span class="hd-tile hd-ok">✓</span> exact &nbsp; <span class="hd-tile hd-close">≈</span> close &nbsp; <span class="hd-tile hd-no">✗</span> not close &nbsp; ↑ ↓ = the answer is higher / lower</div>
-      <p><strong>XI</strong> is the side they mostly played for (1st, 2nd or Both). <strong>Role</strong> is batter, bowler or all-rounder (as on their profile). <strong>Debut</strong> is their first season. Close means within a season, about 10% of the matches, runs or wickets, or one Man of the Match award.</p>
-      <p>Stuck after three guesses? A hint shows their initials. <strong>Practice</strong> gives you a random player any time without touching your streak.</p>
+      <p>All stats come from the club's records, which start in <strong class="hd-start">2018</strong> — matches, runs, wickets and Man of the Match awards only count from then.</p>
+      <p><strong>XI</strong> is the side they mostly played for (1st, 2nd or Both). <strong>Role</strong> is batter, bowler or all-rounder (as on their profile). <strong>Debut</strong> is their first season on record: <strong>≤<span class="hd-start">2018</span></strong> means they were already playing when records began, so they may have debuted earlier. Close means within a season, about 10% of the matches, runs or wickets, or one Man of the Match award.</p>
+      <p>Stuck after three guesses? A hint reveals their highest score and best bowling figures. <strong>Practice</strong> gives you a random player any time without touching your streak.</p>
     </div>
     <div id="hd-stats" class="hd-panel" style="display:none"></div>
     <div class="hd-input-row" id="hd-input-row">
-      <input id="hd-input" list="hd-names" placeholder="Type a player's name…" autocomplete="off" onkeydown="if(event.key==='Enter'){hdGuess();}">
-      <datalist id="hd-names"></datalist>
+      <div class="hd-input-wrap">
+        <input id="hd-input" placeholder="Type a player's name…" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="hd-suggest"
+               oninput="hdSuggest()" onfocus="hdSuggest()" onkeydown="hdKey(event)" onblur="setTimeout(hdHideSuggest, 150)">
+        <div id="hd-suggest" class="hd-suggest" role="listbox"></div>
+      </div>
       <button class="btn-primary hd-go" onclick="hdGuess()">Guess</button>
       <button class="hd-btn" id="hd-hint-btn" onclick="hdHint()" style="display:none">Hint</button>
     </div>
     <div id="hd-msg" class="hd-msg"></div>
     <div id="hd-board" class="hd-board"></div>
     <div id="hd-result"></div>
+  </div>
+</div>
+
+<div id="page-higherlower" class="page">
+  <div class="hl-wrap">
+    <div class="hd-head">
+      <div>
+        <div class="hd-title">Higher or Lower</div>
+        <div class="hd-sub">Does the next player have a higher or lower stat? One wrong answer and it's over. · <span class="hd-since">Stats since <span class="hl-start">2018</span></span></div>
+      </div>
+      <div class="hl-score"><div><span id="hl-streak">0</span><small>Streak</small></div><div><span id="hl-best">0</span><small>Best</small></div></div>
+    </div>
+    <div id="hl-arena" class="hl-arena"></div>
+    <div id="hl-over"></div>
+  </div>
+</div>
+
+<div id="page-grid" class="page">
+  <div class="gr-wrap">
+    <div class="hd-head">
+      <div>
+        <div class="hd-title">Hessle Grid</div>
+        <div class="hd-sub">Name a player who fits each row <em>and</em> column. Nine guesses, no repeats. <span id="gr-daynum"></span> · <span class="hd-since">Stats since <span class="gr-start">2018</span></span></div>
+      </div>
+      <div class="hd-head-btns">
+        <button class="hd-btn" onclick="grToggle('help')">How to play</button>
+        <button class="hd-btn" onclick="grToggle('stats')">Your stats</button>
+      </div>
+    </div>
+    <div class="hd-modes">
+      <button class="hd-mode-btn active" id="gr-mode-daily" onclick="grSetMode('daily')">Today's grid</button>
+      <button class="hd-mode-btn" id="gr-mode-practice" onclick="grSetMode('practice')">Practice</button>
+    </div>
+    <div id="gr-help" class="hd-panel" style="display:none">
+      <p>Every square sits under a <strong>column</strong> and beside a <strong>row</strong>. Tap a square and name a Hessle player who fits <strong>both</strong>. You have <strong>nine guesses</strong> — a wrong name still uses one — and each player can only be used once.</p>
+      <p><strong>Rarity</strong> rewards obscure picks: each correct square scores how common your player is among everyone who could have filled it (weighted by games played). An empty square scores 100. <strong>Lower is better</strong> — a perfect, original grid scores well under 100.</p>
+      <p>All stats come from the club's records since <span class="gr-start">2018</span>. Every grid is checked so every square has at least two answers and the whole grid can be solved with nine different players.</p>
+    </div>
+    <div id="gr-stats" class="hd-panel" style="display:none"></div>
+    <div class="gr-status"><span>Guesses left: <strong id="gr-left">9</strong></span><span>Rarity: <strong id="gr-rarity">900</strong></span></div>
+    <div id="gr-board" class="gr-board"></div>
+    <div id="gr-msg" class="hd-msg" style="text-align:center"></div>
+    <div id="gr-result"></div>
   </div>
 </div>
 
@@ -2330,9 +2491,13 @@ function renderAll() {
 // ============================================================
 // NAVIGATION
 // ============================================================
+// Pages that don't use the Year/Team filters (they have their own selectors, or none) — the filter bar hides there
+var FILTERLESS_PAGES = ['bestxi', 'dataquality', 'hessledle', 'higherlower', 'grid', 'league', 'methodology', 'season', 'seasonawards', 'statquery', 'warleaderboard'];
 function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
+  var _fb = document.querySelector('.filters');
+  if (_fb) { _fb.style.display = FILTERLESS_PAGES.indexOf(name) !== -1 ? 'none' : ''; if (typeof syncHeaderHeight === 'function') syncHeaderHeight(); }
   // Sync desktop nav
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   if(btn && btn.classList.contains('nav-btn')) btn.classList.add('active');
@@ -2432,6 +2597,8 @@ function _buildGlobalSearchIndex() {
     { label: 'Data Quality', page: 'dataquality' },
     { label: 'WAR Leaderboard', page: 'warleaderboard' },
     { label: 'Hessle-dle (guess the player)', page: 'hessledle' },
+    { label: 'Higher or Lower (game)', page: 'higherlower' },
+    { label: 'Hessle Grid (game)', page: 'grid' },
   ];
   var playerNames = Array.from(new Set(
     CRICKET_DATA.batting.map(function(r) { return r.Batter; })
@@ -8812,6 +8979,8 @@ function polishTables() {
 // ============================================================
 // HESSLE-DLE — a daily guess-the-player game
 // ============================================================
+// Placeholder names in the scorebook (e.g. a catch where the fielder wasn't noted) — never offered in the games
+var GAME_NOT_PLAYERS = ['Unsure'];
 var HD = { pool: null, guessable: null, info: null, mode: 'daily', answer: null, guesses: [], done: false, won: false, hint: false, key: null };
 var HD_MAX = 6, HD_LAUNCH = '2026-10-14', HD_MIN_ANSWER = 15, HD_MIN_GUESS = 5;
 var HD_ATTRS = [
@@ -8840,6 +9009,9 @@ function hdBuild() {
   var apps = {}, add = function(p, r) { if (!p) return; (apps[p] = apps[p] || {}); apps[p][r.Date + '|' + r.Team] = r.Team; };
   [['batting', 'Batter'], ['bowling', 'Bowler'], ['fielding', 'Fielder'], ['keeping', 'Keeper']].forEach(function(x) { CRICKET_DATA[x[0]].forEach(function(r) { add(r[x[1]], r); }); });
   var info = {};
+  // the earliest season on record (2018 today; moves back automatically if older seasons are added)
+  HD.start = Math.min.apply(null, CRICKET_DATA.matches.map(function(m) { return +m.Date.slice(0, 4); }));
+  GAME_NOT_PLAYERS.forEach(function(n) { delete apps[n]; });
   Object.keys(apps).forEach(function(p) {
     var keys = Object.keys(apps[p]), n = keys.length, n1 = keys.filter(function(k) { return apps[p][k] === '1st'; }).length;
     var runs = CRICKET_DATA.batting.reduce(function(t, r) { return t + (r.Batter === p && typeof r.Runs === 'number' ? r.Runs : 0); }, 0);
@@ -8847,6 +9019,12 @@ function hdBuild() {
     info[p] = { name: p, matches: n, xi: n1 / n >= 0.8 ? '1st' : (n1 / n <= 0.2 ? '2nd' : 'Both'), role: hdRole(p), runs: runs, wkts: wkts,
                 debut: Math.min.apply(null, keys.map(function(k) { return +k.slice(0, 4); })),
                 motm: CRICKET_DATA.motm.filter(function(r) { return r.MOTM === p; }).length };
+    var inns = CRICKET_DATA.batting.filter(function(r) { return r.Batter === p && typeof r.Runs === 'number' && r.Dismissal !== 'DNB'; });
+    var top = inns.sort(function(x, y) { return y.Runs - x.Runs || (/not out/i.test(y.Dismissal) ? 1 : 0) - (/not out/i.test(x.Dismissal) ? 1 : 0); })[0];
+    info[p].hs = top ? top.Runs + (/not out/i.test(top.Dismissal) ? '*' : '') : '—';
+    var spells = CRICKET_DATA.bowling.filter(function(r) { return r.Bowler === p && (r.Wickets || 0) > 0; });
+    var bb = spells.sort(function(x, y) { return (y.Wickets || 0) - (x.Wickets || 0) || (x.Runs || 0) - (y.Runs || 0); })[0];
+    info[p].bb = bb ? bb.Wickets + '/' + (bb.Runs || 0) : '—';
   });
   HD.info = info;
   HD.guessable = Object.keys(info).filter(function(p) { return info[p].matches >= HD_MIN_GUESS; }).sort();
@@ -8855,11 +9033,15 @@ function hdBuild() {
   var seed = 20261015; function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
   for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(rnd() * (i + 1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
   HD.pool = pool;
-  document.getElementById('hd-names').innerHTML = HD.guessable.map(function(p) { return '<option value="' + p.replace(/"/g, '&quot;') + '">'; }).join('');
 }
 function hdCompare(g, a, k) {
   var gv = g[k], av = a[k];
   if (k === 'xi') return gv === av ? 'ok' : ((gv === 'Both' || av === 'Both') ? 'close' : 'no');
+  // both already playing when records began (≤2018): treat as a match
+  if (k === 'debut' && gv === HD.start && av === HD.start) return 'ok';
+  // one of them was already playing when records began: their real debut could be years earlier,
+  // so only the direction (the arrow) is certain, never "close"
+  if (k === 'debut' && gv !== av && (gv === HD.start || av === HD.start)) return 'no';
   if (k === 'role') return gv === av ? 'ok' : ((gv === 'All-rounder' || av === 'All-rounder') ? 'close' : 'no');
   if (gv === av) return 'ok';
   var diff = Math.abs(gv - av);
@@ -8867,13 +9049,14 @@ function hdCompare(g, a, k) {
   return near ? 'close' : 'no';
 }
 function hdFmt(k, v) {
+  if (k === 'debut' && v === HD.start) return '≤' + v;
   if (k === 'role') return { 'Batter': 'BAT', 'Bowler': 'BOWL', 'All-rounder': 'AR' }[v] || v;
   if ((k === 'runs') && v >= 1000) return (v / 1000).toFixed(1).replace('.0', '') + 'k';
   return v;
 }
 function hdTile(g, a, k, i) {
   var res = hdCompare(g, a, k), arrow = '';
-  if (res !== 'ok' && ['debut', 'matches', 'runs', 'wkts', 'motm'].indexOf(k) !== -1) arrow = a[k] > g[k] ? '↑' : '↓';
+  if (res !== 'ok' && ['debut', 'matches', 'runs', 'wkts', 'motm'].indexOf(k) !== -1 && a[k] !== g[k]) arrow = a[k] > g[k] ? '↑' : '↓';
   return '<div class="hd-tile hd-' + res + '" style="animation-delay:' + (i * 0.08) + 's" title="' + k + '">' + hdFmt(k, g[k]) + (arrow ? '<span class="hd-arrow">' + arrow + '</span>' : '') + '</div>';
 }
 function hdSetMode(m) {
@@ -8897,6 +9080,7 @@ function hdStart() {
     document.getElementById('hd-daynum').textContent = '(practice)';
   }
   document.getElementById('hd-msg').textContent = '';
+  document.querySelectorAll('.hd-start').forEach(function(el) { el.textContent = HD.start; });
   hdRender();
 }
 function hdSave() { if (HD.mode === 'daily') hdStore('hd-day-' + HD.key, { guesses: HD.guesses, done: HD.done, won: HD.won, hint: HD.hint }); }
@@ -8914,6 +9098,67 @@ function hdGuess() {
   if (HD.done && HD.mode === 'daily') hdRecord();
   HD.justGuessed = true; hdSave(); hdRender(); HD.justGuessed = false;
 }
+// ── Name suggestions, styled like the rest of the dashboard
+var HD_SUG = { items: [], active: -1 };
+function hdSuggest() {
+  var inp = document.getElementById('hd-input'), box = document.getElementById('hd-suggest');
+  if (!HD.guessable || HD.done) { hdHideSuggest(); return; }
+  var q = inp.value.trim().toLowerCase();
+  var avail = HD.guessable.filter(function(p) { return HD.guesses.indexOf(p) === -1; });
+  var starts = [], within = [];
+  avail.forEach(function(p) {
+    var lp = p.toLowerCase();
+    if (!q) starts.push(p);
+    else if (lp.indexOf(q) === 0 || lp.split(/[\s\-']+/).some(function(w) { return w.indexOf(q) === 0; })) starts.push(p);
+    else if (lp.indexOf(q) !== -1) within.push(p);
+  });
+  HD_SUG.items = starts.concat(within);
+  // typed a full name exactly and it's the only match: step aside so the Guess button is reachable (phones)
+  if (q && HD_SUG.items.length === 1 && HD_SUG.items[0].toLowerCase() === q) { hdHideSuggest(); return; }
+  HD_SUG.active = q && HD_SUG.items.length ? 0 : -1;
+  if (!HD_SUG.items.length) {
+    box.innerHTML = q ? '<div class="hd-sug-empty">No player matches \u201c' + inp.value.trim().replace(/</g, '&lt;') + '\u201d</div>' : '';
+    box.classList.toggle('open', !!q); inp.setAttribute('aria-expanded', q ? 'true' : 'false'); return;
+  }
+  var esc = function(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); };
+  box.innerHTML = HD_SUG.items.map(function(p, i) {
+    var lp = p.toLowerCase(), at = q ? lp.indexOf(q) : -1;
+    var w = q ? lp.split(/[\s\-']+/) : [], idx = at;
+    // prefer highlighting the start of a word
+    if (q) { var pos = 0; for (var j = 0; j < w.length; j++) { var k = lp.indexOf(w[j], pos); if (w[j].indexOf(q) === 0) { idx = k; break; } pos = k + w[j].length; } }
+    var label = idx >= 0 ? esc(p.slice(0, idx)) + '<strong>' + esc(p.slice(idx, idx + q.length)) + '</strong>' + esc(p.slice(idx + q.length)) : esc(p);
+    return '<div class="hd-sug' + (i === HD_SUG.active ? ' active' : '') + '" role="option" id="hd-sug-' + i + '" aria-selected="' + (i === HD_SUG.active) + '" onmousedown="event.preventDefault();hdPick(' + i + ')">' + label + '</div>';
+  }).join('');
+  box.classList.add('open'); inp.setAttribute('aria-expanded', 'true');
+  if (HD_SUG.active >= 0) inp.setAttribute('aria-activedescendant', 'hd-sug-' + HD_SUG.active); else inp.removeAttribute('aria-activedescendant');
+}
+function hdHideSuggest() {
+  var box = document.getElementById('hd-suggest'), inp = document.getElementById('hd-input');
+  if (box) box.classList.remove('open');
+  if (inp) { inp.setAttribute('aria-expanded', 'false'); inp.removeAttribute('aria-activedescendant'); }
+  HD_SUG.active = -1;
+}
+function hdPick(i) {
+  var name = HD_SUG.items[i]; if (!name) return;
+  document.getElementById('hd-input').value = name;
+  hdHideSuggest(); hdGuess();
+}
+function hdKey(e) {
+  var box = document.getElementById('hd-suggest'), open = box.classList.contains('open') && HD_SUG.items.length;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (!open) { hdSuggest(); return; }
+    var n = HD_SUG.items.length;
+    HD_SUG.active = e.key === 'ArrowDown' ? (HD_SUG.active + 1) % n : (HD_SUG.active - 1 + n) % n;
+    box.querySelectorAll('.hd-sug').forEach(function(el, i) { el.classList.toggle('active', i === HD_SUG.active); el.setAttribute('aria-selected', i === HD_SUG.active); });
+    var act = box.querySelector('.hd-sug.active'); if (act) act.scrollIntoView({ block: 'nearest' });
+    document.getElementById('hd-input').setAttribute('aria-activedescendant', 'hd-sug-' + HD_SUG.active);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (open && HD_SUG.active >= 0) hdPick(HD_SUG.active); else { hdHideSuggest(); hdGuess(); }
+  } else if (e.key === 'Escape') { hdHideSuggest(); }
+}
+
 function hdHint() { HD.hint = true; hdSave(); hdRender(); }
 function hdRecord() {
   var st = hdStore('hd-stats') || { played: 0, wins: 0, streak: 0, best: 0, dist: [0, 0, 0, 0, 0, 0], last: null };
@@ -8970,14 +9215,15 @@ function hdRender() {
   var hintBtn = document.getElementById('hd-hint-btn');
   hintBtn.style.display = (!HD.done && !HD.hint && HD.guesses.length >= 3) ? 'inline-block' : 'none';
   var msg = document.getElementById('hd-msg');
-  if (HD.hint && !HD.done) msg.innerHTML = 'Hint: their initials are <strong>' + HD.answer.split(' ').map(function(w) { return w[0]; }).join('.') + '.</strong>';
+  if (HD.hint && !HD.done) msg.innerHTML = 'Hint: highest score <strong>' + a.hs + '</strong> · best bowling <strong>' + a.bb + '</strong>';
   var res = document.getElementById('hd-result');
   if (!HD.done) { res.innerHTML = ''; return; }
   res.innerHTML = '<div class="hd-done ' + (HD.won ? 'hd-done-won' : 'hd-done-lost') + '">' +
     '<div class="hd-done-h">' + (HD.won ? ['Incredible — first go!', 'Brilliant!', 'Great guess!', 'Nicely done!', 'Got there!', 'Phew — last go!'][HD.guesses.length - 1] : 'Not this time') + '</div>' +
     '<div class="hd-done-p">' + (HD.won ? 'You got' : 'It was') + ' <strong>' + a.name + '</strong>' + (HD.won ? ' in ' + HD.guesses.length + '/' + HD_MAX : '') + '</div>' +
-    '<div class="hd-card">' + [['XI', a.xi], ['Role', a.role], ['Debut', a.debut], ['Matches', a.matches], ['Runs', a.runs], ['Wickets', a.wkts], ['MoTM', a.motm]].map(function(x) {
+    '<div class="hd-card">' + [['XI', a.xi], ['Role', a.role], ['Debut', hdFmt('debut', a.debut)], ['Matches', a.matches], ['Runs', a.runs], ['Wickets', a.wkts], ['MoTM', a.motm]].map(function(x) {
       return '<div><span>' + x[0] + '</span><strong>' + x[1] + '</strong></div>'; }).join('') + '</div>' +
+    '<div class="hd-note" style="margin:-6px 0 12px">Stats since ' + HD.start + ' · highest score ' + a.hs + ' · best bowling ' + a.bb + '</div>' +
     '<div class="hd-done-btns"><button class="btn-primary" onclick="goToPlayer(\'' + a.name.replace(/'/g, "\\'") + '\')">View profile</button>' +
     (HD.mode === 'daily' ? '<button class="hd-btn" id="hd-share" onclick="hdShare()">Share result</button>' : '') +
     '<button class="hd-btn" onclick="hdSetMode(\'practice\')">' + (HD.mode === 'daily' ? 'Practice' : 'Play another') + '</button></div>' +
@@ -8992,6 +9238,459 @@ function hdRender() {
   });
   document.addEventListener('DOMContentLoaded', function() { var pg = document.getElementById('page-hessledle'); if (pg) obs.observe(pg, { attributes: true, attributeFilter: ['class'] }); });
   if (document.readyState !== 'loading') { var pg = document.getElementById('page-hessledle'); if (pg) obs.observe(pg, { attributes: true, attributeFilter: ['class'] }); }
+})();
+
+
+// ============================================================
+// HIGHER OR LOWER
+// ============================================================
+var HL = { info: null, a: null, b: null, cat: null, streak: 0, best: 0, busy: false, over: false, recent: [] };
+var HL_CATS = [
+  { k: 'runs', label: 'career runs', role: 'batting', ok: function(p) { return p.inns >= 5; } },
+  { k: 'wkts', label: 'career wickets', role: 'bowling', ok: function(p) { return p.wkts >= 5; } },
+  { k: 'matches', label: 'matches played', role: 'club', ok: function() { return true; } },
+  { k: 'motm', label: 'Man of the Match awards', role: 'club', ok: function(p) { return p.motm >= 1; } },
+  { k: 'hs', label: 'highest score', role: 'batting', ok: function(p) { return p.inns >= 5; } },
+  { k: 'avg', label: 'batting average', role: 'batting', ok: function(p) { return p.inns >= 10 && p.avg !== null; } },
+  { k: 'catches', label: 'catches', role: 'fielding', ok: function(p) { return p.catches >= 3; } },
+  { k: 'sixes', label: 'sixes hit', role: 'batting', ok: function(p) { return p.sixes >= 3; } },
+  { k: 'fifties', label: 'fifties (50+ scores)', role: 'batting', ok: function(p) { return p.fifties >= 1; } },
+  { k: 'fours', label: 'fours hit', role: 'batting', ok: function(p) { return p.fours >= 10; } },
+  { k: 'sr', label: 'career strike rate', role: 'batting', ok: function(p) { return p.inns >= 10 && p.sr !== null; } },
+  { k: 'ducks', label: 'ducks', role: 'batting', ok: function(p) { return p.ducks >= 1; } },
+  { k: 'bavg', label: 'bowling average', role: 'bowling', ok: function(p) { return p.wkts >= 10; } },
+  { k: 'econ', label: 'economy rate', role: 'bowling', ok: function(p) { return p.balls >= 120; } },
+  { k: 'balls', label: 'overs bowled', role: 'bowling', ok: function(p) { return p.balls >= 60; } },
+  { k: 'maidens', label: 'maidens', role: 'bowling', ok: function(p) { return p.maidens >= 3; } },
+  { k: 'runouts', label: 'run outs', role: 'fielding', ok: function(p) { return p.runouts >= 1; } },
+  { k: 'winpct', label: 'win % in games played', role: 'club', ok: function() { return true; } },
+  { k: 'seasons', label: 'seasons played', role: 'club', ok: function() { return true; } },
+  { k: 'potm', label: 'Player of the Month awards', role: 'club', ok: function(p) { return p.potm >= 1; } },
+  { k: 'war', label: 'career WAR', role: 'club', ok: function(p) { return p.war !== null; } }
+];
+function hlBuild() {
+  if (HL.info) return;
+  var apps = {};
+  [['batting', 'Batter'], ['bowling', 'Bowler'], ['fielding', 'Fielder'], ['keeping', 'Keeper']].forEach(function(x) {
+    CRICKET_DATA[x[0]].forEach(function(r) { var p = r[x[1]]; if (!p) return; (apps[p] = apps[p] || {})[r.Date + '|' + r.Team] = r.Team; }); });
+  var info = {};
+  GAME_NOT_PLAYERS.forEach(function(n) { delete apps[n]; });
+  Object.keys(apps).forEach(function(p) {
+    var keys = Object.keys(apps[p]); if (keys.length < 10) return;
+    var n1 = keys.filter(function(k) { return apps[p][k] === '1st'; }).length / keys.length;
+    var inns = CRICKET_DATA.batting.filter(function(r) { return r.Batter === p && r.Dismissal !== 'DNB' && typeof r.Runs === 'number'; });
+    var st = inns.length ? computeBatStats(inns)[0] : null, avg = st ? parseFloat(st.avg) : NaN;
+    info[p] = { name: p, matches: keys.length, xi: n1 >= 0.8 ? '1st XI' : (n1 <= 0.2 ? '2nd XI' : '1st & 2nd XI'), role: hdRole(p), inns: inns.length,
+      runs: inns.reduce(function(t, r) { return t + r.Runs; }, 0), hs: inns.reduce(function(t, r) { return Math.max(t, r.Runs); }, 0),
+      avg: isNaN(avg) ? null : Math.round(avg * 100) / 100,
+      sixes: inns.reduce(function(t, r) { return t + (typeof r['6s'] === 'number' ? r['6s'] : 0); }, 0),
+      wkts: CRICKET_DATA.bowling.reduce(function(t, r) { return t + (r.Bowler === p ? (r.Wickets || 0) : 0); }, 0),
+      catches: CRICKET_DATA.fielding.filter(function(r) { return r.Fielder === p && r.Dismissal === 'Caught'; }).length +
+               CRICKET_DATA.keeping.filter(function(r) { return r.Keeper === p && r.Dismissal === 'Caught'; }).length,
+      motm: CRICKET_DATA.motm.filter(function(r) { return r.MOTM === p; }).length };
+    var x = info[p];
+    x.fifties = inns.filter(function(r) { return r.Runs >= 50; }).length;
+    x.fours = inns.reduce(function(t, r) { return t + (typeof r['4s'] === 'number' ? r['4s'] : 0); }, 0);
+    var sr = st ? parseFloat(st.sr) : NaN; x.sr = isNaN(sr) ? null : Math.round(sr * 10) / 10;
+    x.ducks = inns.filter(function(r) { return r.Runs === 0 && !/not out|retired/i.test(r.Dismissal || ''); }).length;
+    var bw = CRICKET_DATA.bowling.filter(function(r) { return r.Bowler === p; });
+    x.balls = bw.reduce(function(t, r) { return t + oversToBalls(r.Overs || 0); }, 0);
+    var conceded = bw.reduce(function(t, r) { return t + (r.Runs || 0); }, 0);
+    x.maidens = bw.reduce(function(t, r) { return t + (r.Maidens || 0); }, 0);
+    x.bavg = x.wkts ? Math.round(conceded / x.wkts * 100) / 100 : null;
+    x.econ = x.balls ? Math.round(conceded / (x.balls / 6) * 100) / 100 : null;
+    x.runouts = CRICKET_DATA.fielding.filter(function(r) { return r.Fielder === p && r.Dismissal === 'Run Out'; }).length;
+    var played = keys.map(function(k) { var dt = k.split('|'); return CRICKET_DATA.matches.find(function(m) { return m.Date === dt[0] && m.Team === dt[1]; }); }).filter(Boolean);
+    x.winpct = played.length ? Math.round(played.filter(function(m) { return m.Result === 'W'; }).length / played.length * 1000) / 10 : 0;
+    x.seasons = new Set(keys.map(function(k) { return k.slice(0, 4); })).size;
+    var pm = (CRICKET_DATA.potm || []).find(function(r) { return r.player === p; }); x.potm = pm ? pm.months.length : 0;
+    x.war = null;
+  });
+  // career WAR, exactly as on the WAR Leaderboard
+  try { computeWarLeaderboard('', '').rows.forEach(function(r) { if (info[r.player]) info[r.player].war = Math.round(r.war * 100) / 100; }); } catch (e) { console.warn('WAR for Higher or Lower', e); }
+  HL.info = info;
+  HL.best = +(hdStore('hl-best') || 0);
+  document.querySelectorAll('.hl-start').forEach(function(el) { el.textContent = Math.min.apply(null, CRICKET_DATA.matches.map(function(m) { return +m.Date.slice(0, 4); })); });
+}
+function hlFmt(cat, v) {
+  if (['avg', 'bavg', 'econ', 'war'].indexOf(cat.k) !== -1) return Number(v).toFixed(2);
+  if (cat.k === 'sr') return Number(v).toFixed(1);
+  if (cat.k === 'winpct') return Number(v).toFixed(1) + '%';
+  if (cat.k === 'balls') { var b = Math.round(v); return Math.floor(b / 6).toLocaleString('en-GB') + (b % 6 ? '.' + (b % 6) : ''); }
+  return Number(v).toLocaleString('en-GB');
+}
+function hlPick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function hlNextRound(keepA) {
+  var players = Object.values(HL.info);
+  var a = keepA || hlPick(players);
+  var cats = HL_CATS.filter(function(c) { return c.ok(a) && (!HL.cat || c.k !== HL.cat.k); });
+  if (!cats.length) cats = HL_CATS.filter(function(c) { return c.ok(a); });
+  for (var tries = 0; tries < 40; tries++) {
+    var cat = hlPick(cats);
+    var opts = players.filter(function(p) { return p.name !== a.name && cat.ok(p) && p[cat.k] !== a[cat.k] && HL.recent.indexOf(p.name) === -1; });
+    if (opts.length) { HL.a = a; HL.cat = cat; HL.b = hlPick(opts); break; }
+  }
+  HL.recent.push(HL.b.name); if (HL.recent.length > 6) HL.recent.shift();
+  HL.busy = false;
+  hlRender();
+}
+function hlStart() { hlBuild(); HL.streak = 0; HL.over = false; HL.cat = null; HL.recent = []; document.getElementById('hl-over').innerHTML = ''; hlNextRound(null); }
+function hlCard(p, cat, side, reveal) {
+  var val = side === 'a' || reveal ? hlFmt(cat, p[cat.k]) : '?';
+  return '<div class="hl-card" data-chart-role="' + cat.role + '" id="hl-card-' + side + '">' +
+    '<div class="hl-meta">' + p.xi + ' · ' + p.role + '</div>' +
+    '<div class="hl-name">' + p.name + '</div>' +
+    '<div class="hl-val" id="hl-val-' + side + '">' + val + '</div>' +
+    '<div class="hl-cat"><span class="chart-chip">' + cat.label + '</span></div>' +
+    (side === 'b' ? '<div class="hl-btns" id="hl-btns"><button class="hl-btn" onclick="hlAnswer(\'higher\')">▲ Higher</button><button class="hl-btn" onclick="hlAnswer(\'lower\')">▼ Lower</button></div>' : '') +
+    '</div>';
+}
+function hlRender() {
+  document.getElementById('hl-streak').textContent = HL.streak;
+  document.getElementById('hl-best').textContent = HL.best;
+  var q = '<div class="hl-question">Does <strong>' + HL.b.name + '</strong> have a higher or lower <strong>' + HL.cat.label + '</strong> than ' + HL.a.name + '?</div>';
+  document.getElementById('hl-arena').innerHTML = q + '<div class="hl-cards">' + hlCard(HL.a, HL.cat, 'a') + '<div class="hl-vs">VS</div>' + hlCard(HL.b, HL.cat, 'b') + '</div>';
+}
+function hlAnswer(guess) {
+  if (HL.busy || HL.over) return; HL.busy = true;
+  var a = HL.a[HL.cat.k], b = HL.b[HL.cat.k], right = (b > a) === (guess === 'higher');
+  var el = document.getElementById('hl-val-b'), card = document.getElementById('hl-card-b'), t0 = null, cat = HL.cat;
+  document.getElementById('hl-btns').classList.add('hl-btns-done');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function step(ts) {  // count up to the hidden number
+    if (!t0) t0 = ts; var k = reduce ? 1 : Math.min(1, (ts - t0) / 650);
+    el.textContent = hlFmt(cat, ['avg', 'bavg', 'econ', 'war', 'sr', 'winpct'].indexOf(cat.k) !== -1 ? b * k : Math.round(b * k));
+    if (k < 1) requestAnimationFrame(step);
+    else {
+      card.classList.add(right ? 'hl-right' : 'hl-wrong');
+      el.insertAdjacentHTML('beforeend', '<span class="hl-mark">' + (right ? ' ✓' : ' ✗') + '</span>');
+      setTimeout(function() {
+        if (right) { HL.streak++; if (HL.streak > HL.best) { HL.best = HL.streak; hdStore('hl-best', HL.best); } hlNextRound(HL.b); }
+        else hlGameOver();
+      }, reduce ? 500 : 950);
+    }
+  }
+  requestAnimationFrame(step);
+}
+function hlGameOver() {
+  HL.over = true; HL.busy = false;
+  document.getElementById('hl-streak').textContent = HL.streak; document.getElementById('hl-best').textContent = HL.best;
+  var msgs = ['Unlucky — straight out!', 'Not bad!', 'Good knock!', 'Great run!', 'Superb!', 'Hessle legend!'];
+  var m = msgs[Math.min(msgs.length - 1, HL.streak === 0 ? 0 : HL.streak < 3 ? 1 : HL.streak < 6 ? 2 : HL.streak < 10 ? 3 : HL.streak < 15 ? 4 : 5)];
+  document.getElementById('hl-over').innerHTML = '<div class="hd-done ' + (HL.streak >= HL.best && HL.streak > 0 ? 'hd-done-won' : 'hd-done-lost') + '">' +
+    '<div class="hd-done-h">' + m + '</div>' +
+    '<div class="hd-done-p">Your streak: <strong>' + HL.streak + '</strong>' + (HL.streak > 0 && HL.streak >= HL.best ? ' — a new best!' : ' · Best: <strong>' + HL.best + '</strong>') + '</div>' +
+    '<div class="hd-done-p" style="margin-top:-6px">' + HL.b.name + ' has <strong>' + hlFmt(HL.cat, HL.b[HL.cat.k]) + '</strong> ' + HL.cat.label + ' to ' + HL.a.name + '\u2019s ' + hlFmt(HL.cat, HL.a[HL.cat.k]) + '.</div>' +
+    '<div class="hd-done-btns"><button class="btn-primary hl-again" onclick="hlStart()">Play again</button><button class="hd-btn" id="hl-share" onclick="hlShare()">Share</button></div></div>';
+  var again = document.querySelector('.hl-again'); if (again) again.focus();
+}
+function hlShare() {
+  var text = 'Higher or Lower 🏏 I got a streak of ' + HL.streak + ' on the Hessle CC stats site (best ' + HL.best + ') — can you beat it?\nhttps://textbookanalytics.co.uk/?page=higherlower';
+  var btn = document.getElementById('hl-share');
+  if (navigator.share && /Mobi|Android|iPhone/i.test(navigator.userAgent)) { navigator.share({ text: text }).catch(function() {}); return; }
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(function() { if (btn) { btn.textContent = 'Copied!'; setTimeout(function() { btn.textContent = 'Share'; }, 1800); } }, function() { prompt('Copy:', text); });
+  else prompt('Copy:', text);
+}
+document.addEventListener('keydown', function(e) {
+  var pg = document.getElementById('page-higherlower');
+  if (!pg || !pg.classList.contains('active') || /input|select|textarea/i.test((e.target.tagName || ''))) return;
+  if (e.key === 'ArrowUp' || e.key === 'h' || e.key === 'H') { e.preventDefault(); hlAnswer('higher'); }
+  else if (e.key === 'ArrowDown' || e.key === 'l' || e.key === 'L') { e.preventDefault(); hlAnswer('lower'); }
+});
+(function() {
+  var started = false;
+  function watch() {
+    var pg = document.getElementById('page-higherlower'); if (!pg) return;
+    new MutationObserver(function() {
+      if (!started && pg.classList.contains('active') && typeof CRICKET_DATA !== 'undefined' && CRICKET_DATA && CRICKET_DATA.matches) { started = true; hlStart(); }
+    }).observe(pg, { attributes: true, attributeFilter: ['class'] });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+})();
+
+
+// ============================================================
+// HESSLE GRID — name a player who fits both the row and the column
+// ============================================================
+var GR = { P: null, names: null, crit: null, mode: 'daily', grid: null, cells: null, left: 9, done: false, key: null, sel: null };
+var GR_LAUNCH = '2026-10-14';
+function grBuild() {
+  if (GR.P) return;
+  var P = {};
+  function get(p) { return P[p] || (P[p] = { name: p, apps: {}, opps: {}, years: {}, inns: [], bowl: [], ct: 0, ctMatch: {}, ro: 0, st: 0 }); }
+  [['batting', 'Batter'], ['bowling', 'Bowler'], ['fielding', 'Fielder'], ['keeping', 'Keeper']].forEach(function(x) {
+    CRICKET_DATA[x[0]].forEach(function(r) { var n = r[x[1]]; if (!n) return; var q = get(n);
+      q.apps[r.Date + '|' + r.Team] = r.Team; q.opps[r.Opponent] = 1; q.years[r.Date.slice(0, 4)] = 1; }); });
+  CRICKET_DATA.batting.forEach(function(r) { if (r.Batter && r.Dismissal !== 'DNB' && typeof r.Runs === 'number') get(r.Batter).inns.push(r); });
+  CRICKET_DATA.bowling.forEach(function(r) { if (r.Bowler) get(r.Bowler).bowl.push(r); });
+  CRICKET_DATA.fielding.forEach(function(r) { if (!r.Fielder) return; var q = get(r.Fielder);
+    if (r.Dismissal === 'Run Out') q.ro++; else if (r.Dismissal === 'Caught') { q.ct++; var k = r.Date + '|' + r.Team; q.ctMatch[k] = (q.ctMatch[k] || 0) + 1; } });
+  CRICKET_DATA.keeping.forEach(function(r) { if (!r.Keeper) return; var q = get(r.Keeper);
+    if (/stump/i.test(r.Dismissal)) q.st++; else { q.ct++; var k = r.Date + '|' + r.Team; q.ctMatch[k] = (q.ctMatch[k] || 0) + 1; } });
+  var winKeys = {}; CRICKET_DATA.matches.forEach(function(m) { if (m.Result === 'W') winKeys[m.Date + '|' + m.Team] = 1; });
+  var pots = {}; try { pots = getPlayerOfSeasonWins() || {}; } catch (e) {}
+  Object.values(P).forEach(function(q) {
+    var keys = Object.keys(q.apps);
+    q.matches = keys.length; q.first = Math.min.apply(null, Object.keys(q.years).map(Number)); q.seasons = Object.keys(q.years).length;
+    q.has1 = keys.some(function(k) { return q.apps[k] === '1st'; }); q.has2 = keys.some(function(k) { return q.apps[k] === '2nd'; });
+    q.wins = keys.filter(function(k) { return winKeys[k]; }).length;
+    q.runs = q.inns.reduce(function(t, r) { return t + r.Runs; }, 0);
+    q.hs = q.inns.reduce(function(t, r) { return Math.max(t, r.Runs); }, 0);
+    q.sixes = q.inns.reduce(function(t, r) { return t + (typeof r['6s'] === 'number' ? r['6s'] : 0); }, 0);
+    q.duck = q.inns.some(function(r) { return r.Runs === 0 && !/not out|retired/i.test(r.Dismissal || ''); });
+    q.opened = q.inns.some(function(r) { return r.Pos === 1 || r.Pos === 2; });
+    var st = q.inns.length >= 10 ? computeBatStats(q.inns)[0] : null; q.avg = st ? parseFloat(st.avg) : NaN;
+    q.wkts = q.bowl.reduce(function(t, r) { return t + (r.Wickets || 0); }, 0);
+    q.bestW = q.bowl.reduce(function(t, r) { return Math.max(t, r.Wickets || 0); }, 0);
+    q.maidens = q.bowl.reduce(function(t, r) { return t + (r.Maidens || 0); }, 0);
+    q.balls = q.bowl.reduce(function(t, r) { return t + oversToBalls(r.Overs || 0); }, 0);
+    var conc = q.bowl.reduce(function(t, r) { return t + (r.Runs || 0); }, 0); q.econ = q.balls ? conc / (q.balls / 6) : NaN;
+    q.maxCt = Math.max.apply(null, [0].concat(Object.values(q.ctMatch)));
+    q.motm = CRICKET_DATA.motm.filter(function(r) { return r.MOTM === q.name; }).length;
+    var pm = (CRICKET_DATA.potm || []).find(function(r) { return r.player === q.name; }); q.potm = pm ? pm.months.length : 0;
+    q.pots = (pots[q.name] || []).length;
+  });
+  GAME_NOT_PLAYERS.forEach(function(n) { delete P[n]; });
+  GR.P = P; GR.names = Object.keys(P).sort();
+  GR.start = Math.min.apply(null, CRICKET_DATA.matches.map(function(m) { return +m.Date.slice(0, 4); }));
+  document.querySelectorAll('.gr-start').forEach(function(el) { el.textContent = GR.start; });
+  var C = [];
+  function add(id, fam, role, label, f) { C.push({ id: id, fam: fam, role: role, label: label, f: f }); }
+  add('1st', 'team', 'club', 'Played 1st XI', function(q) { return q.has1; });
+  add('2nd', 'team', 'club', 'Played 2nd XI', function(q) { return q.has2; });
+  add('both', 'team', 'club', 'Played for both XIs', function(q) { return q.has1 && q.has2; });
+  add('m50', 'team', 'club', '50+ matches', function(q) { return q.matches >= 50; });
+  add('s5', 'team', 'club', '5+ seasons', function(q) { return q.seasons >= 5; });
+  add('deb22', 'team', 'club', 'Debuted 2022 or later', function(q) { return q.first >= 2022; });
+  add('w20', 'team', 'club', 'Won 20+ matches', function(q) { return q.wins >= 20; });
+  var oc = {}; CRICKET_DATA.matches.forEach(function(m) { oc[m.Opponent] = (oc[m.Opponent] || 0) + 1; });
+  Object.keys(oc).sort(function(a, b) { return oc[b] - oc[a]; }).slice(0, 12).forEach(function(o) {
+    add('v:' + o, 'opp', 'team', 'Played v ' + o, function(q) { return !!q.opps[o]; }); });
+  Object.keys(CRICKET_DATA.matches.reduce(function(a, m) { a[m.Date.slice(0, 4)] = 1; return a; }, {})).forEach(function(y) {
+    add('y:' + y, 'season', 'team', 'Played in ' + y, function(q) { return !!q.years[y]; }); });
+  add('50', 'bat', 'batting', 'Scored a fifty', function(q) { return q.hs >= 50; });
+  add('100', 'bat', 'batting', 'Scored a hundred', function(q) { return q.hs >= 100; });
+  add('six10', 'bat', 'batting', '10+ career sixes', function(q) { return q.sixes >= 10; });
+  add('duck', 'bat', 'batting', 'Made a duck', function(q) { return q.duck; });
+  add('r500', 'bat', 'batting', '500+ career runs', function(q) { return q.runs >= 500; });
+  add('avg20', 'bat', 'batting', 'Batting average 20+ (10+ inns)', function(q) { return q.avg >= 20; });
+  add('open', 'bat', 'batting', 'Opened the batting', function(q) { return q.opened; });
+  add('5w', 'bowl', 'bowling', 'Took a 5-wicket haul', function(q) { return q.bestW >= 5; });
+  add('3w', 'bowl', 'bowling', 'Took 3+ wickets in a game', function(q) { return q.bestW >= 3; });
+  add('w25', 'bowl', 'bowling', '25+ career wickets', function(q) { return q.wkts >= 25; });
+  add('maiden', 'bowl', 'bowling', 'Bowled a maiden', function(q) { return q.maidens >= 1; });
+  add('econ4', 'bowl', 'bowling', 'Economy under 4 (20+ overs)', function(q) { return q.balls >= 120 && q.econ < 4; });
+  add('st', 'field', 'fielding', 'Took a stumping', function(q) { return q.st >= 1; });
+  add('ct2', 'field', 'fielding', '2+ catches in a game', function(q) { return q.maxCt >= 2; });
+  add('ro', 'field', 'fielding', 'Ran someone out', function(q) { return q.ro >= 1; });
+  add('ct20', 'field', 'fielding', '20+ career catches', function(q) { return q.ct >= 20; });
+  add('motm', 'award', 'club', 'Won Man of the Match', function(q) { return q.motm >= 1; });
+  add('potm', 'award', 'club', 'Won Player of the Month', function(q) { return q.potm >= 1; });
+  add('pots', 'award', 'club', 'Won Player of the Season', function(q) { return q.pots >= 1; });
+  C.forEach(function(c) { c.set = GR.names.filter(function(n) { return c.f(P[n]); }); });
+  GR.crit = C.filter(function(c) { return c.set.length >= 4; });
+}
+function grRng(seedStr) {  // small seeded random number generator, so everyone gets the same daily grid
+  var h = 1779033703 ^ seedStr.length;
+  for (var i = 0; i < seedStr.length; i++) { h = Math.imul(h ^ seedStr.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); }
+  return function() { h = Math.imul(h ^ (h >>> 16), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); h ^= h >>> 16; return (h >>> 0) / 4294967296; };
+}
+function grEligible(r, c) { return r.set.filter(function(n) { return c.set.indexOf(n) !== -1; }); }
+function grSolvable(rows, cols) {  // nine squares, nine different players: bipartite matching
+  var cells = []; rows.forEach(function(r) { cols.forEach(function(c) { cells.push(grEligible(r, c)); }); });
+  var owner = {};
+  function tryCell(i, seen) {
+    for (var j = 0; j < cells[i].length; j++) { var n = cells[i][j]; if (seen[n]) continue; seen[n] = 1;
+      if (owner[n] === undefined || tryCell(owner[n], seen)) { owner[n] = i; return true; } }
+    return false;
+  }
+  for (var i = 0; i < cells.length; i++) if (!tryCell(i, {})) return false;
+  return true;
+}
+function grMake(seedStr) {
+  var rnd = grRng(seedStr), C = GR.crit;
+  for (var attempt = 0; attempt < 4000; attempt++) {
+    var pick = [], fams = {};
+    var pool = C.slice().sort(function() { return rnd() - 0.5; });
+    for (var i = 0; i < pool.length && pick.length < 6; i++) {
+      var c = pool[i], f = c.fam;
+      if ((fams[f] || 0) >= ((f === 'opp' || f === 'season') ? 1 : 2)) continue;
+      pick.push(c); fams[f] = (fams[f] || 0) + 1;
+    }
+    if (pick.length < 6) continue;
+    var rows = pick.slice(0, 3), cols = pick.slice(3, 6), ok = true;
+    for (var a = 0; a < 3 && ok; a++) for (var b = 0; b < 3 && ok; b++) {
+      var n = grEligible(rows[a], cols[b]).length;
+      if (n < 2 || n > 40) ok = false;
+      // skip pairs where one condition swallows the other (e.g. "hundred" with "fifty")
+      if (ok && (n === rows[a].set.length || n === cols[b].set.length)) ok = false;
+    }
+    if (ok && grSolvable(rows, cols)) return { rows: rows, cols: cols };
+  }
+  return null;
+}
+function grToday() { return hdToday(); }
+function grDayNo(k) { return Math.round((Date.parse(k + 'T12:00:00Z') - Date.parse(GR_LAUNCH + 'T12:00:00Z')) / 86400000) + 1; }
+function grSetMode(m) {
+  GR.mode = m;
+  document.getElementById('gr-mode-daily').classList.toggle('active', m === 'daily');
+  document.getElementById('gr-mode-practice').classList.toggle('active', m === 'practice');
+  grStart();
+}
+function grStart() {
+  grBuild();
+  if (GR.mode === 'daily') {
+    GR.key = grToday();
+    GR.grid = grMake('hessle-grid-' + GR.key);
+    var saved = hdStore('gr-day-' + GR.key) || {};
+    GR.cells = saved.cells || [null, null, null, null, null, null, null, null, null];
+    GR.left = saved.left != null ? saved.left : 9; GR.done = !!saved.done;
+    document.getElementById('gr-daynum').textContent = '#' + grDayNo(GR.key);
+  } else {
+    GR.key = null; GR.grid = grMake('practice-' + Math.random());
+    GR.cells = [null, null, null, null, null, null, null, null, null]; GR.left = 9; GR.done = false;
+    document.getElementById('gr-daynum').textContent = '(practice)';
+  }
+  document.getElementById('gr-msg').textContent = '';
+  grRender();
+}
+function grSave() { if (GR.mode === 'daily') hdStore('gr-day-' + GR.key, { cells: GR.cells, left: GR.left, done: GR.done }); }
+function grRarity(i, name) {
+  var r = GR.grid.rows[Math.floor(i / 3)], c = GR.grid.cols[i % 3], el = grEligible(r, c);
+  var tot = el.reduce(function(t, n) { return t + GR.P[n].matches; }, 0);
+  return Math.max(1, Math.round(GR.P[name].matches / tot * 100));
+}
+function grScore() { return GR.cells.reduce(function(t, c) { return t + (c ? c.rarity : 100); }, 0); }
+function grRender() {
+  var g = GR.grid, used = GR.cells.filter(Boolean).length;
+  document.getElementById('gr-left').textContent = GR.left;
+  document.getElementById('gr-rarity').textContent = grScore();
+  var head = function(c) { return '<div class="gr-head" data-chart-role="' + c.role + '"><span>' + c.label + '</span></div>'; };
+  var html = '<div class="gr-corner">' + (GR.done ? (used === 9 ? '🏆' : used + '/9') : '#️⃣') + '</div>' + g.cols.map(head).join('');
+  g.rows.forEach(function(r, ri) {
+    html += head(r);
+    g.cols.forEach(function(c, ci) {
+      var i = ri * 3 + ci, cell = GR.cells[i];
+      if (cell) html += '<div class="gr-cell gr-filled" title="' + cell.name + '"><div class="gr-pname">' + cell.name + '</div><div class="gr-rar">' + cell.rarity + '%</div></div>';
+      else html += '<button class="gr-cell' + (GR.done ? ' gr-missed' : '') + '" ' + (GR.done ? 'disabled' : 'onclick="grOpen(' + i + ')"') + ' aria-label="' + r.label + ' and ' + c.label + '">' + (GR.done ? '' : '<span class="gr-plus">+</span>') + '</button>';
+    });
+  });
+  document.getElementById('gr-board').innerHTML = html;
+  grResult();
+}
+function grOpen(i) {
+  if (GR.done) return; GR.sel = i;
+  var r = GR.grid.rows[Math.floor(i / 3)], c = GR.grid.cols[i % 3];
+  var ov = document.getElementById('gr-overlay');
+  if (!ov) {
+    ov = document.createElement('div'); ov.id = 'gr-overlay';
+    ov.addEventListener('click', function(e) { if (e.target === ov) grClose(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && ov.classList.contains('open')) grClose(); });
+    document.body.appendChild(ov);
+  }
+  ov.innerHTML = '<div class="gr-modal" role="dialog" aria-modal="true" aria-label="Choose a player">' +
+    '<div class="gr-modal-h"><div class="gr-crit"><span data-chart-role="' + r.role + '" class="gr-tag">' + r.label + '</span><span class="gr-x">and</span><span data-chart-role="' + c.role + '" class="gr-tag">' + c.label + '</span></div>' +
+    '<button class="mc-close" onclick="grClose()" aria-label="Close">✕</button></div>' +
+    '<div class="hd-input-wrap"><input id="gr-input" placeholder="Type a player\u2019s name…" autocomplete="off" spellcheck="false" oninput="grSuggest()" onkeydown="grKey(event)"></div>' +
+    '<div id="gr-sug" class="gr-sug-list"></div><div class="gr-modal-foot">Guesses left: <strong>' + GR.left + '</strong> · a wrong name still uses one</div></div>';
+  ov.classList.add('open'); document.body.classList.add('mc-lock');
+  grSuggest(); setTimeout(function() { var inp = document.getElementById('gr-input'); if (inp) inp.focus(); }, 30);
+}
+function grClose() { var ov = document.getElementById('gr-overlay'); if (ov) ov.classList.remove('open'); document.body.classList.remove('mc-lock'); }
+var GR_SUG = { items: [], active: -1 };
+function grSuggest() {
+  var q = (document.getElementById('gr-input').value || '').trim().toLowerCase();
+  var usedNames = GR.cells.filter(Boolean).map(function(c) { return c.name; });
+  var starts = [], within = [];
+  GR.names.forEach(function(p) {
+    if (usedNames.indexOf(p) !== -1) return;
+    var lp = p.toLowerCase();
+    if (!q || lp.indexOf(q) === 0 || lp.split(/[\s\-']+/).some(function(w) { return w.indexOf(q) === 0; })) starts.push(p);
+    else if (lp.indexOf(q) !== -1) within.push(p);
+  });
+  GR_SUG.items = starts.concat(within).slice(0, 60); GR_SUG.active = q && GR_SUG.items.length ? 0 : -1;
+  var esc = function(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); };
+  document.getElementById('gr-sug').innerHTML = GR_SUG.items.length ? GR_SUG.items.map(function(p, i) {
+    var lp = p.toLowerCase(), at = q ? lp.indexOf(q) : -1;
+    var lab = at >= 0 ? esc(p.slice(0, at)) + '<strong>' + esc(p.slice(at, at + q.length)) + '</strong>' + esc(p.slice(at + q.length)) : esc(p);
+    return '<div class="hd-sug' + (i === GR_SUG.active ? ' active' : '') + '" onmousedown="event.preventDefault();grChoose(' + i + ')">' + lab + '</div>';
+  }).join('') : '<div class="hd-sug-empty">No player matches</div>';
+}
+function grKey(e) {
+  var n = GR_SUG.items.length;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (!n) return;
+    GR_SUG.active = e.key === 'ArrowDown' ? (GR_SUG.active + 1) % n : (GR_SUG.active - 1 + n) % n;
+    document.querySelectorAll('#gr-sug .hd-sug').forEach(function(el, i) { el.classList.toggle('active', i === GR_SUG.active); });
+    var a = document.querySelector('#gr-sug .hd-sug.active'); if (a) a.scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter') { e.preventDefault(); if (GR_SUG.active >= 0) grChoose(GR_SUG.active); }
+}
+function grChoose(idx) {
+  var name = GR_SUG.items[idx], i = GR.sel; if (!name || GR.done) return;
+  var r = GR.grid.rows[Math.floor(i / 3)], c = GR.grid.cols[i % 3];
+  GR.left--;
+  var ok = r.f(GR.P[name]) && c.f(GR.P[name]);
+  var msg = document.getElementById('gr-msg');
+  if (ok) { GR.cells[i] = { name: name, rarity: grRarity(i, name) }; msg.textContent = ''; }
+  else msg.innerHTML = '<strong>' + name + '</strong> doesn\u2019t fit ' + (r.f(GR.P[name]) ? '\u201c' + c.label + '\u201d' : (c.f(GR.P[name]) ? '\u201c' + r.label + '\u201d' : 'either condition')) + '.';
+  if (GR.left <= 0 || GR.cells.every(Boolean)) { GR.done = true; if (GR.mode === 'daily') grRecord(); }
+  grSave(); grClose(); grRender();
+}
+function grRecord() {
+  var st = hdStore('gr-stats') || { played: 0, perfect: 0, correct: 0, best: null, last: null };
+  if (st.last === GR.key) return;
+  var n = GR.cells.filter(Boolean).length, sc = grScore();
+  st.played++; st.correct += n; if (n === 9) st.perfect++;
+  st.best = st.best === null ? sc : Math.min(st.best, sc); st.last = GR.key;
+  hdStore('gr-stats', st);
+}
+function grResult() {
+  var res = document.getElementById('gr-result');
+  if (!GR.done) { res.innerHTML = '<div class="gr-giveup"><button class="hd-btn" onclick="grGiveUp()">Give up &amp; see answers</button></div>'; return; }
+  var n = GR.cells.filter(Boolean).length, sc = grScore();
+  var head = n === 9 ? (sc < 100 ? 'Immaculate!' : 'Full grid!') : n >= 6 ? 'Good effort!' : n >= 3 ? 'Not bad!' : 'Tough grid!';
+  var answers = GR.grid.rows.map(function(r, ri) { return GR.grid.cols.map(function(c, ci) {
+    var el = grEligible(r, c).sort(function(a, b) { return GR.P[a].matches - GR.P[b].matches; });
+    return '<div class="gr-ans"><div class="gr-ans-h">' + r.label + ' · ' + c.label + ' <span>(' + el.length + ')</span></div><div class="gr-ans-l">' +
+      el.slice(0, 8).join(', ') + (el.length > 8 ? ' + ' + (el.length - 8) + ' more' : '') + '</div></div>'; }).join(''); }).join('');
+  res.innerHTML = '<div class="hd-done ' + (n === 9 ? 'hd-done-won' : 'hd-done-lost') + '"><div class="hd-done-h">' + head + '</div>' +
+    '<div class="hd-done-p">' + n + '/9 squares · rarity <strong>' + sc + '</strong> (lower is better)</div>' +
+    '<div class="hd-done-btns">' + (GR.mode === 'daily' ? '<button class="btn-primary" id="gr-share" onclick="grShare()">Share result</button>' : '') +
+    '<button class="hd-btn" onclick="this.parentNode.nextSibling.style.display=\'grid\';this.remove()">See answers</button>' +
+    '<button class="hd-btn" onclick="grSetMode(\'practice\')">' + (GR.mode === 'daily' ? 'Practice grid' : 'Another grid') + '</button></div>' +
+    '<div class="gr-answers" style="display:none">' + answers + '</div>' +
+    (GR.mode === 'daily' ? '<div class="hd-note">Next grid in <span id="hd-next-grid"></span></div>' : '') + '</div>';
+  grCountdown();
+}
+function grCountdown() { var el = document.getElementById('hd-next-grid'), src = document.getElementById('hd-next'); if (!el) return;
+  var parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).formatToParts(new Date());
+  var g = function(t) { return +parts.find(function(x) { return x.type === t; }).value; };
+  var left = 86400 - (g('hour') % 24) * 3600 - g('minute') * 60 - g('second');
+  el.textContent = String(Math.floor(left / 3600)).padStart(2, '0') + ':' + String(Math.floor(left % 3600 / 60)).padStart(2, '0') + ':' + String(left % 60).padStart(2, '0'); }
+setInterval(grCountdown, 1000);
+function grGiveUp() { if (GR.done) return; if (!confirm('End this grid and see the answers?')) return; GR.done = true; if (GR.mode === 'daily') grRecord(); grSave(); grRender(); }
+function grShare() {
+  var rows = [0, 1, 2].map(function(r) { return [0, 1, 2].map(function(c) { return GR.cells[r * 3 + c] ? '✅' : '❌'; }).join(''); });
+  var text = 'Hessle Grid #' + grDayNo(GR.key) + ' ' + GR.cells.filter(Boolean).length + '/9 · rarity ' + grScore() + '\n' + rows.join('\n') + '\nhttps://textbookanalytics.co.uk/?page=grid';
+  var btn = document.getElementById('gr-share');
+  if (navigator.share && /Mobi|Android|iPhone/i.test(navigator.userAgent)) { navigator.share({ text: text }).catch(function() {}); return; }
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(function() { if (btn) { btn.textContent = 'Copied!'; setTimeout(function() { btn.textContent = 'Share result'; }, 1800); } }, function() { prompt('Copy:', text); });
+  else prompt('Copy:', text);
+}
+function grToggle(which) {
+  ['help', 'stats'].forEach(function(w) { var el = document.getElementById('gr-' + w); el.style.display = (w === which && el.style.display === 'none') ? 'block' : 'none'; });
+  if (which === 'stats') {
+    var st = hdStore('gr-stats') || { played: 0, perfect: 0, correct: 0, best: null };
+    document.getElementById('gr-stats').innerHTML = '<div class="hd-stat-row">' + [['Played', st.played], ['Full grids', st.perfect],
+      ['Avg squares', st.played ? (st.correct / st.played).toFixed(1) : 0], ['Best rarity', st.best === null ? '—' : st.best]].map(function(x) {
+      return '<div class="hd-stat"><div class="hd-stat-v">' + x[1] + '</div><div class="hd-stat-l">' + x[0] + '</div></div>'; }).join('') + '</div><div class="hd-note">Saved on this device only.</div>';
+  }
+}
+(function() {
+  var started = false;
+  function watch() { var pg = document.getElementById('page-grid'); if (!pg) return;
+    new MutationObserver(function() { if (!started && pg.classList.contains('active') && typeof CRICKET_DATA !== 'undefined' && CRICKET_DATA && CRICKET_DATA.matches) { started = true; grStart(); } })
+      .observe(pg, { attributes: true, attributeFilter: ['class'] }); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
 })();
 
 function renderMethodologyMeta() {
