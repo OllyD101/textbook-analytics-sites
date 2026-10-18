@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hessle CC Fantasy Cricket</title>
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+// ── Connect to Supabase: paste the Project URL and the anon/public key here.
+// Leave both empty to run the demo (the 2026 season replayed, nothing saved online).
+window.FANTASY_CONFIG = {
+  supabaseUrl: '',
+  supabaseAnonKey: ''
+};
+</script>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--surface2:#1c2330;--border:#30363d;--text:#e6edf3;--muted:#8b949e;
+  --hessle:#c8202f;--bat:#d63a46;--bowl:#3d7fe0;--field:#2fa35a;--turf:#13261b;--turf2:#16301f;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-size:15px;line-height:1.45;}
+a{color:inherit;}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit;}
+:focus-visible{outline:2px solid #8db8f2;outline-offset:2px;}
+.wrap{max-width:1180px;margin:0 auto;padding:0 18px;}
+/* header */
+.top{background:linear-gradient(180deg,#2a0d10,#1a0a0c);border-bottom:2px solid var(--hessle);position:sticky;top:0;z-index:20;}
+.top .wrap{display:flex;align-items:center;gap:14px;height:62px;}
+.top img{height:42px;width:auto;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6));}
+.brand{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:1px;line-height:1;}
+.brand span{color:#f0717b;}
+.top-links{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:.88rem;}
+.top-links a{color:var(--muted);text-decoration:none;}
+.top-links a:hover{color:var(--text);}
+.acct{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;}
+.demo-bar{background:#1d2b42;border-bottom:1px solid #2c4366;font-size:.85rem;color:#c9d8ee;}
+.demo-bar .wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px;}
+.demo-bar button{margin-left:auto;}
+/* tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin:18px 0 16px;overflow-x:auto;}
+.tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);padding:10px 14px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.tab.active{color:var(--text);border-bottom-color:var(--hessle);}
+/* generic */
+.btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;}
+.btn:hover{border-color:var(--muted);}
+.btn-red{background:var(--hessle);border-color:var(--hessle);color:#fff;}
+.btn-red:hover{background:#d8303f;border-color:#d8303f;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.muted{color:var(--muted);}
+.hint{font-size:.82rem;color:var(--muted);}
+input[type=text],input[type=email],input[type=password],input[type=search],select{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:9px 12px;outline:none;width:100%;}
+input:focus,select:focus{border-color:var(--hessle);box-shadow:0 0 0 2px rgba(200,32,47,.2);}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;}
+.pos-WK{background:rgba(47,163,90,.18);color:#7fd6a0;} .pos-BAT{background:rgba(214,58,70,.18);color:#f08a92;}
+.pos-AR{background:rgba(200,32,47,.14);color:#f0b2b8;} .pos-BOWL{background:rgba(61,127,224,.18);color:#8db8f2;}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--border);border-left:4px solid var(--field);
+  border-radius:10px;padding:12px 16px;box-shadow:0 14px 34px rgba(0,0,0,.5);z-index:50;max-width:min(560px,92vw);display:none;}
+.toast.err{border-left-color:var(--bat);} .toast.show{display:block;}
+/* sign in */
+.auth{max-width:420px;margin:40px auto;padding:24px;}
+.auth h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:2.2rem;letter-spacing:1px;margin:0 0 4px;}
+.auth form{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.auth label{font-size:.85rem;color:var(--muted);display:flex;flex-direction:column;gap:4px;}
+.auth .switch{margin-top:14px;font-size:.88rem;color:var(--muted);}
+.auth .switch button{background:none;border:none;color:#8db8f2;cursor:pointer;padding:0;text-decoration:underline;}
+.form-err{color:#f08a92;font-size:.86rem;min-height:1.2em;}
+/* status strip */
+.strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:10px;align-items:stretch;margin-bottom:14px;}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;min-width:0;}
+.stat b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums;}
+.stat small{color:var(--muted);font-size:.78rem;}
+.stat.bad b{color:#f08a92;}
+.save-box{display:flex;flex-direction:column;gap:6px;justify-content:center;}
+.wild{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--muted);cursor:pointer;}
+/* team builder */
+.builder{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;align-items:start;}
+.ground{position:relative;border-radius:50%/44%;background:radial-gradient(ellipse at center,var(--turf2) 0 34%,var(--turf) 34% 100%);
+  border:2px solid #24452f;padding:30px 22px 34px;box-shadow:inset 0 0 0 10px rgba(255,255,255,.02),inset 0 0 60px rgba(0,0,0,.35);}
+.ground:before{content:'';position:absolute;left:50%;top:50%;width:11%;height:34%;transform:translate(-50%,-50%);background:#3a3322;opacity:.55;border-radius:3px;}
+.line{position:relative;display:flex;justify-content:center;gap:8px;margin:10px 0;flex-wrap:nowrap;}
+.slot{width:110px;min-height:76px;border-radius:10px;background:rgba(13,17,23,.78);border:1px dashed #3d5c48;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:6px;text-align:center;cursor:pointer;position:relative;}
+.slot.filled{border-style:solid;border-color:#2e4a39;background:rgba(13,17,23,.92);}
+.slot .nm{font-weight:700;font-size:.82rem;line-height:1.15;}
+.slot .pr{font-size:.72rem;color:var(--muted);margin-top:2px;}
+.slot .empty{font-size:.74rem;color:#7c9c86;}
+.slot .cv{display:flex;gap:4px;margin-top:5px;}
+.cvb.x:hover{border-color:#d63a46;color:#f08a92;}
+.cvb{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);font-size:.68rem;font-weight:800;cursor:pointer;color:var(--muted);padding:0;}
+.cvb.on{background:var(--hessle);border-color:var(--hessle);color:#fff;}
+.cvb.on.v{background:#8a1520;border-color:#8a1520;}
+.ground-key{display:flex;justify-content:center;gap:12px;margin-top:10px;font-size:.78rem;color:var(--muted);flex-wrap:wrap;}
+/* market */
+.market{padding:12px;}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.fbtn{background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:5px 11px;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--muted);}
+.fbtn.on{color:var(--text);border-color:var(--muted);}
+.mrow{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:10px;align-items:center;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,.05);}
+.mrow:last-child{border-bottom:none;}
+.mname{font-weight:600;min-width:0;}
+.mname small{display:block;color:var(--muted);font-weight:400;font-size:.76rem;}
+.num{font-variant-numeric:tabular-nums;text-align:right;}
+.add{width:34px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);font-weight:800;cursor:pointer;}
+.add.in{background:rgba(47,163,90,.2);border-color:rgba(47,163,90,.6);color:#7fd6a0;}
+.add:disabled{opacity:.35;cursor:not-allowed;}
+.mlist{max-height:560px;overflow-y:auto;}
+.mhead{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:10px;padding:4px 6px 6px;font-size:.74rem;color:var(--muted);border-bottom:1px solid var(--border);}
+.problems{margin:0 0 12px;padding:10px 14px;border-radius:10px;background:rgba(214,58,70,.08);border:1px solid rgba(214,58,70,.35);font-size:.86rem;}
+.problems ul{margin:4px 0 0;padding-left:18px;}
+/* points + league */
+.gw{border-bottom:1px solid var(--border);}
+.gw summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:12px 14px;cursor:pointer;list-style:none;}
+.gw summary::-webkit-details-marker{display:none;}
+.gw summary b{font-size:1.15rem;font-variant-numeric:tabular-nums;}
+.gw .detail{padding:0 14px 12px;}
+.prow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:5px 0;font-size:.9rem;border-bottom:1px solid rgba(255,255,255,.04);}
+.prow small{color:var(--muted);}
+table.league{width:100%;border-collapse:collapse;}
+table.league th{text-align:left;font-size:.76rem;color:var(--muted);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--border);}
+table.league td{padding:10px;border-bottom:1px solid rgba(255,255,255,.05);}
+table.league tr.me td{background:rgba(200,32,47,.1);}
+table.league tbody tr{cursor:pointer;} table.league tbody tr:hover td{background:var(--surface2);}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
+.rules .card{padding:14px 16px;}
+.rules h3{margin:0 0 8px;font-size:1rem;}
+.rules table{width:100%;border-collapse:collapse;font-size:.9rem;}
+.rules td{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.rules td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:flex-start;justify-content:center;padding:8vh 16px;z-index:40;}
+.modal-bg.open{display:flex;}
+.modal{max-width:520px;width:100%;padding:16px;max-height:80vh;overflow-y:auto;}
+.empty-state{padding:30px;text-align:center;color:var(--muted);}
+@media (max-width:900px){
+  .builder{grid-template-columns:1fr;}
+  .strip{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .save-box{grid-column:1/-1;}
+  .mlist{max-height:none;}
+}
+@media (max-width:560px){
+  .wrap{padding:0 12px;}
+  .brand{font-size:1.35rem;}
+  .top-links .dash{display:none;}
+  .ground{padding:22px 8px 26px;border-radius:44%/30%;}
+  .line{gap:4px;}
+  .slot{width:78px;min-height:66px;padding:4px;}
+  .slot .nm{font-size:.7rem;}
+  .mrow,.mhead{gap:6px;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+.linkish{background:none;border:none;padding:0;color:#8db8f2;text-decoration:underline;cursor:pointer;font-size:inherit;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <img src="logo.png" alt="Hessle CC crest">
+    <div class="brand">Hessle CC <span>Fantasy</span></div>
+    <div class="top-links">
+      <a class="dash" href="fantasy.html">Play for real</a>
+      <a class="dash" href="index.html">Stats dashboard</a>
+      <button class="acct" id="acct" style="display:none" onclick="signOut()">Sign out</button>
+    </div>
+  </div>
+</header>
+<div class="demo-bar" id="demo-bar" style="display:none"><div class="wrap"><span id="demo-text"></span><button class="btn" id="demo-next" onclick="demoNext()">Play next Saturday</button><button class="btn" onclick="demoReset()">Reset demo</button></div></div>
+<main class="wrap" id="app"><div class="empty-state">Loading…</div></main>
+<div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()"><div class="modal card" id="modal-body"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// ============================================================ rules (mirrors the database)
+const RULES = {
+  squad: { WK: 1, BAT: 4, AR: 2, BOWL: 4 }, budget: 100, freeTransfers: 2, hit: 4,
+  points: [
+    ['Batting', [['Each run', 1], ['Each six', '+2'], ['Fifty', '+10'], ['Hundred', '+20'], ['Duck', -8]]],
+    ['Bowling', [['Each wicket', 12], ['Maiden', '+4'], ['4-wicket haul', '+8'], ['5-wicket haul', '+16']]],
+    ['Fielding', [['Catch', 5], ['Stumping', 8], ['Run-out', 10], ['3+ catches in a match', '+4']]],
+    ['Bonuses', [['Man of the Match', '+10'], ['On the winning team', '+3']]]
+  ]
+};
+const POS_NAME = { WK: 'Wicketkeeper', BAT: 'Batter', AR: 'All-rounder', BOWL: 'Bowler' };
+const POS_ORDER = ['WK', 'BAT', 'AR', 'BOWL'];
+const PART_NAME = { runs: 'runs', sixes: 'sixes', fifty: 'fifty', hundred: 'hundred', duck: 'duck', wickets: 'wickets', maidens: 'maidens',
+  four_wkts: '4-wicket haul', five_wkts: '5-wicket haul', catches: 'catches', stumpings: 'stumpings', run_outs: 'run-outs',
+  three_catches: '3+ catches', motm: 'Man of the Match', win: 'win bonus' };
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+const money = v => '£' + Number(v).toFixed(1) + 'm';
+
+// ============================================================ state
+const S = { players: [], byName: {}, gws: [], points: {}, session: null, manager: null, entries: [], draft: null,
+  view: 'team', filter: 'ALL', search: '', sort: 'price', authMode: 'signin', saving: false };
+
+// ============================================================ shared scoring (same as the database view)
+function entryForGw(entries, gw) { let e = null; for (const x of entries) if (x.gw <= gw && (!e || x.gw > e.gw)) e = x; return e; }
+function scoreEntry(e, gw, pts) {
+  if (!e) return null;
+  const P = pts[gw] || {};
+  let total = 0; for (const p of e.players) total += (P[p] ? P[p].points : 0);
+  const doubled = P[e.captain] ? e.captain : (P[e.vice] ? e.vice : null);
+  if (doubled) total += P[doubled].points;
+  const hit = e.gw === gw ? (e.hit || 0) : 0;
+  return { gw, points: total - hit, doubled, hit };
+}
+function scoredGws(now) { return S.gws.filter(g => new Date(g.deadline) <= now && S.points[g.gw] && Object.keys(S.points[g.gw]).length).map(g => g.gw); }
+function checkTeam(t) {
+  const errs = [], ps = t.players || [];
+  if (ps.length !== 11 || new Set(ps).size !== 11) errs.push(`Pick 11 players (you have ${ps.length}).`);
+  const c = { WK: 0, BAT: 0, AR: 0, BOWL: 0 }; let cost = 0;
+  for (const p of ps) { const pl = S.byName[p]; if (!pl) { errs.push(p + ' isn\u2019t available.'); continue; } c[pl.position]++; cost += pl.price; }
+  for (const k of POS_ORDER) if (c[k] !== RULES.squad[k]) errs.push(`You need ${RULES.squad[k]} ${POS_NAME[k].toLowerCase()}${RULES.squad[k] > 1 ? 's' : ''} (you have ${c[k]}).`);
+  if (cost > RULES.budget + 1e-9) errs.push(`Over budget by ${money(cost - RULES.budget)}.`);
+  if (ps.length === 11 && (!ps.includes(t.captain) || !ps.includes(t.vice) || t.captain === t.vice)) errs.push('Choose a captain (C) and a different vice-captain (V).');
+  return errs;
+}
+
+// ============================================================ demo backend: the 2026 season replayed in this browser
+const DemoAPI = {
+  key: 'hessle-fantasy-demo-v1', data: null, st: null,
+  async init() {
+    if (window.FANTASY_DEMO_DATA) this.data = window.FANTASY_DEMO_DATA;
+    else {
+      if (location.protocol === 'file:') throw new Error('This file can\u2019t load the demo when it\u2019s opened from your computer. Open fantasy_preview.html instead, or use the page on the website.');
+      let r; try { r = await fetch('fantasy-demo.json', { cache: 'no-store' }); } catch (e) { throw new Error('Couldn\u2019t load the demo — check your connection and refresh.'); }
+      if (!r.ok) throw new Error('The demo needs fantasy-demo.json. Upload it to the docs folder on GitHub, next to fantasy.html.');
+      this.data = await r.json();
+    }
+    try { localStorage.setItem('hfc-test', '1'); localStorage.removeItem('hfc-test'); this.canSave = true; } catch (e) { this.canSave = false; }
+    try { this.st = JSON.parse(localStorage.getItem(this.key) || 'null'); } catch (e) { this.st = null; }
+    if (!this.st) this.st = { scored: this.data.paused_after, user: null, manager: null, entries: [] };
+    // Demo: no sign-in needed — go straight to picking a team
+    if (!this.st.user) this.st.user = { id: 'demo-me', email: 'demo' };
+    if (!this.st.manager) this.st.manager = { user_id: 'demo-me', team_name: 'My Team', manager_name: 'You' };
+  },
+  save() { try { localStorage.setItem(this.key, JSON.stringify(this.st)); } catch (e) {} },
+  now() { const g = this.data.gameweeks[this.st.scored - 1]; return g ? new Date(Date.parse(g.deadline) + 3 * 86400000) : new Date(Date.parse(this.data.gameweeks[0].deadline) - 86400000); },
+  async players() { return this.data.players; },
+  async gameweeks() { return this.data.gameweeks; },
+  async points() { const out = {}, cut = this.data.gameweeks.slice(0, this.st.scored).map(g => g.gw); for (const gw of cut) out[gw] = this.data.points[gw] || {}; return out; },
+  async session() { return this.st.user; },
+  async signIn(email, password) { if (!email || !password) throw new Error('Enter your email and password.'); this.st.user = { id: 'demo-me', email }; this.save(); return this.st.user; },
+  async signUp(email, password) { if ((password || '').length < 8) throw new Error('Use a password of at least 8 characters.'); return this.signIn(email, password); },
+  async signOut() { this.st.user = null; this.save(); },
+  async resetPassword() { return 'In the demo there\u2019s no email — just sign in with any password.'; },
+  async manager() { return this.st.manager; },
+  async createManager(team_name, manager_name) { this.st.manager = { user_id: 'demo-me', team_name, manager_name }; this.save(); return this.st.manager; },
+  async myEntries() { return this.st.entries.slice(); },
+  async saveEntry(e) {
+    const now = this.now(), next = this.data.gameweeks.find(g => new Date(g.deadline) > now);
+    if (!next || e.gw !== next.gw) throw new Error('You can only pick a team for the next gameweek.');
+    const errs = checkTeam(e); if (errs.length) throw new Error(errs[0]);
+    const prev = entryForGw(this.st.entries.filter(x => x.gw < e.gw), e.gw);
+    const row = { gw: e.gw, players: e.players.slice(), captain: e.captain, vice: e.vice, wildcard: !!e.wildcard && !!prev, transfers: 0, hit: 0 };
+    if (prev) row.transfers = row.players.filter(p => !prev.players.includes(p)).length;
+    if (row.wildcard && this.st.entries.some(x => x.wildcard && x.gw !== e.gw)) throw new Error('You\u2019ve already used your wildcard this season.');
+    row.hit = row.wildcard ? 0 : Math.max(0, row.transfers - RULES.freeTransfers) * RULES.hit;
+    this.st.entries = this.st.entries.filter(x => x.gw !== e.gw).concat([row]); this.save(); return row;
+  },
+  managersAll() {
+    const ms = this.data.managers.map(m => ({ user_id: m.id, team_name: m.team_name, manager_name: m.manager_name, entries: Object.entries(m.entries).map(([gw, e]) => Object.assign({ gw }, e)) }));
+    if (this.st.manager) ms.push({ user_id: 'demo-me', team_name: this.st.manager.team_name, manager_name: this.st.manager.manager_name, entries: this.st.entries });
+    return ms;
+  },
+  async myScores() { return this.scoresFor(this.st.entries); },
+  scoresFor(entries) { const now = this.now(); return scoredGws(now).map(gw => scoreEntry(entryForGw(entries, gw), gw, S.points)).filter(Boolean); },
+  async standings() {
+    const now = this.now(), gws = scoredGws(now), last = gws[gws.length - 1];
+    const rows = this.managersAll().map(m => { const sc = gws.map(gw => scoreEntry(entryForGw(m.entries, gw), gw, S.points)).filter(Boolean);
+      return { user_id: m.user_id, team_name: m.team_name, manager_name: m.manager_name, total: sc.reduce((t, s) => t + s.points, 0), last_week: (sc.find(s => s.gw === last) || {}).points || 0 }; });
+    rows.sort((a, b) => b.total - a.total); rows.forEach((r, i) => r.position = i && rows[i - 1].total === r.total ? rows[i - 1].position : i + 1); return rows;
+  },
+  async lockedTeam(user_id) {
+    const m = this.managersAll().find(x => x.user_id === user_id); const now = this.now();
+    const locked = this.data.gameweeks.filter(g => new Date(g.deadline) <= now).map(g => g.gw);
+    return m ? entryForGw(m.entries, locked[locked.length - 1] || '0000') : null;
+  }
+};
+
+// ============================================================ live backend: Supabase
+const LiveAPI = {
+  sb: null,
+  async init() {
+    await new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js'; s.onload = res; s.onerror = () => rej(new Error('Couldn\u2019t load the sign-in service. Check your connection and refresh.')); document.head.appendChild(s); });
+    this.sb = window.supabase.createClient(window.FANTASY_CONFIG.supabaseUrl, window.FANTASY_CONFIG.supabaseAnonKey);
+    this.sb.auth.onAuthStateChange(ev => { if (ev === 'PASSWORD_RECOVERY') { S.authMode = 'newpass'; render(); } });
+  },
+  now() { return new Date(); },
+  async all(table, select, order) {   // Supabase returns at most 1000 rows per request, so page through
+    let out = [], from = 0;
+    for (;;) { const q = this.sb.from(table).select(select).order(order).range(from, from + 999); const { data, error } = await q; if (error) throw error; out = out.concat(data); if (data.length < 1000) break; from += 1000; }
+    return out;
+  },
+  async players() { return (await this.all('fantasy_players', 'name,position,price,xi,active', 'name')).filter(p => p.active).map(p => Object.assign(p, { price: Number(p.price) })); },
+  async gameweeks() { return this.all('fantasy_gameweeks', 'gw,season,deadline', 'gw'); },
+  async points() { const rows = await this.all('fantasy_points', 'player,gw,points,parts', 'gw'); const out = {}; for (const r of rows) (out[r.gw] = out[r.gw] || {})[r.player] = { points: r.points, parts: r.parts || {} }; return out; },
+  async session() { const { data } = await this.sb.auth.getSession(); return data.session ? { id: data.session.user.id, email: data.session.user.email } : null; },
+  async signIn(email, password) { const { data, error } = await this.sb.auth.signInWithPassword({ email, password }); if (error) throw new Error(friendly(error.message)); return { id: data.user.id, email: data.user.email }; },
+  async signUp(email, password) {
+    const { data, error } = await this.sb.auth.signUp({ email, password, options: { emailRedirectTo: location.href.split('#')[0] } });
+    if (error) throw new Error(friendly(error.message));
+    if (!data.session) throw new Error('Check your email for a link to confirm your account, then sign in.');
+    return { id: data.user.id, email: data.user.email };
+  },
+  async signOut() { await this.sb.auth.signOut(); },
+  async resetPassword(email) { const { error } = await this.sb.auth.resetPasswordForEmail(email, { redirectTo: location.href.split('#')[0] }); if (error) throw new Error(friendly(error.message)); return 'If that email has an account, a reset link is on its way.'; },
+  async setNewPassword(pw) { const { error } = await this.sb.auth.updateUser({ password: pw }); if (error) throw new Error(friendly(error.message)); },
+  async manager() { const { data, error } = await this.sb.from('fantasy_managers').select('*').eq('user_id', S.session.id).maybeSingle(); if (error) throw error; return data; },
+  async createManager(team_name, manager_name) { const { data, error } = await this.sb.from('fantasy_managers').insert({ user_id: S.session.id, team_name, manager_name }).select().single(); if (error) throw new Error(friendly(error.message)); return data; },
+  async myEntries() { const { data, error } = await this.sb.from('fantasy_entries').select('*').eq('user_id', S.session.id).order('gw'); if (error) throw error; return data; },
+  async saveEntry(e) {
+    const { data, error } = await this.sb.from('fantasy_entries').upsert({ user_id: S.session.id, gw: e.gw, players: e.players, captain: e.captain, vice: e.vice, wildcard: !!e.wildcard }, { onConflict: 'user_id,gw' }).select().single();
+    if (error) throw new Error(friendly(error.message)); return data;
+  },
+  async myScores() { const { data, error } = await this.sb.from('fantasy_gw_scores').select('*').eq('user_id', S.session.id).order('gw'); if (error) throw error; return data; },
+  async standings() { const { data, error } = await this.sb.from('fantasy_standings').select('*').order('position'); if (error) throw error; return data; },
+  async lockedTeam(user_id) { const { data } = await this.sb.from('fantasy_entries').select('*').eq('user_id', user_id).order('gw', { ascending: false }).limit(1); return (data || [])[0] || null; }
+};
+function friendly(m) {
+  if (/invalid login/i.test(m)) return 'That email and password don\u2019t match an account.';
+  if (/already registered|already been registered/i.test(m)) return 'There\u2019s already an account with that email — sign in instead.';
+  if (/password should be|at least 6|weak/i.test(m)) return 'Use a longer password (at least 8 characters).';
+  if (/rate limit|too many/i.test(m)) return 'Too many attempts — wait a few minutes and try again.';
+  if (/email not confirmed/i.test(m)) return 'Confirm your email first — check your inbox (and spam) for the link.';
+  if (/unable to validate email|invalid email/i.test(m)) return 'That doesn\u2019t look like a full email address.';
+  if (/failed to fetch|network/i.test(m)) return 'Couldn\u2019t reach the sign-in service. Check your connection and try again.';
+  if (/duplicate key.*fantasy_managers/i.test(m)) return 'You already have a team.';
+  return m;
+}
+
+const LIVE = !!(window.FANTASY_CONFIG.supabaseUrl && window.FANTASY_CONFIG.supabaseAnonKey);
+const API = LIVE ? LiveAPI : DemoAPI;
+
+// ============================================================ boot
+async function boot() {
+  try {
+    await API.init();
+    const [pl, gws, pts] = await Promise.all([API.players(), API.gameweeks(), API.points()]);
+    S.players = pl; S.byName = Object.fromEntries(pl.map(p => [p.name, p])); S.gws = gws; S.points = pts;
+    S.totals = {}; S.lastPts = {};
+    const sg = scoredGws(API.now()), last = sg[sg.length - 1];
+    for (const gw of sg) for (const [p, v] of Object.entries(S.points[gw] || {})) S.totals[p] = (S.totals[p] || 0) + v.points;
+    if (last) for (const [p, v] of Object.entries(S.points[last] || {})) S.lastPts[p] = v.points;
+    S.session = await API.session();
+    if (S.session) { S.manager = await API.manager(); if (S.manager) S.entries = await API.myEntries(); }
+    resetDraft(); renderDemoBar(); render();
+  } catch (e) { document.getElementById('app').innerHTML = '<div class="auth card"><h1>Can\u2019t open the game</h1><p class="muted">' + esc(e.message || e) + '</p></div>'; }
+}
+function nextGw() { const now = API.now(); return S.gws.find(g => new Date(g.deadline) > now) || null; }
+function gwNumber(gw) { const season = (S.gws.find(g => g.gw === gw) || {}).season; return S.gws.filter(g => g.season === season && g.gw <= gw).length; }
+function resetDraft() {
+  const ng = nextGw(), saved = ng && S.entries.find(e => e.gw === ng.gw), base = saved || entryForGw(S.entries, ng ? ng.gw : '9999');
+  S.draft = base ? { players: base.players.filter(p => S.byName[p]), captain: base.captain, vice: base.vice, wildcard: !!(saved && saved.wildcard) } : { players: [], captain: null, vice: null, wildcard: false };
+}
+function renderDemoBar() {
+  const bar = document.getElementById('demo-bar'); if (LIVE) return;
+  bar.style.display = 'block';
+  const done = DemoAPI.st.scored, total = DemoAPI.data.gameweeks.length;
+  document.getElementById('demo-text').innerHTML = `<strong>Demo:</strong> the real 2026 season, replayed. ${done} of ${total} Saturdays played. Nothing is saved online.` +
+    (DemoAPI.canSave === false ? ' <strong>This browser is blocking storage (private browsing?), so the demo resets if you reload.</strong>' : '');
+  document.getElementById('demo-next').disabled = done >= total;
+}
+async function demoNext() { DemoAPI.st.scored = Math.min(DemoAPI.data.gameweeks.length, DemoAPI.st.scored + 1); DemoAPI.save(); await boot(); toast('Saturday played — points are in. Check the Points and League tabs.'); }
+function renameDemo() {
+  const n = (prompt('Team name', S.manager.team_name) || '').trim(); if (n.length < 2) return;
+  DemoAPI.st.manager.team_name = n.slice(0, 40); DemoAPI.save(); S.manager = DemoAPI.st.manager; render();
+}
+function demoReset() { if (!confirm('Reset the demo to the start?')) return; localStorage.removeItem(DemoAPI.key); DemoAPI.st = null; boot(); }
+document.getElementById('acct');
+
+// ============================================================ rendering
+function render() {
+  document.getElementById('acct').style.display = S.session && LIVE ? 'inline-block' : 'none';
+  const app = document.getElementById('app');
+  if (!S.session || S.authMode === 'newpass') { app.innerHTML = authView(); return; }
+  if (!S.manager) { app.innerHTML = createTeamView(); return; }
+  const tabs = [['team', 'My team'], ['points', 'Points'], ['league', 'League'], ['rules', 'Rules']];
+  app.innerHTML = `<nav class="tabs" role="tablist">${tabs.map(([k, l]) => `<button class="tab ${S.view === k ? 'active' : ''}" role="tab" aria-selected="${S.view === k}" onclick="go('${k}')">${l}</button>`).join('')}</nav><section id="view"></section>`;
+  ({ team: teamView, points: pointsView, league: leagueView, rules: rulesView })[S.view]();
+}
+function go(v) { S.view = v; render(); window.scrollTo(0, 0); }
+
+function authView() {
+  const m = S.authMode;
+  const title = { signin: 'Sign in', signup: 'Create your account', reset: 'Reset your password', newpass: 'Choose a new password' }[m];
+  const intro = { signin: 'Pick 11 Hessle players, score points from real matches, and top the club league.', signup: 'Free to enter. One team per person.',
+    reset: 'Enter your email and we\u2019ll send a reset link.', newpass: 'Enter a new password for your account.' }[m];
+  const fields = m === 'newpass' ? `<label>New password<input type="password" id="pw" autocomplete="new-password" minlength="8" required></label>`
+    : `<label>Email<input type="email" id="email" autocomplete="email" required></label>` + (m === 'reset' ? '' : `<label>Password<input type="password" id="pw" autocomplete="${m === 'signup' ? 'new-password' : 'current-password'}" minlength="${m === 'signup' ? 8 : 1}" required></label>`);
+  const btn = { signin: 'Sign in', signup: 'Create account', reset: 'Send reset link', newpass: 'Save new password' }[m];
+  const sw = m === 'signin' ? `New here? <button onclick="authMode('signup')">Create an account</button> · <button onclick="authMode('reset')">Forgotten password?</button>`
+    : `Already have an account? <button onclick="authMode('signin')">Sign in</button>`;
+  return `<div class="auth card"><h1>${title}</h1><div class="muted">${intro}</div>
+    <form novalidate onsubmit="event.preventDefault();doAuth()">${fields}<div class="form-err" id="ferr"></div><button class="btn btn-red" type="submit" id="abtn">${btn}</button></form>
+    ${m === 'newpass' ? '' : `<div class="switch">${sw}</div>`}</div>`;
+}
+function authMode(m) { S.authMode = m; render(); }
+async function doAuth() {
+  const err = document.getElementById('ferr'), btn = document.getElementById('abtn'); err.textContent = ''; btn.disabled = true;
+  const email = ((document.getElementById('email') || {}).value || '').trim(), pw = (document.getElementById('pw') || {}).value || '';
+  const problem = S.authMode !== 'newpass' && !email ? 'Enter your email address.'
+    : S.authMode !== 'newpass' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'That doesn\u2019t look like a full email address (for example name@example.com).'
+    : S.authMode === 'reset' ? null
+    : !pw ? 'Enter your password.'
+    : (S.authMode === 'signup' || S.authMode === 'newpass') && pw.length < 8 ? 'Use at least 8 characters for your password.' : null;
+  if (problem) { err.style.color = ''; err.textContent = problem; btn.disabled = false; const f = document.getElementById(/email|address/i.test(problem) ? 'email' : 'pw'); if (f) f.focus(); return; }
+  try {
+    if (S.authMode === 'reset') { err.style.color = '#7fd6a0'; err.textContent = await API.resetPassword(email); btn.disabled = false; return; }
+    if (S.authMode === 'newpass') { await API.setNewPassword(pw); S.authMode = 'signin'; toast('Password changed.'); }
+    else S.session = S.authMode === 'signup' ? await API.signUp(email, pw) : await API.signIn(email, pw);
+    S.authMode = 'signin'; S.session = await API.session();
+    if (S.session) { S.manager = await API.manager(); S.entries = S.manager ? await API.myEntries() : []; resetDraft(); }
+    render();
+  } catch (e) { err.style.color = ''; err.textContent = e.message; btn.disabled = false; }
+}
+async function signOut() { await API.signOut(); S.session = null; S.manager = null; S.entries = []; S.view = 'team'; render(); }
+
+function createTeamView() {
+  return `<div class="auth card"><h1>Name your team</h1><div class="muted">This is how you\u2019ll appear in the league table.</div>
+    <form novalidate onsubmit="event.preventDefault();doCreate()"><label>Team name<input type="text" id="tn" maxlength="40" required placeholder="e.g. The Humber Hitters"></label>
+    <label>Your name<input type="text" id="mn" maxlength="40" required placeholder="First name is fine"></label><div class="form-err" id="ferr"></div>
+    <button class="btn btn-red" type="submit">Create team</button></form></div>`;
+}
+async function doCreate() {
+  const tn = document.getElementById('tn').value.trim(), mn = document.getElementById('mn').value.trim(), err = document.getElementById('ferr');
+  if (tn.length < 2) { err.textContent = 'Give your team a name (at least 2 characters).'; document.getElementById('tn').focus(); return; }
+  if (!mn) { err.textContent = 'Add your name, so people know whose team it is.'; document.getElementById('mn').focus(); return; }
+  try { S.manager = await API.createManager(tn, mn); S.entries = []; resetDraft(); render(); } catch (e) { err.textContent = e.message; }
+}
+
+// ---------------------------------------------------------------- my team
+function draftCost() { return S.draft.players.reduce((t, p) => t + (S.byName[p] ? S.byName[p].price : 0), 0); }
+function transferInfo() {
+  const ng = nextGw(); if (!ng) return { prev: null, changes: 0, hit: 0 };
+  const prev = entryForGw(S.entries.filter(e => e.gw < ng.gw), ng.gw);
+  if (!prev) return { prev: null, changes: 0, hit: 0, first: true };
+  const changes = S.draft.players.filter(p => !prev.players.includes(p)).length;
+  return { prev, changes, hit: S.draft.wildcard ? 0 : Math.max(0, changes - RULES.freeTransfers) * RULES.hit };
+}
+function wildcardAvailable() { const ng = nextGw(); if (!ng) return false; return !S.entries.some(e => e.wildcard && e.gw !== ng.gw && (S.gws.find(g => g.gw === e.gw) || {}).season === ng.season); }
+function fmtDeadline(d) { return new Date(d).toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London' }); }
+function teamView() {
+  const ng = nextGw(), v = document.getElementById('view');
+  if (!ng) { v.innerHTML = '<div class="card empty-state">The season\u2019s over. Check the League tab for the final table.</div>'; return; }
+  const cost = draftCost(), left = RULES.budget - cost, ti = transferInfo(), saved = S.entries.find(e => e.gw === ng.gw);
+  const errs = S.draft.players.length ? checkTeam(S.draft) : [];
+  const base = saved || ti.prev;
+  const changed = !base || JSON.stringify([base.players.slice().sort(), base.captain, base.vice, !!(saved && saved.wildcard)]) !== JSON.stringify([S.draft.players.slice().sort(), S.draft.captain, S.draft.vice, !!S.draft.wildcard]);
+  const saveLabel = !changed ? (saved ? 'Team saved' : 'Team carries over') : (saved ? 'Save changes' : 'Save team');
+  const tLabel = ti.first ? 'Free — your first team' : (S.draft.wildcard ? `${ti.changes} (wildcard: free)` : `${ti.changes} of ${RULES.freeTransfers} free` + (ti.hit ? ` · −${ti.hit} pts` : ''));
+  v.innerHTML = `
+    <div class="strip">
+      <div class="stat ${left < 0 ? 'bad' : ''}"><b>${money(left)}</b><small>Budget left of ${money(RULES.budget)}</small></div>
+      <div class="stat"><b>${S.draft.players.length}/11</b><small>Players picked</small></div>
+      <div class="stat"><b>Gameweek ${gwNumber(ng.gw)}</b><small>Locks ${fmtDeadline(ng.deadline)}</small></div>
+      <div class="stat ${ti.hit ? 'bad' : ''}"><b>${ti.first ? '—' : ti.changes}</b><small>Transfers: ${tLabel}</small></div>
+      <div class="save-box">
+        <button class="btn btn-red" onclick="saveTeam()" ${errs.length || S.draft.players.length < 11 || !changed || S.saving ? 'disabled' : ''}>${saveLabel}</button>
+        ${!ti.first && wildcardAvailable() ? `<label class="wild"><input type="checkbox" ${S.draft.wildcard ? 'checked' : ''} onchange="S.draft.wildcard=this.checked;teamView()"> Play wildcard (once a season)</label>` : ''}
+      </div>
+    </div>
+    ${!LIVE ? `<p class="hint" style="margin:-4px 0 12px">Playing as <strong>${esc(S.manager.team_name)}</strong> · <button class="linkish" onclick="renameDemo()">Rename team</button></p>` : ''}
+    ${errs.length && S.draft.players.length === 11 ? `<div class="problems"><strong>Before you can save:</strong><ul>${errs.map(e => '<li>' + esc(e) + '</li>').join('')}</ul></div>` : ''}
+    <div class="builder"><div>${groundHTML()}</div><div class="card market">${marketHTML()}</div></div>`;
+}
+function groundHTML() {
+  const by = { WK: [], BAT: [], AR: [], BOWL: [] }; for (const p of S.draft.players) if (S.byName[p]) by[S.byName[p].position].push(p);
+  const slot = (pos, p) => {
+    if (!p) return `<button class="slot" onclick="setFilter('${pos}')" aria-label="Add a ${POS_NAME[pos].toLowerCase()}"><span class="empty">+ ${POS_NAME[pos]}</span></button>`;
+    const pl = S.byName[p], c = S.draft.captain === p, vc = S.draft.vice === p;
+    return `<div class="slot filled"><div class="nm">${esc(p)}</div><div class="pr">${money(pl.price)}</div>
+      <div class="cv"><button class="cvb ${c ? 'on' : ''}" title="Make captain (double points)" aria-label="Make ${esc(p)} captain" aria-pressed="${c}" onclick="setCap('${esc(p)}','captain')">C</button><button class="cvb v ${vc ? 'on' : ''}" title="Make vice-captain" aria-label="Make ${esc(p)} vice-captain" aria-pressed="${vc}" onclick="setCap('${esc(p)}','vice')">V</button><button class="cvb x" title="Remove from your team" aria-label="Remove ${esc(p)}" onclick="toggle('${esc(p)}')">✕</button></div></div>`;
+  };
+  const line = pos => `<div class="line">${Array.from({ length: RULES.squad[pos] }, (_, i) => slot(pos, by[pos][i])).join('')}</div>`;
+  return `<div class="ground" aria-label="Your team">${line('WK')}${line('BAT')}${line('AR')}${line('BOWL')}</div>
+    <div class="ground-key"><span><span class="pill pos-WK">WK</span> keeper</span><span><span class="pill pos-BAT">BAT</span> batters</span><span><span class="pill pos-AR">AR</span> all-rounders</span><span><span class="pill pos-BOWL">BOWL</span> bowlers</span><span>C = captain (×2) · V = vice-captain</span></div>`;
+}
+function marketHTML() {
+  const q = S.search.trim().toLowerCase(), left = RULES.budget - draftCost();
+  const count = { WK: 0, BAT: 0, AR: 0, BOWL: 0 }; for (const p of S.draft.players) if (S.byName[p]) count[S.byName[p].position]++;
+  let list = S.players.filter(p => (S.filter === 'ALL' || p.position === S.filter) && (!q || p.name.toLowerCase().includes(q)));
+  const key = { price: p => -p.price, points: p => -(S.totals[p.name] || 0), name: p => p.name }[S.sort];
+  list.sort((a, b) => { const x = key(a), y = key(b); return x < y ? -1 : x > y ? 1 : a.name.localeCompare(b.name); });
+  const rows = list.map(p => {
+    const inTeam = S.draft.players.includes(p.name), full = count[p.position] >= RULES.squad[p.position], dear = p.price > left + 1e-9;
+    const why = inTeam ? 'Remove' : full ? `You have ${RULES.squad[p.position]} ${POS_NAME[p.position].toLowerCase()}${RULES.squad[p.position] > 1 ? 's' : ''} already` : dear ? 'Not enough budget left' : 'Add';
+    return `<div class="mrow"><div class="mname">${esc(p.name)}<small><span class="pill pos-${p.position}">${p.position}</span> ${p.xi ? esc(p.xi) + ' XI' : ''}</small></div>
+      <div class="num">${money(p.price)}</div><div class="num" title="Points this season">${S.totals[p.name] || 0}</div>
+      <button class="add ${inTeam ? 'in' : ''}" title="${why}" aria-label="${why}: ${esc(p.name)}" onclick="toggle('${esc(p.name)}')" ${!inTeam && (full || dear) ? 'disabled' : ''}>${inTeam ? '✓' : '+'}</button></div>`;
+  }).join('');
+  return `<div class="filters">${['ALL', ...POS_ORDER].map(k => `<button class="fbtn ${S.filter === k ? 'on' : ''}" onclick="setFilter('${k}')">${k === 'ALL' ? 'All' : POS_NAME[k] + 's'}${k !== 'ALL' ? ` ${count[k]}/${RULES.squad[k]}` : ''}</button>`).join('')}</div>
+    <div style="display:flex;gap:8px;margin-bottom:8px"><input type="search" placeholder="Search players" value="${esc(S.search)}" oninput="S.search=this.value;refreshMarket()" aria-label="Search players">
+      <select onchange="S.sort=this.value;refreshMarket()" aria-label="Sort players" style="width:auto"><option value="price" ${S.sort === 'price' ? 'selected' : ''}>Price</option><option value="points" ${S.sort === 'points' ? 'selected' : ''}>Points</option><option value="name" ${S.sort === 'name' ? 'selected' : ''}>Name</option></select></div>
+    <div class="mhead"><span>Player</span><span>Price</span><span>Pts</span><span></span></div>
+    <div class="mlist" id="mlist">${rows || '<div class="empty-state">No players match.</div>'}</div>`;
+}
+function refreshMarket() { const m = document.querySelector('.market'); if (m) { const s = document.activeElement && document.activeElement.type === 'search'; m.innerHTML = marketHTML(); if (s) { const i = m.querySelector('input[type=search]'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); } } }
+function setFilter(k) { S.filter = k; S.search = ''; teamView(); }
+function toggle(name) {
+  const d = S.draft, i = d.players.indexOf(name);
+  if (i >= 0) { d.players.splice(i, 1); if (d.captain === name) d.captain = null; if (d.vice === name) d.vice = null; }
+  else if (d.players.length < 11) d.players.push(name);
+  if (d.players.length === 11) {    // suggest a captain and vice from the most expensive picks if not chosen
+    const byPrice = d.players.slice().sort((a, b) => S.byName[b].price - S.byName[a].price);
+    if (!d.captain) d.captain = byPrice.find(p => p !== d.vice);
+    if (!d.vice) d.vice = byPrice.find(p => p !== d.captain);
+  }
+  teamView();
+}
+function setCap(name, which) { const d = S.draft, other = which === 'captain' ? 'vice' : 'captain'; if (d[other] === name) d[other] = d[which]; d[which] = name; teamView(); }
+async function saveTeam() {
+  const ng = nextGw(); if (!ng) return;
+  const errs = checkTeam(S.draft); if (errs.length) { toast(errs[0], true); return; }
+  S.saving = true; teamView();
+  try {
+    const row = await API.saveEntry({ gw: ng.gw, players: S.draft.players, captain: S.draft.captain, vice: S.draft.vice, wildcard: S.draft.wildcard });
+    S.entries = S.entries.filter(e => e.gw !== ng.gw).concat([row]);
+    toast(`Team saved for Gameweek ${gwNumber(ng.gw)}.` + (row.hit ? ` ${row.transfers} transfers: −${row.hit} points.` : '') + (row.wildcard ? ' Wildcard played.' : ''));
+  } catch (e) { toast(e.message, true); }
+  S.saving = false; teamView();
+}
+
+// ---------------------------------------------------------------- points
+async function pointsView() {
+  const v = document.getElementById('view'); v.innerHTML = '<div class="empty-state">Loading…</div>';
+  const scores = (await API.myScores()).slice().sort((a, b) => b.gw < a.gw ? -1 : 1);
+  if (!scores.length) { v.innerHTML = '<div class="card empty-state">No points yet. Your first points arrive the evening after your first Saturday.</div>'; return; }
+  const total = scores.reduce((t, s) => t + s.points, 0);
+  v.innerHTML = `<div class="strip" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="stat"><b>${total}</b><small>Total points</small></div>
+      <div class="stat"><b>${scores[0].points}</b><small>Last gameweek</small></div><div class="stat"><b>${Math.max(...scores.map(s => s.points))}</b><small>Best gameweek</small></div></div>
+    <div class="card">${scores.map(s => {
+      const e = entryForGw(S.entries, s.gw), P = S.points[s.gw] || {};
+      const rows = e ? e.players.slice().sort((a, b) => ((P[b] || {}).points || 0) - ((P[a] || {}).points || 0)).map(p => {
+        const x = P[p], dbl = s.doubled === p;
+        const parts = x ? Object.entries(x.parts || {}).filter(([, n]) => n).map(([k, n]) => `${PART_NAME[k] || k} ${n > 0 ? '+' : ''}${n}`).join(', ') : 'didn\u2019t play';
+        return `<div class="prow"><div>${esc(p)} ${dbl ? '<span class="pill pos-AR">×2</span>' : ''}<br><small>${esc(parts)}</small></div><div class="num"><b>${x ? x.points * (dbl ? 2 : 1) : 0}</b></div></div>`;
+      }).join('') : '';
+      return `<details class="gw"><summary><div>Gameweek ${gwNumber(s.gw)} <span class="muted">· ${new Date(s.gw).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>${s.hit ? ` <span class="muted">(−${s.hit} transfers)</span>` : ''}</div><b>${s.points}</b></summary><div class="detail">${rows}</div></details>`;
+    }).join('')}</div>`;
+}
+
+// ---------------------------------------------------------------- league
+async function leagueView() {
+  const v = document.getElementById('view'); v.innerHTML = '<div class="empty-state">Loading…</div>';
+  const rows = await API.standings();
+  if (!rows.length) { v.innerHTML = '<div class="card empty-state">No teams yet. Be the first.</div>'; return; }
+  const me = S.session && S.session.id;
+  v.innerHTML = `<div class="card" style="overflow-x:auto"><table class="league"><thead><tr><th>#</th><th>Team</th><th class="num">This week</th><th class="num">Total</th></tr></thead><tbody>
+    ${rows.map(r => `<tr class="${r.user_id === me ? 'me' : ''}" onclick="showTeam('${esc(r.user_id)}','${esc(r.team_name).replace(/'/g, '&#39;')}')"><td>${r.position}</td><td><strong>${esc(r.team_name)}</strong><br><small class="muted">${esc(r.manager_name)}</small></td><td class="num">${r.last_week}</td><td class="num"><strong>${r.total}</strong></td></tr>`).join('')}
+    </tbody></table></div><p class="hint">Tap a team to see who they picked. Teams are only shown once each gameweek has locked.</p>`;
+}
+async function showTeam(uid, name) {
+  const e = await API.lockedTeam(uid), mb = document.getElementById('modal-body');
+  const sg = scoredGws(API.now()), last = sg[sg.length - 1], P = (last && S.points[last]) || {};
+  mb.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong>${esc(name)}</strong><button class="btn" onclick="closeModal()" aria-label="Close">✕</button></div>` +
+    (e ? POS_ORDER.map(pos => e.players.filter(p => S.byName[p] && S.byName[p].position === pos).map(p => `<div class="prow"><div><span class="pill pos-${pos}">${pos}</span> ${esc(p)} ${e.captain === p ? '<span class="pill pos-AR">C</span>' : ''}${e.vice === p ? '<span class="pill pos-AR">V</span>' : ''}</div><div class="num">${P[p] ? P[p].points : '–'}</div></div>`).join('')).join('') + `<p class="hint">Points from the last gameweek played.</p>`
+      : '<div class="empty-state">This team hasn\u2019t played a locked gameweek yet.</div>');
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ---------------------------------------------------------------- rules
+function rulesView() {
+  document.getElementById('view').innerHTML = `<div class="rules">
+    <div class="card"><h3>Your team</h3><p class="muted" style="margin:0">Pick 11 players: 4 batters, 4 bowlers, 2 all-rounders and 1 wicketkeeper, from either XI, within ${money(RULES.budget)}. Your captain scores double; if they don\u2019t play, your vice-captain scores double instead.</p></div>
+    <div class="card"><h3>Gameweeks and transfers</h3><p class="muted" style="margin:0">Each Saturday is a gameweek, covering both XIs\u2019 matches. Teams lock at 12:00 on Saturday. You get ${RULES.freeTransfers} free transfers a week; each extra costs ${RULES.hit} points. Once a season you can play a wildcard for unlimited free changes. If you don\u2019t change anything, your team carries over.</p></div>
+    ${RULES.points.map(([h, rows]) => `<div class="card"><h3>${h}</h3><table>${rows.map(([k, n]) => `<tr><td>${k}</td><td>${n}</td></tr>`).join('')}</table></div>`).join('')}
+    <div class="card"><h3>Good to know</h3><p class="muted" style="margin:0">Players who aren\u2019t picked for a Saturday score nothing, so think about who\u2019s likely to play. Points come from the scorecards on Play-Cricket and usually appear on Saturday evening.</p></div></div>`;
+}
+
+let _tt; function toast(msg, err) { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast show' + (err ? ' err' : ''); clearTimeout(_tt); _tt = setTimeout(() => t.className = 'toast', 4200); }
+boot();
+</script>
+</body>
+</html>

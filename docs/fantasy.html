@@ -11,8 +11,8 @@
 // ── Connect to Supabase: paste the Project URL and the anon/public key here.
 // Leave both empty to run the demo (the 2026 season replayed, nothing saved online).
 window.FANTASY_CONFIG = {
-  supabaseUrl: '',
-  supabaseAnonKey: ''
+  supabaseUrl: 'https://jsnjgqhkicsyjvwvazah.supabase.co',
+  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzbmpncWhraWNzeWp2d3ZhemFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNzI2MTcsImV4cCI6MjEwNzg0ODYxN30.R4BNMVn4yseMHcdL40FvaKTtAGvjo3f9pymjNUU5sMU'
 };
 </script>
 <style>
@@ -159,6 +159,7 @@ table.league tbody tr{cursor:pointer;} table.league tbody tr:hover td{background
     <img src="logo.png" alt="Hessle CC crest">
     <div class="brand">Hessle CC <span>Fantasy</span></div>
     <div class="top-links">
+      <a class="dash" href="fantasy-demo.html">Try the demo</a>
       <a class="dash" href="index.html">Stats dashboard</a>
       <button class="acct" id="acct" style="display:none" onclick="signOut()">Sign out</button>
     </div>
@@ -281,7 +282,7 @@ const DemoAPI = {
 const LiveAPI = {
   sb: null,
   async init() {
-    await new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js'; s.onload = res; s.onerror = () => rej(new Error('Couldn\u2019t load the sign-in service. Check your connection and refresh.')); document.head.appendChild(s); });
+    await new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js'; s.onload = res; s.onerror = () => rej(new Error('Couldn\u2019t load the sign-in service. Check your connection and refresh.')); document.head.appendChild(s); });
     this.sb = window.supabase.createClient(window.FANTASY_CONFIG.supabaseUrl, window.FANTASY_CONFIG.supabaseAnonKey);
     this.sb.auth.onAuthStateChange(ev => { if (ev === 'PASSWORD_RECOVERY') { S.authMode = 'newpass'; render(); } });
   },
