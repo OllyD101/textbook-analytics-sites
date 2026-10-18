@@ -5,8 +5,10 @@ and to build the files the fantasy page reads.
 
 Rules agreed with the club
 --------------------------
-Squad: 11 players = 4 batters, 4 bowlers, 2 all-rounders, 1 wicketkeeper, budget £100m.
-Captain scores double; the vice-captain takes over if the captain doesn't play.
+Squad: 11 starters = 4 batters, 4 bowlers, 2 all-rounders, 1 wicketkeeper, plus 3 subs (any positions);
+budget £100m for all 14. If a starter doesn't play, the first sub (in bench order) of the SAME position who
+did play comes on. Captain scores double; the vice-captain takes over if the captain doesn't play.
+Both must be starters, and subs never take the captaincy.
 Gameweeks: each Saturday (a match belongs to the most recent Saturday on or before it);
 teams lock at 12:00 UK time on that Saturday.
 Transfers: 2 free a week, -4 points for each extra; one wildcard per season.
@@ -24,13 +26,15 @@ POINTS = {
     'catch': 5, 'stumping': 8, 'run_out': 10, 'three_catches': 4,
     'motm': 10, 'win': 3,
 }
-SQUAD = {'BAT': 4, 'BOWL': 4, 'AR': 2, 'WK': 1}
+SQUAD = {'BAT': 4, 'BOWL': 4, 'AR': 2, 'WK': 1}   # the starting 11
+BENCH = 3                                         # subs, any positions
 BUDGET = 100.0
-PRICE_MIN, PRICE_MAX = 4.0, 12.0
+PRICE_MIN, PRICE_MAX = 3.5, 10.5   # £100m covers 14 players (11 + 3 subs)
 FREE_TRANSFERS, TRANSFER_HIT = 2, 4
 
 num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)
 NOT_PLAYERS = {'Unsure'}
+NEW_PLAYER_PRICE = 4.0   # a debutant with no track record starts as a bargain
 
 
 def _key(r):
@@ -169,7 +173,7 @@ def auto_positions(data, season):
 
 # ---------------------------------------------------------------- prices
 def auto_prices(data, season, players):
-    """£4.0m–£12.0m from expected points per gameweek going into `season`:
+    """£3.5m–£10.5m from expected points per gameweek going into `season`:
     points per game in the previous season (60%) and the one before (40%), times how often they played."""
     def per_season(s):
         sp = season_points(data, s); n_gw = max(1, len(sp))
@@ -199,8 +203,9 @@ def auto_prices(data, season, players):
 def load_overrides(path):
     out = {}
     if os.path.exists(path):
-        with open(path, newline='', encoding='utf-8') as f:
-            for row in csv.DictReader(f):
+        with open(path, newline='', encoding='utf-8-sig') as f:
+            # skip the explanatory note lines (starting with #) so the real column headings are read
+            for row in csv.DictReader(line for line in f if not line.lstrip().startswith('#') and line.strip()):
                 p = (row.get('Player') or '').strip()
                 if not p or p.startswith('#'):
                     continue
@@ -218,9 +223,17 @@ def build_players(data, season, overrides_path=None):
     ov = load_overrides(overrides_path) if overrides_path else {}
     for p, o in ov.items():
         if p not in pos:  # a new signing added by hand
-            pos[p] = o['position'] or 'BAT'; prices[p] = o['price'] or 4.5; exp[p] = 0.0
+            pos[p] = o['position'] or 'BAT'; prices[p] = o['price'] or NEW_PLAYER_PRICE; exp[p] = 0.0
+    # debutants this season: added automatically after their first game, position from their games so far
+    new = []
+    for p in appearances(data, [season]):
+        if p not in pos:
+            kept = {_key(r) for r in data['keeping'] if r.get('Keeper') == p and r['Date'][:4] == str(season)}
+            games = appearances(data, [season])[p]
+            pos[p] = 'WK' if kept and len(kept) / len(games) >= 1 / 3 else _profile_role(data, p, season)
+            prices[p] = NEW_PLAYER_PRICE; exp[p] = 0.0; new.append(p)
     xi = {}
-    apps = appearances(data, [season - 1, season - 2])
+    apps = appearances(data, [season, season - 1, season - 2])
     for p, a in apps.items():
         n1 = sum(1 for k in a if k[1] == '1st'); xi[p] = '1st' if n1 / len(a) >= 0.5 else '2nd'
     out = []
@@ -229,14 +242,14 @@ def build_players(data, season, overrides_path=None):
         if o and not o.get('active', True):
             continue
         out.append({'name': p, 'position': (o.get('position') or pos[p]), 'price': o.get('price') or prices[p],
-                    'xi': xi.get(p, '1st'), 'expected': round(exp.get(p, 0.0), 1)})
+                    'xi': xi.get(p, '1st'), 'expected': round(exp.get(p, 0.0), 1), 'new': p in new and p not in ov})
     return out
 
 
 def write_overrides_template(players, path):
     with open(path, 'w', newline='', encoding='utf-8') as f:
         f.write('# Hessle CC Fantasy: positions and prices. Edit any row; delete nothing.\n')
-        f.write('# Position: BAT, BOWL, AR or WK.  Price: in £m (4.0-12.0).  Active: no = not available this season.\n')
+        f.write('# Position: BAT, BOWL, AR or WK.  Price: in £m (3.5-10.5).  Active: no = not available this season.\n')
         f.write('# Add a new signing as a new row. The automation re-reads this file every time it runs.\n')
         w = csv.writer(f); w.writerow(['Player', 'Position', 'Price', 'Active', 'XI', 'Expected pts per week'])
         for p in sorted(players, key=lambda x: ({'WK': 0, 'BAT': 1, 'AR': 2, 'BOWL': 3}[x['position']], -x['price'], x['name'])):
@@ -245,12 +258,16 @@ def write_overrides_template(players, path):
 
 # ---------------------------------------------------------------- team checks (mirrors the database rules)
 def check_team(team, players_by_name):
-    """Returns a list of problems (empty = valid). team = {'players': [...11], 'captain', 'vice'}."""
+    """Returns a list of problems (empty = valid). team = {'players': [11 starters], 'bench': [3 subs], 'captain', 'vice'}."""
     errs = []
-    ps = team.get('players') or []
-    if len(ps) != 11 or len(set(ps)) != 11:
-        errs.append('Pick 11 different players.')
-    unknown = [p for p in ps if p not in players_by_name]
+    ps, bench = team.get('players') or [], team.get('bench') or []
+    if len(ps) != 11:
+        errs.append('Pick 11 starters.')
+    if len(bench) != BENCH:
+        errs.append(f'Pick {BENCH} subs.')
+    if len(set(ps + bench)) != len(ps) + len(bench):
+        errs.append('A player can only be picked once.')
+    unknown = [p for p in ps + bench if p not in players_by_name]
     if unknown:
         errs.append('Unknown players: ' + ', '.join(unknown))
         return errs
@@ -259,18 +276,109 @@ def check_team(team, players_by_name):
         count[players_by_name[p]['position']] += 1
     for pos, need in SQUAD.items():
         if count[pos] != need:
-            errs.append(f'You need {need} {pos} (you have {count[pos]}).')
-    cost = sum(players_by_name[p]['price'] for p in ps)
+            errs.append(f'Your starting 11 needs {need} {pos} (you have {count[pos]}).')
+    cost = sum(players_by_name[p]['price'] for p in ps + bench)
     if cost > BUDGET + 1e-9:
         errs.append(f'Over budget: £{cost:.1f}m of £{BUDGET:.0f}m.')
     if team.get('captain') not in ps or team.get('vice') not in ps or team.get('captain') == team.get('vice'):
-        errs.append('Choose a captain and a different vice-captain from your 11.')
+        errs.append('Choose a captain and a different vice-captain from your starting 11.')
     return errs
 
 
-def team_gameweek_points(team, gw_points):
-    """Captain doubles; if the captain didn't play, the vice-captain doubles instead."""
-    pts = {p: gw_points.get(p, {}).get('total', 0) for p in team['players']}
-    played = {p for p in team['players'] if p in gw_points}
-    cap = team['captain'] if team['captain'] in played else (team['vice'] if team['vice'] in played else None)
-    return sum(pts.values()) + (pts[cap] if cap else 0), cap
+def effective_eleven(team, gw_points, positions):
+    """Auto-subs: each starter who didn't play is replaced by the first sub (bench order) of the same
+    position who did play. Returns (eleven, {starter_out: sub_in})."""
+    eleven = list(team['players']); used = set(); subs = {}
+    for i, p in enumerate(team['players']):
+        if p in gw_points:
+            continue
+        for b in team.get('bench') or []:
+            if b not in used and b in gw_points and positions.get(b) == positions.get(p):
+                eleven[i] = b; used.add(b); subs[p] = b
+                break
+    return eleven, subs
+
+
+def team_gameweek_points(team, gw_points, positions=None):
+    """Points for a team in a gameweek, after auto-subs. Captain doubles; if the captain didn't play,
+    the vice-captain doubles instead (subs never take the captaincy)."""
+    eleven, _ = effective_eleven(team, gw_points, positions or {}) if team.get('bench') else (list(team['players']), {})
+    pts = {p: gw_points.get(p, {}).get('total', 0) for p in eleven}
+    cap = team['captain'] if team['captain'] in gw_points else (team['vice'] if team['vice'] in gw_points else None)
+    return sum(pts.values()) + (pts.get(cap, 0) if cap else 0), cap
+
+
+# ---------------------------------------------------------------- price changes (after each Saturday, on form)
+PRICE_FLOOR, PRICE_CEILING = 3.0, 12.0
+PRICE_STEP_UP_BIG, PRICE_STEP_UP, PRICE_STEP_DOWN = 0.2, 0.1, 0.1
+
+
+def expected_for_price(players):
+    """Weekly points a player 'should' score for his price: a straight line fitted to the starting prices
+    and the expected weekly points they were based on (players with a track record only)."""
+    pts = [(p['price'], p['expected']) for p in players if p.get('expected', 0) > 0]
+    if len(pts) < 2:
+        return lambda price: max(1.0, price)
+    n = len(pts); mx = sum(x for x, _ in pts) / n; my = sum(y for _, y in pts) / n
+    var = sum((x - mx) ** 2 for x, _ in pts) or 1.0
+    b = sum((x - mx) * (y - my) for x, y in pts) / var; a = my - b * mx
+    return lambda price: max(1.0, a + b * price)
+
+
+def price_changes(data, season, players):
+    """Recalculated from scratch every run (so reruns and scorecard corrections always agree).
+    players: the season's list with STARTING prices. Returns {player: [(gw, price_after_that_gw), ...]}
+    and {player: current_price}. A new price applies from the next gameweek."""
+    sp = season_points(data, season)
+    gws = list(sp.keys())
+    expect = expected_for_price(players)
+    price = {p['name']: p['price'] for p in players}
+    history = {p['name']: [] for p in players}
+    for k, gw in enumerate(gws):
+        if k >= 2:   # form needs three gameweeks
+            last3 = gws[k - 2:k + 1]
+            for name in price:
+                weeks = [sp[g].get(name) for g in last3]
+                missed = sum(1 for w in weeks if w is None)
+                form = sum(w['total'] for w in weeks if w) / 3
+                ratio = form / expect(price[name])
+                if missed >= 2 or ratio <= 0.5:
+                    step = -PRICE_STEP_DOWN
+                elif ratio >= 1.5:
+                    step = PRICE_STEP_UP_BIG
+                elif ratio >= 1.2:
+                    step = PRICE_STEP_UP
+                else:
+                    step = 0.0
+                price[name] = round(min(PRICE_CEILING, max(PRICE_FLOOR, price[name] + step)), 1)
+        for name in price:
+            history[name].append((gw, price[name]))
+    return history, dict(price)
+
+
+# ---------------------------------------------------------------- chips
+CHIPS = ('triple', 'bench')   # Triple Captain, Bench Boost: once a season each, one chip per gameweek (wildcard included)
+
+
+def team_gameweek_points_chip(team, gw_points, positions, chip=None):
+    """Like team_gameweek_points, with a chip played that gameweek.
+    triple: the doubled player (captain, or vice if the captain didn't play) scores x3 instead of x2.
+    bench:  all 14 count (no auto-subs needed)."""
+    if chip == 'bench':
+        squad = list(team['players']) + list(team.get('bench') or [])
+        pts = sum(gw_points.get(p, {}).get('total', 0) for p in squad)
+        cap = team['captain'] if team['captain'] in gw_points else (team['vice'] if team['vice'] in gw_points else None)
+        return pts + (gw_points[cap]['total'] if cap else 0), cap
+    total, cap = team_gameweek_points(team, gw_points, positions)
+    if chip == 'triple' and cap:
+        total += gw_points[cap]['total']
+    return total, cap
+
+
+# ---------------------------------------------------------------- team of the week
+def team_of_the_week(gw_points, positions):
+    """Best possible 4 batters, 4 bowlers, 2 all-rounders and 1 keeper by points that gameweek."""
+    best = []
+    for pos, n in SQUAD.items():
+        best += sorted([p for p in gw_points if positions.get(p) == pos], key=lambda p: (-gw_points[p]['total'], p))[:n]
+    return best

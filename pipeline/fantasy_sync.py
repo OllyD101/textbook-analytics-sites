@@ -65,9 +65,12 @@ def fantasy_season(gameweeks, today):
 
 
 def build_payload(data, season, gameweek_dates, overrides_path=OVERRIDES):
-    players = fantasy.build_players(data, season, overrides_path)
+    players = fantasy.build_players(data, season, overrides_path)     # prices here are the season's STARTING prices
     names = {p['name'] for p in players}
-    player_rows = [{'name': p['name'], 'position': p['position'], 'price': p['price'], 'xi': p['xi'], 'active': True} for p in players]
+    history, current = fantasy.price_changes(data, season, players)    # recalculated from the season's form every run
+    player_rows = [{'name': p['name'], 'position': p['position'], 'price': current[p['name']], 'start_price': p['price'], 'xi': p['xi'], 'active': True} for p in players]
+    price_rows = [{'player': name, 'gw': gw, 'price': price} for name, h in history.items() for gw, price in h if gw in gameweek_dates]
+    new_players = [f"{p['name']} ({p['position']}, £{p['price']:.1f}m)" for p in players if p.get('new')]
     point_rows, skipped = [], []
     for gw, ps in fantasy.season_points(data, season).items():
         if gw not in gameweek_dates:
@@ -76,7 +79,7 @@ def build_payload(data, season, gameweek_dates, overrides_path=OVERRIDES):
         for name, v in ps.items():
             if name in names:
                 point_rows.append({'player': name, 'gw': gw, 'points': v['total'], 'parts': v['parts'], 'matches': v['matches']})
-    return player_rows, point_rows, skipped
+    return player_rows, point_rows, skipped, new_players, price_rows
 
 
 def sync(data, mode='dry_run', today=None, client=None):
@@ -92,9 +95,11 @@ def sync(data, mode='dry_run', today=None, client=None):
         season = fantasy_season(gws, today)
         if season is None:
             return {'status': 'no gameweeks', 'note': 'No gameweeks set up in Supabase yet (run supabase_setup.sql).'}
-        players, points, skipped = build_payload(data, season, {g['gw'] for g in gws if g['season'] == season})
+        players, points, skipped, new_players, prices = build_payload(data, season, {g['gw'] for g in gws if g['season'] == season})
         summary = {'status': 'dry run' if mode != 'publish' else 'sent', 'season': season, 'players': len(players),
-                   'point_rows': len(points), 'gameweeks_scored': len({p['gw'] for p in points}), 'skipped_dates': skipped}
+                   'point_rows': len(points), 'gameweeks_scored': len({p['gw'] for p in points}), 'skipped_dates': skipped,
+                   'new_players': new_players,
+                   'price_changes': sum(1 for p in players if p['price'] != p['start_price'])}
         if mode != 'publish':
             return summary
         client.upsert('fantasy_players', players, 'name')
@@ -104,6 +109,8 @@ def sync(data, mode='dry_run', today=None, client=None):
             client.patch('fantasy_players?name=eq.' + urllib.parse.quote(name), {'active': False})
         if points:
             client.upsert('fantasy_points', points, 'player,gw')
+        if prices:
+            client.upsert('fantasy_price_history', prices, 'player,gw')
         summary['made_unavailable'] = gone
         return summary
     except Exception as e:

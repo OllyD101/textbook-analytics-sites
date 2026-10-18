@@ -369,9 +369,11 @@ def write_report(report, names):
     fz = report.get("fantasy")
     if fz:
         if fz.get("status") in ("sent", "dry run"):
-            L += [f"Fantasy ({fz['status']}): season {fz['season']}, {fz['players']} players, {fz['point_rows']} player scores across {fz['gameweeks_scored']} gameweeks"
+            L += [f"Fantasy ({fz['status']}): season {fz['season']}, {fz['players']} players ({fz.get('price_changes', 0)} with a price change since the start), {fz['point_rows']} player scores across {fz['gameweeks_scored']} gameweeks"
                   + (f"; now unavailable: {', '.join(fz['made_unavailable'])}" if fz.get("made_unavailable") else "")
                   + (f"; matches outside any gameweek: {', '.join(fz['skipped_dates'])}" if fz.get("skipped_dates") else ""), ""]
+            if fz.get("new_players"):
+                L += ["New fantasy players added automatically (check positions.csv): " + ", ".join(fz["new_players"]), ""]
         else:
             L += [f"Fantasy: {fz.get('note', fz.get('status'))}", ""]
     if report["mode"] == "dry_run":
