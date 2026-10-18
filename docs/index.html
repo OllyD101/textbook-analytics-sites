@@ -736,6 +736,8 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 .gr-board-small{gap:5px;} .gr-board-small .gr-head{min-height:48px;font-size:0.68rem;padding:5px;}
 .gr-board-small .gr-pname{font-size:0.72rem;} .gr-board-small .gr-rar{font-size:0.66rem;}
 .gr-perfect-cell{background:rgba(200,32,47,0.12);border-color:rgba(200,32,47,0.5);} .gr-perfect-cell .gr-rar{color:#f0717b;}
+
+.nav-link-out{text-decoration:none;display:block;}
 </style>
 </head>
 <body>
@@ -792,6 +794,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
         <button class="nav-btn" onclick="showPage('hessledle',this)">Hessle-dle</button>
         <button class="nav-btn" onclick="showPage('higherlower',this)">Higher or Lower</button>
         <button class="nav-btn" onclick="showPage('grid',this)">Hessle Grid</button>
+        <a class="nav-btn nav-link-out" href="fantasy.html">Fantasy Cricket</a>
       </div>
     </div>
     <div class="nav-dropdown" id="navDropdown-league">
@@ -857,6 +860,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
         <button class="mobile-nav-item" onclick="showPage('hessledle',this);closeMobileNav()">🎯 Hessle-dle</button>
         <button class="mobile-nav-item" onclick="showPage('higherlower',this);closeMobileNav()">↕️ Higher or Lower</button>
         <button class="mobile-nav-item" onclick="showPage('grid',this);closeMobileNav()">#️⃣ Hessle Grid</button>
+        <a class="mobile-nav-item" href="fantasy.html" style="text-decoration:none;display:block">🏆 Fantasy Cricket</a>
       </div>
     </div>
     <div class="mobile-nav-section" id="mobileNavSection-league">
@@ -2391,7 +2395,9 @@ function initDashboard() {
   }
   const years = [...new Set(CRICKET_DATA.matches.map(r=>r.Date.slice(0,4)))].sort().reverse();
   const sel = document.getElementById('filterYear');
-  years.forEach(y => sel.innerHTML += `<option value="${y}">${y}</option>`);
+  // fill each dropdown in one go (adding options one at a time with += re-parsed the whole list every time)
+  const _opts = list => list.map(v => `<option value="${v}">${v}</option>`).join('');
+  sel.insertAdjacentHTML('beforeend', _opts(years));
 
   const batters = [...new Set(CRICKET_DATA.batting.map(r=>r.Batter))].filter(Boolean).sort();
   const bowlers = [...new Set(CRICKET_DATA.bowling.map(r=>r.Bowler))].filter(Boolean).sort();
@@ -2402,17 +2408,12 @@ function initDashboard() {
 
   const allPlayers = [...new Set([...batters,...bowlers])].sort();
   // Populate unified compare selects with all players
-  allPlayers.forEach(p => {
-    document.getElementById('cmpPlayer1').innerHTML += `<option value="${p}">${p}</option>`;
-    document.getElementById('cmpPlayer2').innerHTML += `<option value="${p}">${p}</option>`;
-  });
-  allPlayers.forEach(p => document.getElementById('profileSelect').innerHTML += `<option value="${p}">${p}</option>`);
+  const _allOpts = _opts(allPlayers);
+  ['cmpPlayer1', 'cmpPlayer2', 'profileSelect'].forEach(id => document.getElementById(id).insertAdjacentHTML('beforeend', _allOpts));
 
   // Populate new batting selects
-  batters.forEach(b => {
-    document.getElementById('batOppPlayer').innerHTML += `<option value="${b}">${b}</option>`;
-    document.getElementById('batFormPlayer').innerHTML += `<option value="${b}">${b}</option>`;
-  });
+  const _batOpts = _opts(batters);
+  ['batOppPlayer', 'batFormPlayer'].forEach(id => document.getElementById(id).insertAdjacentHTML('beforeend', _batOpts));
 
   sqPopulateOpponents();
   sqPopulateYears();
@@ -2446,51 +2447,53 @@ function updateLoadingMsg(msg) {
   if(el) el.textContent = msg;
 }
 
-function renderAll() {
-  function safe(fn,name){try{fn();}catch(e){console.error(name+' failed:',e);}}
-  safe(function(){updateLoadingMsg('Loading match data...');},'loadingMsg');
-  safe(renderOverview,'renderOverview');
-  safe(renderOnThisDay,'renderOnThisDay');
-  setTimeout(function(){safe(renderOverviewSparklines,'sparklines');}, 50);
-  safe(renderBatStats,'renderBatStats');
-  safe(renderBatInnings,'renderBatInnings');
-  safe(renderBowlStats,'renderBowlStats');
-  safe(renderBowlSpells,'renderBowlSpells');
-  safe(renderFielding,'renderFielding');
-  safe(renderSeason,'renderSeason');
-  safe(renderBatCharts,'renderBatCharts');
-  safe(renderBowlCharts,'renderBowlCharts');
-  safe(renderOpponents,'renderOpponents');
-  safe(renderForm,'renderForm');
-  safe(renderAllMatches,'renderAllMatches');
-  safe(renderBestXI,'renderBestXI');
-  safe(renderSeasonAwards,'renderSeasonAwards');
-  safe(renderMethodologyMeta,'renderMethodologyMeta');
-  safe(renderDataQuality,'renderDataQuality');
-  safe(renderWarLeaderboard,'renderWarLeaderboard');
-  safe(renderBatFirst,'renderBatFirst');
-  safe(renderHomeAway,'renderHomeAway');
-  safe(renderNRR,'renderNRR');
-  safe(renderCloseGames,'renderCloseGames');
-  safe(renderBatByPosition,'renderBatByPosition');
-  safe(renderWinSpells,'renderWinSpells');
-  safe(renderBowlPartnerships,'renderBowlPartnerships');
-  safe(renderBowlExtras,'renderBowlExtras');
-  safe(renderBowlerFielderPartnerships,'renderBowlerFielderPartnerships');
-  safe(renderChasing,'renderChasing');
-  safe(renderDefending,'renderDefending');
-  safe(renderStreaks,'renderStreaks');
-  safe(renderSquadDepth,'renderSquadDepth');
-  safe(renderAwards,'renderAwards');
-  safe(renderLeague,'renderLeague');
-  safe(renderRecords,'renderRecords');
-  safe(renderRecentRecords,'renderRecentRecords');
-  safe(renderMilestoneTimeline,'renderMilestoneTimeline');
-  // Apply row limits to large tables
-  ['tblBatStats','tblBatInnings','tblBowlStats','tblBowlSpells','tblAllMatches',
+// ── Build pages only when they're first opened ──────────────────────────────
+// Building all ~37 sections up front froze phones for 5-6 seconds on load. Now startup builds just
+// the page you're on, every other page is built the first time you open it, and a filter change
+// rebuilds the current page straight away and the rest when you next visit them.
+var PAGE_RENDERERS = {
+  overview: ['renderOverview', 'renderOnThisDay'],
+  batting: ['renderBatStats', 'renderBatInnings', 'renderBatCharts', 'renderBatByPosition'],
+  bowling: ['renderBowlStats', 'renderBowlSpells', 'renderBowlCharts', 'renderWinSpells', 'renderBowlPartnerships', 'renderBowlExtras'],
+  fielding: ['renderFielding', 'renderBowlerFielderPartnerships'],
+  season: ['renderSeason'],
+  opponents: ['renderOpponents'],
+  form: ['renderForm'],
+  matches: ['renderAllMatches', 'renderStreaks'],
+  bestxi: ['renderBestXI', 'renderSquadDepth'],
+  seasonawards: ['renderSeasonAwards'],
+  methodology: ['renderMethodologyMeta'],
+  dataquality: ['renderDataQuality'],
+  warleaderboard: ['renderWarLeaderboard'],
+  chasing: ['renderChasing', 'renderDefending'],
+  awards: ['renderAwards'],
+  league: ['renderLeague'],
+  records: ['renderRecords', 'renderRecentRecords', 'renderMilestoneTimeline']
+};
+// Charts on a page's hidden tabs: built just after the page appears, so what you see first isn't held up
+var PAGE_DEFERRED = { overview: ['renderBatFirst', 'renderHomeAway', 'renderNRR', 'renderCloseGames'] };
+var LIMITED_TABLES = ['tblBatStats','tblBatInnings','tblBowlStats','tblBowlSpells','tblAllMatches',
    'tblOpponents','tblBatStats','tblPosBat','tblWinSpells','tblBowlPairs',
    'tblExtras','tblBestChases','tblFailedChases','tblBestDef','tblDefLost',
-   'tblBestXI','tblSeason','tblFormBat','tblFormBowl'].forEach(function(t){safe(function(){initTableLimit(t);},'limit:'+t);});
+   'tblBestXI','tblSeason','tblFormBat','tblFormBowl'];
+var _pageStale = {};
+function _safeRun(fn, name) { try { fn(); } catch (e) { console.error(name + ' failed:', e); } }
+function renderPage(name) {
+  var list = PAGE_RENDERERS[name]; if (!list) return;
+  _pageStale[name] = false;
+  list.forEach(function(fnName) { if (typeof window[fnName] === 'function') _safeRun(window[fnName], fnName); });
+  if (name === 'overview') setTimeout(function() { _safeRun(renderOverviewSparklines, 'sparklines'); }, 50);
+  (PAGE_DEFERRED[name] || []).forEach(function(fnName, i) {
+    setTimeout(function() { if (typeof window[fnName] === 'function') _safeRun(window[fnName], fnName); }, 80 + i * 40);
+  });
+  var page = document.getElementById('page-' + name);
+  LIMITED_TABLES.forEach(function(t) { var el = document.getElementById(t); if (el && page && page.contains(el)) _safeRun(function() { initTableLimit(t); }, 'limit:' + t); });
+}
+function renderAll() {
+  _safeRun(function() { updateLoadingMsg('Loading match data...'); }, 'loadingMsg');
+  Object.keys(PAGE_RENDERERS).forEach(function(p) { _pageStale[p] = true; });
+  var active = document.querySelector('.page.active');
+  renderPage(active ? active.id.replace('page-', '') : 'overview');
 }
 
 
@@ -2502,6 +2505,7 @@ var FILTERLESS_PAGES = ['bestxi', 'dataquality', 'hessledle', 'higherlower', 'gr
 function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
+  if (_pageStale[name]) renderPage(name);
   var _fb = document.querySelector('.filters');
   if (_fb) { _fb.style.display = FILTERLESS_PAGES.indexOf(name) !== -1 ? 'none' : ''; if (typeof syncHeaderHeight === 'function') syncHeaderHeight(); }
   // Sync desktop nav
