@@ -351,6 +351,14 @@ def main():
             write_json(league_path, league, compact=False)
         state["last_run"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         write_json(state_path, state, compact=False)
+    # Fantasy cricket: players, prices and points to Supabase (never blocks the dashboard update)
+    try:
+        from fantasy_sync import sync as fantasy_sync
+        report["fantasy"] = fantasy_sync(data, mode, today=date.fromisoformat(os.environ["PIPELINE_TODAY"]) if os.environ.get("PIPELINE_TODAY") else None)
+        if report["fantasy"].get("status") == "warning":
+            report["warnings"].append(report["fantasy"]["note"])
+    except Exception as e:
+        report["warnings"].append(f"Fantasy sync could not run (dashboard update not affected): {e}")
     write_report(report, names)
     if mode == "dry_run" and report["compared_diff"]:
         print("Dry run finished WITH differences - see the report before switching to publish.")
@@ -358,6 +366,14 @@ def main():
 
 def write_report(report, names):
     L = [f"# Dashboard update - {report['mode'].replace('_', ' ')}", ""]
+    fz = report.get("fantasy")
+    if fz:
+        if fz.get("status") in ("sent", "dry run"):
+            L += [f"Fantasy ({fz['status']}): season {fz['season']}, {fz['players']} players, {fz['point_rows']} player scores across {fz['gameweeks_scored']} gameweeks"
+                  + (f"; now unavailable: {', '.join(fz['made_unavailable'])}" if fz.get("made_unavailable") else "")
+                  + (f"; matches outside any gameweek: {', '.join(fz['skipped_dates'])}" if fz.get("skipped_dates") else ""), ""]
+        else:
+            L += [f"Fantasy: {fz.get('note', fz.get('status'))}", ""]
     if report["mode"] == "dry_run":
         L += [f"- Matches identical to the site: **{len(report['compared_ok'])}**",
               f"- Matches with differences: **{len(report['compared_diff'])}**",
