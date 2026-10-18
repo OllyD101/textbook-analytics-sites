@@ -207,6 +207,10 @@ table.league tbody tr{cursor:pointer;} table.league tbody tr:hover td{background
 .aw-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
 .aw-card{padding:12px 14px;} .aw-h{font-weight:800;font-size:.95rem;margin-bottom:6px;} .aw-big{font-size:1.6rem;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums;}
 @media (max-width:560px){ .aw-grid{grid-template-columns:1fr;} }
+
+.adminbar{margin-bottom:12px;padding:9px 12px;border-radius:8px;background:rgba(61,127,224,.14);border:1px solid rgba(61,127,224,.5);font-size:.9rem;}
+table.admin tbody tr{cursor:default;} table.admin tbody tr:hover td{background:none;}
+.actions{white-space:nowrap;} .btn.sm{padding:4px 8px;font-size:.76rem;margin:2px 2px 2px 0;} .btn.danger{color:#f08a92;border-color:rgba(214,58,70,.5);}
 </style>
 </head>
 <body>
@@ -348,7 +352,10 @@ const DemoAPI = {
     this.st.entries = this.st.entries.filter(x => x.gw !== e.gw).concat([row]); this.save(); return row;
   },
   managersAll() {
-    const ms = this.data.managers.map(m => ({ user_id: m.id, team_name: m.team_name, manager_name: m.manager_name, entries: Object.entries(m.entries).map(([gw, e]) => Object.assign({ gw }, e)) }));
+    const A = this.st.admin || { edits: {}, removed: [], names: {} };
+    const ms = this.data.managers.filter(m => !A.removed.includes(m.id)).map(m => {
+      const ent = Object.entries(m.entries).map(([gw, e]) => Object.assign({ gw }, e)).filter(e => !(A.edits[m.id] || {})[e.gw]).concat(Object.values(A.edits[m.id] || {}));
+      return { user_id: m.id, team_name: A.names[m.id] || m.team_name, manager_name: m.manager_name, entries: ent.sort((a, b) => a.gw < b.gw ? -1 : 1) }; });
     if (this.st.manager) ms.push({ user_id: 'demo-me', team_name: this.st.manager.team_name, manager_name: this.st.manager.manager_name, entries: this.st.entries });
     return ms;
   },
@@ -369,6 +376,25 @@ const DemoAPI = {
       return { user_id: m.user_id, team_name: m.team_name, manager_name: m.manager_name, total: sc.reduce((t, s) => t + s.points, 0), last_week: (sc.find(s => s.gw === last) || {}).points || 0 }; });
     rows.sort((a, b) => b.total - a.total); rows.forEach((r, i) => r.position = i && rows[i - 1].total === r.total ? rows[i - 1].position : i + 1); return rows;
   },
+  async isAdmin() { return true; },   // in the demo you can try the admin page on the pretend managers
+  async adminOverview() {
+    const ng = nextGw(), now = this.now(), sg = scoredGws(now);
+    return this.managersAll().map(m => ({ user_id: m.user_id, team_name: m.team_name, manager_name: m.manager_name, email: m.user_id === 'demo-me' ? 'you@example.com' : m.manager_name.toLowerCase().replace(/[^a-z]/g, '') + '@example.com',
+      total: sg.reduce((t, gw) => t + ((scoreEntry(entryForGw(m.entries, gw), gw, S.points) || {}).points || 0), 0), next_gw: ng && ng.gw,
+      saved_for_next: !!(ng && m.entries.some(e => e.gw <= ng.gw)), last_saved: m.entries.length ? m.entries[m.entries.length - 1].gw : null }));
+  },
+  async adminEntries(user_id) { const m = this.managersAll().find(x => x.user_id === user_id); return m ? m.entries.map(e => Object.assign({}, e)) : []; },
+  async adminSaveEntry(user_id, e) {
+    if (user_id === 'demo-me') return this.saveEntry(e);
+    const errs = checkTeam(e); if (errs.length) throw new Error(errs[0]);
+    const A = this.st.admin = this.st.admin || { edits: {}, removed: [], names: {} };
+    const ent = (await this.adminEntries(user_id)).filter(x => x.gw < e.gw), prev = entryForGw(ent, e.gw);
+    const row = { gw: e.gw, players: e.players.slice(), bench: (e.bench || []).slice(), captain: e.captain, vice: e.vice, wildcard: !!e.wildcard, chip: e.chip || null, transfers: 0, hit: 0 };
+    if (prev) { const before = prev.players.concat(prev.bench || []); row.transfers = row.players.concat(row.bench).filter(p => !before.includes(p)).length; row.hit = row.wildcard ? 0 : Math.max(0, row.transfers - RULES.freeTransfers) * RULES.hit; }
+    (A.edits[user_id] = A.edits[user_id] || {})[e.gw] = row; this.save(); return row;
+  },
+  async adminRename(user_id, name) { if (user_id === 'demo-me') { this.st.manager.team_name = name; } else { const A = this.st.admin = this.st.admin || { edits: {}, removed: [], names: {} }; A.names[user_id] = name; } this.save(); },
+  async adminRemove(user_id) { if (user_id === 'demo-me') throw new Error('In the demo you can\u2019t remove yourself.'); const A = this.st.admin = this.st.admin || { edits: {}, removed: [], names: {} }; A.removed.push(user_id); this.save(); },
   async lockedTeam(user_id) {
     const m = this.managersAll().find(x => x.user_id === user_id); const now = this.now();
     const locked = this.data.gameweeks.filter(g => new Date(g.deadline) <= now).map(g => g.gw);
@@ -416,6 +442,15 @@ const LiveAPI = {
   async allScores() { return this.all('fantasy_gw_scores', 'user_id,gw,points', 'gw'); },
   async pickStats() { const rows = await this.all('fantasy_pick_stats', 'player,picked_pct,captain_pct,managers,gw', 'player'); const out = {}; for (const r of rows) out[r.player] = { picked_pct: Number(r.picked_pct), captain_pct: Number(r.captain_pct) }; return { gw: rows[0] ? rows[0].gw : null, managers: rows[0] ? rows[0].managers : 0, rows: out }; },
   async standings() { const { data, error } = await this.sb.from('fantasy_standings').select('*').order('position'); if (error) throw error; return data; },
+  async isAdmin() { const { data } = await this.sb.from('fantasy_admins').select('user_id').eq('user_id', S.session.id).maybeSingle(); return !!data; },
+  async adminOverview() { const { data, error } = await this.sb.rpc('fantasy_admin_overview'); if (error) throw new Error(friendly(error.message)); return data; },
+  async adminEntries(user_id) { const { data, error } = await this.sb.from('fantasy_entries').select('*').eq('user_id', user_id).order('gw'); if (error) throw new Error(dbProblem(error)); return data; },
+  async adminSaveEntry(user_id, e) {
+    const { data, error } = await this.sb.from('fantasy_entries').upsert({ user_id, gw: e.gw, players: e.players, bench: e.bench, captain: e.captain, vice: e.vice, wildcard: !!e.wildcard, chip: e.chip || null }, { onConflict: 'user_id,gw' }).select().single();
+    if (error) throw new Error(friendly(error.message)); return data;
+  },
+  async adminRename(user_id, name) { const { error } = await this.sb.from('fantasy_managers').update({ team_name: name }).eq('user_id', user_id); if (error) throw new Error(friendly(error.message)); },
+  async adminRemove(user_id) { const { error } = await this.sb.from('fantasy_managers').delete().eq('user_id', user_id); if (error) throw new Error(friendly(error.message)); },
   async lockedTeam(user_id) { const { data } = await this.sb.from('fantasy_entries').select('*').eq('user_id', user_id).order('gw', { ascending: false }).limit(1); return (data || [])[0] || null; }
 };
 function dbProblem(e) {
@@ -455,14 +490,14 @@ async function boot() {
     for (const gw of sg) for (const [p, v] of Object.entries(S.points[gw] || {})) S.totals[p] = (S.totals[p] || 0) + v.points;
     if (last) for (const [p, v] of Object.entries(S.points[last] || {})) S.lastPts[p] = v.points;
     S.session = await API.session();
-    if (S.session) { S.manager = await API.manager(); if (S.manager) S.entries = await API.myEntries(); }
+    if (S.session) { S.manager = await API.manager(); if (S.manager) S.entries = await API.myEntries(); try { S.isAdmin = await API.isAdmin(); } catch (e) { S.isAdmin = false; } }
     S.pick = null; resetDraft(); renderDemoBar(); render();
   } catch (e) {
     if (navigator.onLine === false) { document.getElementById('app').innerHTML = '<div class="auth card"><h1>You\u2019re offline</h1><p class="muted">Your team, points and the league need a connection. Connect to Wi-Fi or mobile data, then try again.</p><button class="btn btn-red" onclick="location.reload()">Try again</button></div>'; return; }
     document.getElementById('app').innerHTML = '<div class="auth card"><h1>Can\u2019t open the game</h1><p class="muted">' + esc(e.message || e) + '</p>' +
       (LIVE ? '<div class="switch">Not sure what\u2019s wrong? <button onclick="runCheck()">Run a check</button></div><div id="diag"></div>' : '') + '</div>'; }
 }
-function nextGw() { const now = API.now(); return S.gws.find(g => new Date(g.deadline) > now) || null; }
+function nextGw() { if (S.adminFor) return S.adminFor.gwObj; const now = API.now(); return S.gws.find(g => new Date(g.deadline) > now) || null; }
 function gwNumber(gw) { const season = (S.gws.find(g => g.gw === gw) || {}).season; return S.gws.filter(g => g.season === season && g.gw <= gw).length; }
 function resetDraft() {
   const ng = nextGw(), saved = ng && S.entries.find(e => e.gw === ng.gw), base = saved || entryForGw(S.entries, ng ? ng.gw : '9999');
@@ -491,9 +526,10 @@ function render() {
   const app = document.getElementById('app');
   if (!S.session || S.authMode === 'newpass') { app.innerHTML = authView(); return; }
   if (!S.manager) { app.innerHTML = createTeamView(); return; }
-  const tabs = [['team', 'My team'], ['points', 'Points'], ['league', 'League'], ['awards', 'Awards'], ['rules', 'Rules']];
+  const tabs = [['team', S.adminFor ? 'Editing team' : 'My team'], ['points', 'Points'], ['league', 'League'], ['awards', 'Awards'], ['rules', 'Rules']].concat(S.isAdmin ? [['admin', 'Admin']] : []);
   app.innerHTML = `<nav class="tabs" role="tablist">${tabs.map(([k, l]) => `<button class="tab ${S.view === k ? 'active' : ''}" role="tab" aria-selected="${S.view === k}" onclick="go('${k}')">${l}</button>`).join('')}</nav><section id="view"></section>`;
-  ({ team: teamView, points: pointsView, league: leagueView, awards: awardsView, rules: rulesView })[S.view]();
+  if (S.adminFor && S.view !== 'team') endAdminEdit(false);
+  ({ team: teamView, points: pointsView, league: leagueView, awards: awardsView, rules: rulesView, admin: adminView })[S.view]();
 }
 function go(v) { S.view = v; render(); window.scrollTo(0, 0); }
 
@@ -569,6 +605,7 @@ async function doAuthInner(err, btn) {
     if (!S.session) throw new Error('Signed in, but this browser didn\u2019t keep the sign-in (private browsing or blocked cookies?). Try a normal browser window.');
     S.manager = await withTimeout(API.manager(), 20, 'the database');
     S.entries = S.manager ? await withTimeout(API.myEntries(), 20, 'the database') : [];
+    try { S.isAdmin = await API.isAdmin(); } catch (e) { S.isAdmin = false; }
     resetDraft(); render();
   } catch (e) { err.style.color = ''; err.textContent = (e && (e.message || e.msg || e.error_description)) || String(e); }
 }
@@ -623,7 +660,8 @@ function teamView() {
           return `<button class="chip ${S.draft.chip === c ? 'on' : ''}" ${used || S.draft.wildcard ? 'disabled' : ''} title="${used ? 'Used in Gameweek ' + gwNumber(used) : c === 'triple' ? 'Your captain scores ×3 this week' : 'All 14 players\u2019 points count this week'}" onclick="S.draft.chip=S.draft.chip==='${c}'?null:'${c}';teamView()">${CHIP_NAME[c]}${used ? ' · used' : S.draft.chip === c ? ' ✓' : ''}</button>`; }).join('')}</div>
       </div>
     </div>
-    ${!LIVE ? `<p class="hint" style="margin:-4px 0 12px">Playing as <strong>${esc(S.manager.team_name)}</strong> · <button class="linkish" onclick="renameDemo()">Rename team</button></p>` : ''}
+    ${S.adminFor ? `<div class="adminbar">Admin: editing <strong>${esc(S.adminFor.team_name)}</strong> for Gameweek ${gwNumber(ng.gw)}${S.adminFor.locked ? ' (already locked: points recalculate when you save)' : ''} · <button class="linkish" onclick="endAdminEdit(true)">Back to admin</button></div>` : ''}
+    ${!LIVE && !S.adminFor ? `<p class="hint" style="margin:-4px 0 12px">Playing as <strong>${esc(S.manager.team_name)}</strong> · <button class="linkish" onclick="renameDemo()">Rename team</button></p>` : ''}
     ${errs.length && squad().length === 14 ? `<div class="problems"><strong>Before you can save:</strong><ul>${errs.map(e => '<li>' + esc(e) + '</li>').join('')}</ul></div>` : ''}
     <div class="builder"><div>${groundHTML()}</div><div class="card market">${marketHTML()}</div></div>`;
 }
@@ -700,9 +738,10 @@ async function saveTeam() {
   const errs = checkTeam(S.draft); if (errs.length) { toast(errs[0], true); return; }
   S.saving = true; teamView();
   try {
-    const row = await API.saveEntry({ gw: ng.gw, players: S.draft.players, bench: S.draft.bench, captain: S.draft.captain, vice: S.draft.vice, wildcard: S.draft.wildcard, chip: S.draft.chip });
+    const payload = { gw: ng.gw, players: S.draft.players, bench: S.draft.bench, captain: S.draft.captain, vice: S.draft.vice, wildcard: S.draft.wildcard, chip: S.draft.chip };
+    const row = S.adminFor ? await API.adminSaveEntry(S.adminFor.user_id, payload) : await API.saveEntry(payload);
     S.entries = S.entries.filter(e => e.gw !== ng.gw).concat([row]);
-    toast(`Team saved for Gameweek ${gwNumber(ng.gw)}.` + (row.hit ? ` ${row.transfers} transfers: −${row.hit} points.` : '') + (row.wildcard ? ' Wildcard played.' : '') + (row.chip ? ' ' + CHIP_NAME[row.chip] + ' played.' : ''));
+    toast((S.adminFor ? `${S.adminFor.team_name}: ` : '') + `Team saved for Gameweek ${gwNumber(ng.gw)}.` + (row.hit ? ` ${row.transfers} transfers: −${row.hit} points.` : '') + (row.wildcard ? ' Wildcard played.' : '') + (row.chip ? ' ' + CHIP_NAME[row.chip] + ' played.' : ''));
   } catch (e) { toast(e.message, true); }
   S.saving = false; teamView();
 }
@@ -874,6 +913,57 @@ function drawAwards() {
       ${mostWins ? `<div class="prow"><div>Most Manager of the Week wins<br><small>${team(mostWins[0])}</small></div><div class="num"><b>${mostWins[1]}</b></div></div>` : ''}</div></div>`;
 }
 function awStep(d) { const i = S.aw.sg.indexOf(S.awGw) + d; if (i >= 0 && i < S.aw.sg.length) { S.awGw = S.aw.sg[i]; drawAwards(); } }
+
+// ---------------------------------------------------------------- admin (club organisers only; the database enforces this)
+async function adminView() {
+  const v = document.getElementById('view'); v.innerHTML = '<div class="empty-state">Loading…</div>';
+  let rows; try { rows = await API.adminOverview(); } catch (e) { v.innerHTML = '<div class="card empty-state">' + esc(e.message) + '</div>'; return; }
+  const ng = nextGw(), saved = rows.filter(r => r.saved_for_next), missing = rows.filter(r => !r.saved_for_next);
+  const last = S.gws.filter(g => new Date(g.deadline) <= API.now()).pop();
+  S.adminRows = rows;
+  v.innerHTML = `
+    <div class="strip" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="stat"><b>${rows.length}</b><small>Managers</small></div>
+      <div class="stat"><b>${saved.length}</b><small>Have a team for ${ng ? 'Gameweek ' + gwNumber(ng.gw) : 'the next gameweek'}</small></div>
+      <div class="stat ${missing.length ? 'bad' : ''}"><b>${missing.length}</b><small>Haven\u2019t picked a team</small></div>
+    </div>
+    ${missing.length ? `<div class="card" style="padding:10px 14px;margin-bottom:12px"><strong>No team yet:</strong> ${missing.map(r => esc(r.team_name)).join(', ')}
+      <div style="margin-top:8px"><button class="btn" onclick="copyMissingEmails()">Copy their emails</button> <span class="hint">to send a reminder</span></div></div>` : ''}
+    <div class="card" style="overflow-x:auto"><table class="league admin"><thead><tr><th>Team</th><th>Email</th><th>${ng ? 'GW' + gwNumber(ng.gw) : 'Next'}</th><th class="num">Total</th><th>Actions</th></tr></thead><tbody>
+      ${rows.map((r, i) => `<tr><td><strong>${esc(r.team_name)}</strong><br><small class="muted">${esc(r.manager_name)}</small></td><td><small>${esc(r.email)}</small></td>
+        <td>${r.saved_for_next ? '<span class="mv up">✓</span>' : '<span class="mv down">✗</span>'}</td><td class="num">${r.total}</td>
+        <td class="actions">${ng ? `<button class="btn sm" onclick="startAdminEdit(${i}, false)">Fix team</button>` : ''}${last ? `<button class="btn sm" onclick="startAdminEdit(${i}, true)" title="Change Gameweek ${gwNumber(last.gw)}, which has locked">Fix last week</button>` : ''}
+          <button class="btn sm" onclick="adminRename(${i})">Rename</button><button class="btn sm danger" onclick="adminRemove(${i})">Remove</button></td></tr>`).join('')}
+    </tbody></table></div>
+    <p class="hint">Only club admins see this tab. Changes follow the normal team rules. To remove someone\u2019s login completely, delete them in Supabase under Authentication → Users.</p>`;
+}
+async function startAdminEdit(i, lastWeek) {
+  const r = S.adminRows[i];
+  const gwObj = lastWeek ? S.gws.filter(g => new Date(g.deadline) <= API.now()).pop() : nextGw();
+  const theirs = await API.adminEntries(r.user_id);
+  S.adminSaved = { entries: S.entries, draft: S.draft };
+  S.adminFor = { user_id: r.user_id, team_name: r.team_name, gwObj, locked: !!lastWeek };
+  S.entries = theirs; resetDraft(); S.view = 'team'; render(); window.scrollTo(0, 0);
+}
+function endAdminEdit(goBack) {
+  if (!S.adminFor) return;
+  S.entries = S.adminSaved.entries; S.draft = S.adminSaved.draft; S.adminFor = null; S.adminSaved = null;
+  if (goBack) { S.view = 'admin'; render(); }
+}
+async function adminRename(i) {
+  const r = S.adminRows[i], n = (prompt('New team name for ' + r.team_name, r.team_name) || '').trim();
+  if (n.length < 2 || n === r.team_name) return;
+  try { await API.adminRename(r.user_id, n.slice(0, 40)); if (S.session && r.user_id === S.session.id) S.manager.team_name = n.slice(0, 40); toast('Renamed to ' + n + '.'); adminView(); } catch (e) { toast(e.message, true); }
+}
+async function adminRemove(i) {
+  const r = S.adminRows[i];
+  if (!confirm(`Remove ${r.team_name} (${r.email}) from the league? Their teams and points are deleted. This can\u2019t be undone.`)) return;
+  try { await API.adminRemove(r.user_id); toast(r.team_name + ' removed from the league.'); adminView(); } catch (e) { toast(e.message, true); }
+}
+async function copyMissingEmails() {
+  const emails = S.adminRows.filter(r => !r.saved_for_next).map(r => r.email).join(', ');
+  try { await navigator.clipboard.writeText(emails); toast('Copied ' + emails.split(', ').length + ' email addresses.'); } catch (e) { prompt('Copy these addresses:', emails); }
+}
 
 // ---------------------------------------------------------------- rules
 function rulesView() {
