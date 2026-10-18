@@ -38,6 +38,9 @@ jobs:
         env:
           PLAY_CRICKET_API_TOKEN: ${{ secrets.PLAY_CRICKET_API_TOKEN }}
           PLAY_CRICKET_SITE_ID: ${{ vars.PLAY_CRICKET_SITE_ID }}
+          # Fantasy cricket (optional): leave unset until the Supabase project exists
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           # Manual runs use the mode you pick; scheduled runs use the PIPELINE_MODE variable (dry_run until you switch it)
           PIPELINE_MODE: ${{ github.event.inputs.mode || vars.PIPELINE_MODE || 'dry_run' }}
           PIPELINE_SEASONS: ${{ github.event.inputs.seasons }}
