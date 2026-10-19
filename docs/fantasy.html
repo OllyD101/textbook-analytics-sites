@@ -421,7 +421,18 @@ const LiveAPI = {
   sb: null,
   async init() {
     await new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js'; s.onload = res; s.onerror = () => rej(new Error('Couldn\u2019t load the sign-in service. Check your connection and refresh.')); document.head.appendChild(s); });
-    this.sb = window.supabase.createClient(window.FANTASY_CONFIG.supabaseUrl, window.FANTASY_CONFIG.supabaseAnonKey);
+    // Keep the sign-in in the browser's storage if it allows it; if not (some in-app browsers, strict privacy
+    // settings, or the page shown inside a frame), keep it in memory for this visit so signing in still works.
+    let store = null;
+    try { const k = 'hfc-storage-test'; localStorage.setItem(k, '1'); if (localStorage.getItem(k) === '1') { localStorage.removeItem(k); store = localStorage; } } catch (e) {}
+    const mem = {};
+    this.persistent = !!store;
+    const storage = {
+      getItem: k => { try { if (store) { const v = store.getItem(k); if (v != null) return v; } } catch (e) {} return k in mem ? mem[k] : null; },
+      setItem: (k, v) => { mem[k] = v; try { if (store) store.setItem(k, v); } catch (e) { this.persistent = false; } },
+      removeItem: k => { delete mem[k]; try { if (store) store.removeItem(k); } catch (e) {} }
+    };
+    this.sb = window.supabase.createClient(window.FANTASY_CONFIG.supabaseUrl, window.FANTASY_CONFIG.supabaseAnonKey, { auth: { storage, persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
     this.sb.auth.onAuthStateChange(ev => { if (ev === 'PASSWORD_RECOVERY') { S.authMode = 'newpass'; render(); } });
   },
   now() { return new Date(); },
@@ -434,12 +445,13 @@ const LiveAPI = {
   async priceHistory() { const rows = await this.all('fantasy_price_history', 'player,gw,price', 'gw'); const out = {}; for (const r of rows) (out[r.player] = out[r.player] || []).push([r.gw, Number(r.price)]); return out; },
   async gameweeks() { return this.all('fantasy_gameweeks', 'gw,season,deadline', 'gw'); },
   async points() { const rows = await this.all('fantasy_points', 'player,gw,points,parts', 'gw'); const out = {}; for (const r of rows) (out[r.gw] = out[r.gw] || {})[r.player] = { points: r.points, parts: r.parts || {} }; return out; },
-  async session() { const { data } = await this.sb.auth.getSession(); return data.session ? { id: data.session.user.id, email: data.session.user.email } : null; },
-  async signIn(email, password) { const { data, error } = await this.sb.auth.signInWithPassword({ email, password }); if (error) throw new Error(friendly(error.message)); return { id: data.user.id, email: data.user.email }; },
+  async session() { let s = null; try { const { data } = await this.sb.auth.getSession(); s = data.session; } catch (e) {} if (!s) s = this.lastSession; return s ? { id: s.user.id, email: s.user.email } : null; },
+  async signIn(email, password) { const { data, error } = await this.sb.auth.signInWithPassword({ email, password }); if (!error) this.lastSession = data.session; if (error) throw new Error(friendly(error.message)); return { id: data.user.id, email: data.user.email }; },
   async signUp(email, password) {
     const { data, error } = await this.sb.auth.signUp({ email, password, options: { emailRedirectTo: location.href.split('#')[0] } });
     if (error) throw new Error(friendly(error.message));
     if (!data.session) throw new Error('Check your email for a link to confirm your account, then sign in.');
+    this.lastSession = data.session;
     return { id: data.user.id, email: data.user.email };
   },
   async signOut() { await this.sb.auth.signOut(); },
@@ -610,6 +622,9 @@ async function runCheck() {
     const g = await get('/rest/v1/fantasy_gameweeks?select=gw&order=gw&limit=1');
     if (g.status === 200) line(Array.isArray(g.body) && g.body.length > 0, Array.isArray(g.body) && g.body.length ? 'Gameweeks are set up (first: ' + g.body[0].gw + ')' : 'No gameweeks set up', 'Run supabase_setup.sql again: it creates the 2027 Saturdays.');
   } catch (e) { line(false, 'Couldn\u2019t reach the database', esc(e.message)); }
+  let framed = false; try { framed = window.top !== window.self; } catch (e) { framed = true; }
+  if (framed) line(false, 'The page is being shown inside another website\u2019s frame', 'Browsers often block sign-ins in frames. If textbookanalytics.co.uk uses “forwarding with masking” at your domain provider, switch it to point straight at GitHub Pages. Opening the GitHub address directly also works.');
+  if (API.sb) line(API.persistent !== false, API.persistent !== false ? 'This browser can remember your sign-in' : 'This browser won\u2019t remember sign-ins', 'You can still play: you\u2019ll just need to sign in each visit. Causes: private browsing, an in-app browser (e.g. opened from WhatsApp), or strict privacy settings. Opening the page in Safari or Chrome directly usually fixes it.');
   try { if (API.sb) { const s = await API.session(); line(null, s ? 'This browser is signed in as ' + esc(s.email) : 'This browser isn\u2019t signed in yet'); } } catch (e) {}
   show();
 }
@@ -633,8 +648,10 @@ async function doAuthInner(err, btn) {
     if (S.authMode === 'reset') { err.style.color = '#7fd6a0'; err.textContent = await withTimeout(API.resetPassword(email), 20, 'the sign-in service'); return; }
     if (S.authMode === 'newpass') { await withTimeout(API.setNewPassword(pw), 20, 'the sign-in service'); S.authMode = 'signin'; toast('Password changed.'); }
     else S.session = await withTimeout(S.authMode === 'signup' ? API.signUp(email, pw) : API.signIn(email, pw), 20, 'the sign-in service');
-    S.authMode = 'signin'; S.session = await withTimeout(API.session(), 20, 'the sign-in service');
-    if (!S.session) throw new Error('Signed in, but this browser didn\u2019t keep the sign-in (private browsing or blocked cookies?). Try a normal browser window.');
+    const signedIn = S.session;
+    S.authMode = 'signin'; S.session = (await withTimeout(API.session(), 20, 'the sign-in service')) || signedIn;
+    if (!S.session) throw new Error('The sign-in didn\u2019t go through. Please try again, or use "Run a check" below.');
+    if (LIVE && API.persistent === false) setTimeout(() => toast('Signed in. This browser won\u2019t remember you after you close the page, so you\u2019ll need to sign in again next time.'), 400);
     S.manager = await withTimeout(API.manager(), 20, 'the database');
     S.entries = S.manager ? await withTimeout(API.myEntries(), 20, 'the database') : [];
     try { S.isAdmin = await API.isAdmin(); } catch (e) { S.isAdmin = false; }
