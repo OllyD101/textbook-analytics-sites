@@ -235,7 +235,14 @@ def main():
     if mode not in ("dry_run", "publish"):
         sys.exit(f"unknown mode {mode}")
     site_id = os.environ.get("PLAY_CRICKET_SITE_ID") or cfg.get("site_id")
-    seasons = [s.strip() for s in (args.seasons or os.environ.get("PIPELINE_SEASONS") or str(date.today().year)).split(",")]
+    seasons = []
+    for part in (args.seasons or os.environ.get("PIPELINE_SEASONS") or str(date.today().year)).split(","):
+        part = part.strip()
+        if "-" in part:   # a range such as 2018-2026
+            a, b = (int(x) for x in part.split("-", 1)); seasons += [str(y) for y in range(a, b + 1)]
+        elif part:
+            seasons.append(part)
+    only_teams = {t.strip() for t in (os.environ.get("PIPELINE_ONLY_TEAMS") or "").split(",") if t.strip()}
 
     if not args.fixtures and not os.environ.get("PLAY_CRICKET_API_TOKEN"):
         sys.exit("PLAY_CRICKET_API_TOKEN is not set (GitHub: Settings > Secrets and variables > Actions > Secrets)")
@@ -278,6 +285,8 @@ def main():
             hs = [sd for sd in ("home", "away") if cfg["club_name_match"].lower() in (m.get(f"{sd}_club_name") or "").lower()]
             if hs and not any((m.get(f"{sd}_team_name") or "").strip() in cfg["teams"] for sd in hs):
                 continue
+            if only_teams and not {cfg["teams"].get((m.get(f"{sd}_team_name") or "").strip()) for sd in hs} & only_teams:
+                continue  # this run is limited to some XIs (e.g. the 3rd XI backfill), so leave the others alone
             mid = str(m.get("id"))
             prev = state["matches"].get(mid)
             if mode == "publish" and prev and prev.get("last_updated") == m.get("last_updated") and prev.get("published"):
@@ -354,7 +363,8 @@ def main():
     # Fantasy cricket: players, prices and points to Supabase (never blocks the dashboard update)
     try:
         from fantasy_sync import sync as fantasy_sync
-        report["fantasy"] = fantasy_sync(data, mode, today=date.fromisoformat(os.environ["PIPELINE_TODAY"]) if os.environ.get("PIPELINE_TODAY") else None)
+        report["fantasy"] = fantasy_sync(data, mode, today=date.fromisoformat(os.environ["PIPELINE_TODAY"]) if os.environ.get("PIPELINE_TODAY") else None,
+                                         review_path=os.path.join(os.path.dirname(data_path), "fantasy-player-stats.json") if mode == "publish" else None)
         if report["fantasy"].get("status") == "warning":
             report["warnings"].append(report["fantasy"]["note"])
     except Exception as e:

@@ -82,9 +82,12 @@ def award_match_of_the_match(data, cfg, report):
     start = cfg["match_value_from"]
     have = {(r["Date"], r["Team"]) for r in data.get("motm", [])}
     added = 0
+    all_seasons = set(cfg.get("match_value_all_seasons_teams", []))   # e.g. the 3rd XI, whose past games have no awards
     for m in sorted(data["matches"], key=lambda m: (m["Date"], m["Team"])):
-        if m["Date"] < start or (m["Date"], m["Team"]) in have:
-            continue  # earlier seasons keep their existing award; existing awards are frozen
+        if (m["Date"], m["Team"]) in have:
+            continue  # existing awards are frozen
+        if m["Date"] < start and m["Team"] not in all_seasons:
+            continue  # earlier seasons keep their existing award
         vals = match_value(data, m, cfg)
         if not vals:
             report["warnings"].append(f"{m['Date']} {m['Team']} XI v {m['Opponent']}: no scorecard rows, so no Man of the Match yet")

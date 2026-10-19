@@ -64,8 +64,27 @@ def fantasy_season(gameweeks, today):
     return max(g['season'] for g in gameweeks) if gameweeks else None
 
 
-def build_payload(data, season, gameweek_dates, overrides_path=OVERRIDES):
-    players = fantasy.build_players(data, season, overrides_path)     # prices here are the season's STARTING prices
+def apply_site_edits(players, edits):
+    """The club's edits from the Players editor (stored in Supabase) win over positions.csv."""
+    by = {p['name']: p for p in players}
+    for e in edits or []:
+        name = (e.get('player') or '').strip()
+        if not name:
+            continue
+        if e.get('active') is False:
+            by.pop(name, None); continue
+        p = by.get(name)
+        if p is None:   # a new signing added on the website
+            p = by[name] = {'name': name, 'position': e.get('position') or 'BAT', 'price': fantasy.NEW_PLAYER_PRICE, 'xi': e.get('xi') or '1st', 'expected': 0.0, 'new': False}
+        if e.get('position'): p['position'] = e['position']
+        if e.get('start_price') is not None: p['price'] = float(e['start_price'])
+        if e.get('xi'): p['xi'] = e['xi']
+        p['new'] = False
+    return sorted(by.values(), key=lambda p: p['name'])
+
+
+def build_payload(data, season, gameweek_dates, overrides_path=OVERRIDES, site_edits=None):
+    players = apply_site_edits(fantasy.build_players(data, season, overrides_path), site_edits)   # STARTING prices
     names = {p['name'] for p in players}
     history, current = fantasy.price_changes(data, season, players)    # recalculated from the season's form every run
     player_rows = [{'name': p['name'], 'position': p['position'], 'price': current[p['name']], 'start_price': p['price'], 'xi': p['xi'], 'active': True} for p in players]
@@ -82,7 +101,7 @@ def build_payload(data, season, gameweek_dates, overrides_path=OVERRIDES):
     return player_rows, point_rows, skipped, new_players, price_rows
 
 
-def sync(data, mode='dry_run', today=None, client=None):
+def sync(data, mode='dry_run', today=None, client=None, review_path=None):
     """Returns a short summary for the report. Raises nothing: problems come back as 'warning'."""
     url, key = os.environ.get('SUPABASE_URL'), os.environ.get('SUPABASE_SERVICE_KEY')
     if client is None:
@@ -95,10 +114,17 @@ def sync(data, mode='dry_run', today=None, client=None):
         season = fantasy_season(gws, today)
         if season is None:
             return {'status': 'no gameweeks', 'note': 'No gameweeks set up in Supabase yet (run supabase_setup.sql).'}
-        players, points, skipped, new_players, prices = build_payload(data, season, {g['gw'] for g in gws if g['season'] == season})
+        try:
+            edits = client.get('fantasy_player_overrides?select=*')
+        except Exception:
+            edits = []   # an older setup without the editor: positions.csv alone
+        players, points, skipped, new_players, prices = build_payload(data, season, {g['gw'] for g in gws if g['season'] == season}, site_edits=edits)
+        if review_path:   # what the Players editor shows: last season's records and warning flags
+            with open(review_path, 'w', encoding='utf-8') as f:
+                json.dump(fantasy.player_review(data, season, [dict(p) for p in players]), f, separators=(',', ':'))
         summary = {'status': 'dry run' if mode != 'publish' else 'sent', 'season': season, 'players': len(players),
                    'point_rows': len(points), 'gameweeks_scored': len({p['gw'] for p in points}), 'skipped_dates': skipped,
-                   'new_players': new_players,
+                   'new_players': new_players, 'site_edits': len(edits),
                    'price_changes': sum(1 for p in players if p['price'] != p['start_price'])}
         if mode != 'publish':
             return summary

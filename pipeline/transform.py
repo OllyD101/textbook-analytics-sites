@@ -137,7 +137,7 @@ def convert(md, names, club_match, team_map):
         return None, [f"match {mid}: no Hessle team found"]
     side, hid, team = side_info
     if not team:
-        return None, [f"match {mid}: Hessle team '{md.get(side + '_team_name')}' isn't mapped to 1st/2nd XI (skipped)"]
+        return None, [f"match {mid}: Hessle team '{md.get(side + '_team_name')}' isn't one of the XIs in config.json 'teams' (skipped)"]
 
     other = "away" if side == "home" else "home"
     date = _date(md["match_date"])

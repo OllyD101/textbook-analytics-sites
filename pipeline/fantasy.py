@@ -158,15 +158,15 @@ def auto_positions(data, season):
     """Positions going into `season`, from the seasons before it. WK = kept in a third or more of their recent games."""
     recent = [season - 1, season - 2]
     apps = appearances(data, recent)
+    by_season = {s: appearances(data, [s]) for s in recent}          # worked out once, not once per player
+    kept = defaultdict(set)
+    for r in data['keeping']:
+        if r.get('Keeper') and r['Date'][:4] in {str(s) for s in recent}:
+            kept[(r['Keeper'], int(r['Date'][:4]))].add(_key(r))
     pos = {}
     for p in apps:
         # a keeper if they kept in a third or more of their games (min 3) in EITHER recent season
-        is_wk = False
-        for s in recent:
-            a = appearances(data, [s]).get(p, set())
-            k = {_key(r) for r in data['keeping'] if r.get('Keeper') == p and r['Date'][:4] == str(s)}
-            if a and len(k) >= 3 and len(k) / len(a) >= 1 / 3:
-                is_wk = True
+        is_wk = any(len(kept[(p, s)]) >= 3 and by_season[s].get(p) and len(kept[(p, s)]) / len(by_season[s][p]) >= 1 / 3 for s in recent)
         pos[p] = 'WK' if is_wk else _profile_role(data, p, season - 1)
     return pos
 
@@ -226,16 +226,20 @@ def build_players(data, season, overrides_path=None):
             pos[p] = o['position'] or 'BAT'; prices[p] = o['price'] or NEW_PLAYER_PRICE; exp[p] = 0.0
     # debutants this season: added automatically after their first game, position from their games so far
     new = []
-    for p in appearances(data, [season]):
+    this_season = appearances(data, [season])
+    for p in this_season:
         if p not in pos:
             kept = {_key(r) for r in data['keeping'] if r.get('Keeper') == p and r['Date'][:4] == str(season)}
-            games = appearances(data, [season])[p]
+            games = this_season[p]
             pos[p] = 'WK' if kept and len(kept) / len(games) >= 1 / 3 else _profile_role(data, p, season)
             prices[p] = NEW_PLAYER_PRICE; exp[p] = 0.0; new.append(p)
     xi = {}
     apps = appearances(data, [season, season - 1, season - 2])
-    for p, a in apps.items():
-        n1 = sum(1 for k in a if k[1] == '1st'); xi[p] = '1st' if n1 / len(a) >= 0.5 else '2nd'
+    order = ['1st', '2nd', '3rd', '4th', '5th']
+    for p, a in apps.items():   # the XI they played for most (ties go to the higher XI)
+        c = defaultdict(int)
+        for k in a: c[k[1]] += 1
+        xi[p] = sorted(c, key=lambda t: (-c[t], order.index(t) if t in order else 99))[0]
     out = []
     for p in sorted(pos):
         o = ov.get(p, {})
@@ -382,3 +386,58 @@ def team_of_the_week(gw_points, positions):
     for pos, n in SQUAD.items():
         best += sorted([p for p in gw_points if positions.get(p) == pos], key=lambda p: (-gw_points[p]['total'], p))[:n]
     return best
+
+
+# ---------------------------------------------------------------- player review (for the admin Players editor)
+def _season_record(data, p, year):
+    y = str(year); games = set(); bowled = set(); kept = set(); runs = wkts = catches = 0
+    for r in data['batting']:
+        if r.get('Batter') == p and r['Date'][:4] == y:
+            games.add(_key(r))
+            if r.get('Dismissal') != 'DNB' and num(r.get('Runs')):
+                runs += r['Runs']
+    for r in data['bowling']:
+        if r.get('Bowler') == p and r['Date'][:4] == y:
+            games.add(_key(r)); bowled.add(_key(r)); wkts += r.get('Wickets') or 0
+    for r in data['fielding']:
+        if r.get('Fielder') == p and r['Date'][:4] == y:
+            games.add(_key(r)); catches += (r.get('Dismissal') == 'Caught')
+    for r in data['keeping']:
+        if r.get('Keeper') == p and r['Date'][:4] == y:
+            games.add(_key(r)); kept.add(_key(r))
+    return {'games': len(games), 'runs': runs, 'wkts': wkts, 'bowled': len(bowled), 'kept': len(kept), 'catches': catches}
+
+
+def player_review(data, season, players):
+    """What each player did in the two previous seasons, plus warning flags, for the Players editor."""
+    last, before = season - 1, season - 2
+    pts = defaultdict(int)
+    for gw in season_points(data, last).values():
+        for p, v in gw.items():
+            pts[p] += v['total']
+    out = {}
+    for pl in players:
+        p = pl['name']; a, b = _season_record(data, p, last), _season_record(data, p, before)
+        flags = []
+        if a['games'] == 0:
+            flags.append(f'No games in {last}: left the club?')
+        elif a['games'] <= 2:
+            flags.append(f"Only {a['games']} game{'s' if a['games'] > 1 else ''} in {last}")
+        if pl['position'] != 'WK' and a['kept'] + b['kept'] >= 2:
+            flags.append(f"Kept wicket in {a['kept'] + b['kept']} games but isn't a keeper")
+        if pl['position'] == 'WK' and a['kept'] == 0 and a['games'] >= 3:
+            flags.append(f'Keeper, but didn\u2019t keep in {last}')
+        if pl['position'] == 'BAT' and a['wkts'] >= 10:
+            flags.append(f"Batter, but took {a['wkts']} wickets in {last}")
+        if pl['position'] == 'BOWL' and a['runs'] >= 250:
+            flags.append(f"Bowler, but scored {a['runs']} runs in {last}")
+        if pl['position'] == 'AR' and a['games'] >= 5 and a['bowled'] <= 2:
+            flags.append(f'All-rounder, but barely bowled in {last}')
+        if pl['position'] == 'AR' and a['games'] >= 5 and a['bowled'] > 2 and a['wkts'] == 0:
+            flags.append(f'All-rounder, but took no wickets in {last}')
+        if pl['position'] == 'AR' and a['games'] >= 5 and a['runs'] < 50 and a['wkts'] >= 8:
+            flags.append(f"All-rounder, but only {a['runs']} runs in {last}")
+        if pl['price'] >= 7 and a['games'] <= 4:
+            flags.append(f'Priced £{pl["price"]:.1f}m for few games in {last}')
+        out[p] = {'last': a, 'before': b, 'points': pts.get(p, 0), 'flags': flags}
+    return {'season': season, 'last': last, 'before': before, 'players': out}
