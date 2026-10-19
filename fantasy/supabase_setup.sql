@@ -71,6 +71,28 @@ create table if not exists public.fantasy_price_history (
   primary key (player, gw)
 );
 
+-- The club's own player edits (from the Players editor in the Admin tab). The automation applies these on top of
+-- positions.csv every run, so edits made on the website are never undone.
+create table if not exists public.fantasy_player_overrides (
+  player      text primary key,
+  position    text check (position in ('BAT', 'BOWL', 'AR', 'WK')),
+  start_price numeric(4,1) check (start_price between 3.0 and 12.0),
+  active      boolean,
+  xi          text,
+  updated_at  timestamptz not null default now()
+);
+
+-- Admins (club organisers). Added only from the SQL Editor, never from the website:
+--   insert into public.fantasy_admins (user_id) select id from auth.users where email = 'you@example.com';
+create table if not exists public.fantasy_admins (
+  user_id  uuid primary key references auth.users(id) on delete cascade,
+  added_at timestamptz not null default now()
+);
+create or replace function public.fantasy_is_admin()
+returns boolean language sql stable security definer set search_path = public as $$
+  select exists (select 1 from fantasy_admins where user_id = auth.uid());
+$$;
+
 -- ---------------------------------------------------------------------
 -- 2. The rules, checked by the database on every save
 -- ---------------------------------------------------------------------
@@ -101,7 +123,7 @@ begin
     return new;
   end if;
 
-  if new.user_id is distinct from auth.uid() then
+  if new.user_id is distinct from auth.uid() and not public.fantasy_is_admin() then
     raise exception 'You can only save your own team.';
   end if;
   if tg_op = 'UPDATE' and (new.user_id <> old.user_id or new.gw <> old.gw) then
@@ -112,12 +134,19 @@ begin
   if v_deadline is null then
     raise exception 'That gameweek doesn''t exist.';
   end if;
-  if now() >= v_deadline then
-    raise exception 'Teams for this gameweek locked at %.', to_char(v_deadline at time zone 'Europe/London', 'HH24:MI on Dy DD Mon');
-  end if;
   select min(gw) into v_next_gw from fantasy_gameweeks where deadline > now();
-  if new.gw <> v_next_gw then
-    raise exception 'You can only pick a team for the next gameweek (%).', v_next_gw;
+  if public.fantasy_is_admin() then
+    -- admins can fix the next gameweek or the most recent locked one (e.g. a captain change after the deadline)
+    if new.gw <> v_next_gw and new.gw <> (select max(gw) from fantasy_gameweeks where deadline <= now()) then
+      raise exception 'Admins can change the next gameweek or the most recent one, not %.', new.gw;
+    end if;
+  else
+    if now() >= v_deadline then
+      raise exception 'Teams for this gameweek locked at %.', to_char(v_deadline at time zone 'Europe/London', 'HH24:MI on Dy DD Mon');
+    end if;
+    if new.gw <> v_next_gw then
+      raise exception 'You can only pick a team for the next gameweek (%).', v_next_gw;
+    end if;
   end if;
 
   -- 11 starters + 3 subs, all different, known and active
@@ -232,6 +261,35 @@ drop policy if exists "edit own manager"   on public.fantasy_managers;
 create policy "read managers"      on public.fantasy_managers for select using (true);
 create policy "create own manager" on public.fantasy_managers for insert to authenticated with check (user_id = auth.uid());
 create policy "edit own manager"   on public.fantasy_managers for update to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid());
+
+alter table public.fantasy_admins enable row level security;
+drop policy if exists "see own admin row" on public.fantasy_admins;
+create policy "see own admin row" on public.fantasy_admins for select to authenticated using (user_id = auth.uid());
+grant select on public.fantasy_admins to authenticated;
+
+-- Admins edit players (positions, prices, who's available, new signings) from the Players editor.
+alter table public.fantasy_player_overrides enable row level security;
+drop policy if exists "admins manage overrides"  on public.fantasy_player_overrides;
+drop policy if exists "admins update players"    on public.fantasy_players;
+drop policy if exists "admins add players"       on public.fantasy_players;
+create policy "admins manage overrides" on public.fantasy_player_overrides for all to authenticated using (public.fantasy_is_admin()) with check (public.fantasy_is_admin());
+create policy "admins update players"   on public.fantasy_players for update to authenticated using (public.fantasy_is_admin()) with check (public.fantasy_is_admin());
+create policy "admins add players"      on public.fantasy_players for insert to authenticated with check (public.fantasy_is_admin());
+grant select, insert, update, delete on public.fantasy_player_overrides to authenticated;
+grant insert, update on public.fantasy_players to authenticated;
+
+-- Admins can rename and remove managers, and see and fix any team.
+drop policy if exists "admins edit managers"   on public.fantasy_managers;
+drop policy if exists "admins remove managers" on public.fantasy_managers;
+drop policy if exists "admins read entries"    on public.fantasy_entries;
+drop policy if exists "admins save entries"    on public.fantasy_entries;
+drop policy if exists "admins update entries"  on public.fantasy_entries;
+create policy "admins edit managers"   on public.fantasy_managers for update to authenticated using (public.fantasy_is_admin()) with check (public.fantasy_is_admin());
+create policy "admins remove managers" on public.fantasy_managers for delete to authenticated using (public.fantasy_is_admin());
+create policy "admins read entries"    on public.fantasy_entries  for select to authenticated using (public.fantasy_is_admin());
+create policy "admins save entries"    on public.fantasy_entries  for insert to authenticated with check (public.fantasy_is_admin());
+create policy "admins update entries"  on public.fantasy_entries  for update to authenticated using (public.fantasy_is_admin()) with check (public.fantasy_is_admin());
+grant delete on public.fantasy_managers to authenticated;
 
 -- Teams: you always see your own; other people's only once that gameweek has locked.
 drop policy if exists "read own or locked entries" on public.fantasy_entries;
@@ -357,6 +415,29 @@ group by p.player;
 
 grant select on public.fantasy_gw_scores, public.fantasy_standings, public.fantasy_pick_stats to anon, authenticated;
 
+-- Admin overview: every manager with email, total points and whether they've saved a team for the next gameweek.
+create or replace function public.fantasy_admin_overview()
+returns table (user_id uuid, team_name text, manager_name text, email text, joined timestamptz,
+               total int, next_gw date, saved_for_next boolean, last_saved date)
+language plpgsql stable security definer set search_path = public as $$
+begin
+  if not public.fantasy_is_admin() then
+    raise exception 'Only club admins can see this.';
+  end if;
+  return query
+    select m.user_id, m.team_name, m.manager_name, u.email::text, m.created_at,
+           coalesce((select sum(s.points) from fantasy_gw_scores s where s.user_id = m.user_id), 0)::int,
+           (select min(g.gw) from fantasy_gameweeks g where g.deadline > now()),
+           exists (select 1 from fantasy_entries e where e.user_id = m.user_id
+                   and e.gw <= (select min(g.gw) from fantasy_gameweeks g where g.deadline > now())),
+           (select max(e.gw) from fantasy_entries e where e.user_id = m.user_id)
+    from fantasy_managers m join auth.users u on u.id = m.user_id
+    order by m.team_name;
+end;
+$$;
+revoke all on function public.fantasy_admin_overview() from public, anon;
+grant execute on function public.fantasy_admin_overview() to authenticated;
+
 -- ---------------------------------------------------------------------
 -- 5. Gameweeks for a season: every Saturday between two dates, locking at 12:00 UK time
 -- ---------------------------------------------------------------------
@@ -381,7 +462,8 @@ select public.fantasy_create_season(2027, '2027-04-03', '2027-09-25');
 -- =====================================================================
 -- To remove everything and start again (careful — deletes all teams):
 --   drop view if exists public.fantasy_pick_stats, public.fantasy_standings, public.fantasy_gw_scores;
---   drop table if exists public.fantasy_price_history, public.fantasy_entries, public.fantasy_managers, public.fantasy_points,
+--   drop function if exists public.fantasy_admin_overview(), public.fantasy_is_admin();
+--   drop table if exists public.fantasy_player_overrides, public.fantasy_admins, public.fantasy_price_history, public.fantasy_entries, public.fantasy_managers, public.fantasy_points,
 --                        public.fantasy_gameweeks, public.fantasy_players cascade;
 --   drop function if exists public.fantasy_check_entry(), public.fantasy_create_season(int, date, date), public.fantasy_effective_eleven(text[], text[], date);
 -- =====================================================================
