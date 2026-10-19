@@ -13,7 +13,10 @@ on:
         options: [dry_run, publish]
         default: dry_run
       seasons:
-        description: "Seasons to check, e.g. 2026 (blank = current season)"
+        description: "Seasons to check, e.g. 2026, or a range like 2018-2026 (blank = current season)"
+        required: false
+      only_teams:
+        description: "Only these XIs, e.g. 3rd for the 3rd XI backfill (blank = all XIs)"
         required: false
 
 permissions:
@@ -44,6 +47,7 @@ jobs:
           # Manual runs use the mode you pick; scheduled runs use the PIPELINE_MODE variable (dry_run until you switch it)
           PIPELINE_MODE: ${{ github.event.inputs.mode || vars.PIPELINE_MODE || 'dry_run' }}
           PIPELINE_SEASONS: ${{ github.event.inputs.seasons }}
+          PIPELINE_ONLY_TEAMS: ${{ github.event.inputs.only_teams }}
         run: python pipeline/run.py
 
       - name: Keep the report
@@ -59,7 +63,7 @@ jobs:
         run: |
           git config user.name "dashboard-bot"
           git config user.email "dashboard-bot@users.noreply.github.com"
-          git add docs/data.json docs/league.json pipeline/state.json 2>/dev/null || true
+          git add docs/data.json docs/league.json docs/fantasy-player-stats.json pipeline/state.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "Nothing new to publish."
           else
