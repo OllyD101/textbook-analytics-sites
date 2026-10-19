@@ -1009,7 +1009,7 @@ function drawPlayersEditor() {
           <td><select aria-label="Position for ${esc(p.name)}" onchange="peSet('${esc(p.name)}','position',this.value)">${POS_ORDER.map(k => `<option value="${k}" ${peVal(p, 'position') === k ? 'selected' : ''}>${POS_NAME[k]}</option>`).join('')}</select></td>
           <td><input type="number" aria-label="Starting price for ${esc(p.name)}" min="3" max="12" step="0.5" value="${Number(peVal(p, 'start_price')).toFixed(1)}" onchange="peSet('${esc(p.name)}','start_price',Math.round(parseFloat(this.value)*10)/10)" style="width:76px"></td>
           <td class="num">${money(nowPrice)}</td>
-          <td><select aria-label="XI for ${esc(p.name)}" onchange="peSet('${esc(p.name)}','xi',this.value)">${['1st', '2nd'].map(x => `<option ${peVal(p, 'xi') === x ? 'selected' : ''}>${x}</option>`).join('')}</select></td>
+          <td><select aria-label="XI for ${esc(p.name)}" onchange="peSet('${esc(p.name)}','xi',this.value)">${['1st', '2nd', '3rd'].map(x => `<option ${peVal(p, 'xi') === x ? 'selected' : ''}>${x}</option>`).join('')}</select></td>
           <td><label class="wild"><input type="checkbox" ${peVal(p, 'active') !== false ? 'checked' : ''} onchange="peSet('${esc(p.name)}','active',this.checked)"> ${peVal(p, 'active') !== false ? 'Yes' : 'No'}</label></td>
           <td class="num">${a.games != null ? `${a.games} · ${a.runs} · ${a.wkts} · ${a.kept}` : '–'}</td><td class="num">${b.games != null ? b.games : '–'}</td><td class="num">${r.points != null ? r.points : '–'}</td></tr>`; }).join('') || '<tr><td colspan="9" class="empty-state">No players here.</td></tr>'}
     </tbody></table></div>`;
