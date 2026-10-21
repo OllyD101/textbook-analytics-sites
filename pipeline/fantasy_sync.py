@@ -83,10 +83,10 @@ def apply_site_edits(players, edits):
     return sorted(by.values(), key=lambda p: p['name'])
 
 
-def build_payload(data, season, gameweek_dates, overrides_path=OVERRIDES, site_edits=None):
+def build_payload(data, season, gameweek_dates, overrides_path=OVERRIDES, site_edits=None, today=None):
     players = apply_site_edits(fantasy.build_players(data, season, overrides_path), site_edits)   # STARTING prices
     names = {p['name'] for p in players}
-    history, current = fantasy.price_changes(data, season, players)    # recalculated from the season's form every run
+    history, current = fantasy.price_changes(data, season, players, today)    # recalculated every run, finished weekends only
     player_rows = [{'name': p['name'], 'position': p['position'], 'price': current[p['name']], 'start_price': p['price'], 'xi': p['xi'], 'active': True} for p in players]
     price_rows = [{'player': name, 'gw': gw, 'price': price} for name, h in history.items() for gw, price in h if gw in gameweek_dates]
     new_players = [f"{p['name']} ({p['position']}, £{p['price']:.1f}m)" for p in players if p.get('new')]
@@ -118,7 +118,7 @@ def sync(data, mode='dry_run', today=None, client=None, review_path=None):
             edits = client.get('fantasy_player_overrides?select=*')
         except Exception:
             edits = []   # an older setup without the editor: positions.csv alone
-        players, points, skipped, new_players, prices = build_payload(data, season, {g['gw'] for g in gws if g['season'] == season}, site_edits=edits)
+        players, points, skipped, new_players, prices = build_payload(data, season, {g['gw'] for g in gws if g['season'] == season}, site_edits=edits, today=today)
         if review_path:   # what the Players editor shows: last season's records and warning flags
             with open(review_path, 'w', encoding='utf-8') as f:
                 json.dump(fantasy.player_review(data, season, [dict(p) for p in players]), f, separators=(',', ':'))

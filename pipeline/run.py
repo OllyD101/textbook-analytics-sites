@@ -369,6 +369,16 @@ def main():
             report["warnings"].append(report["fantasy"]["note"])
     except Exception as e:
         report["warnings"].append(f"Fantasy sync could not run (dashboard update not affected): {e}")
+    # Fixtures file (docs/fixtures.csv): typos, and games played on a date it doesn't list
+    try:
+        import fixtures
+        fx_games, fx_problems = fixtures.load()
+        report["warnings"] += fx_problems
+        off = fixtures.check_against_results(data["matches"])
+        if off:
+            report["warnings"].append("Played on a date not in docs/fixtures.csv (rearranged? change the date in the file): " + ", ".join(off[-10:]))
+    except Exception as e:
+        report["warnings"].append(f"Couldn't read docs/fixtures.csv: {e}")
     write_report(report, names)
     if mode == "dry_run" and report["compared_diff"]:
         print("Dry run finished WITH differences - see the report before switching to publish.")

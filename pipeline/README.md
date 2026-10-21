@@ -1,6 +1,6 @@
 # Automatic updates from Play-Cricket
 
-Once switched on, the dashboard updates itself. GitHub checks Play-Cricket every 30 minutes on Saturday and Sunday afternoons and evenings, and once each weekday evening. When a new or corrected scorecard appears, it converts it, checks it, and publishes it. You don't need to do anything after a match, apart from Man of the Match (see below).
+Once switched on, the dashboard updates itself. GitHub checks Play-Cricket every 30 minutes on Saturday and Sunday afternoons and evenings (and bank holiday Mondays, worked out automatically), and once each weekday evening. A one-off extra bank holiday, such as a jubilee, goes in `extra_bank_holidays` in `config.json`. When a new or corrected scorecard appears, it converts it, checks it, and publishes it. You don't need to do anything after a match, apart from Man of the Match (see below).
 
 ## How it works
 
@@ -58,10 +58,29 @@ GitHub emails the repository owner. Open the run in the **Actions** tab; the rep
 - **First publish.** Two 2026 matches (6 June, both XIs) have batting marked as 1st innings when Hessle fielded first. Play-Cricket's batting order will correct them automatically.
 - **League page wording** currently says "Final standings". It will need a small change before next season to show a table in progress.
 
+## Fixtures
+
+When the fixtures come out (usually around January), put them in `docs/fixtures.csv` and upload it to GitHub. It opens in Excel; keep it saved as CSV. One row per game:
+
+```
+Date,XI,Opponent,Home/Away
+03/04/2027,1st,Walkington CC,H
+04/04/2027,3rd,Cottingham CC,A
+```
+
+Only Date and XI are needed. With a season's fixtures in the file:
+- the automation checks Play-Cricket every 30 minutes on any day with a game, not just weekends,
+- each fantasy weekend runs to the day after its last game (Monday at the earliest), so prices and the "still to come" notes cover Sundays, bank holiday Mondays, Good Friday or anything else.
+
+Without the file, Sundays and bank holiday Mondays are still handled, using the usual bank holiday dates. If a game is rearranged, change its date in the file; the report also lists any game played on a date the file doesn't have. Check the file any time with `python pipeline/fixtures.py`.
+
 ## Testing without Play-Cricket
 
 ```
 python tests/make_fixtures.py docs/data.json tests/fixtures   # builds Play-Cricket-format scorecards from 2026 data
 python pipeline/run.py --mode dry_run --fixtures tests/fixtures
-python tests/test_pipeline.py                                   # 6 end-to-end tests on a throwaway copy
+python tests/test_pipeline.py                                   # 11 end-to-end tests on a throwaway copy
+python tests/test_third_xi.py                                   # 3 tests: 3rd XI weekly runs and backfill
+python tests/test_sunday_games.py                               # 7 tests: Sunday and bank holiday Monday games, fantasy gameweeks and prices
+python tests/test_fixtures.py                                   # 5 tests: the fixtures file
 ```

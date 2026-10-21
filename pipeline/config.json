@@ -10,6 +10,9 @@
   "data_path": "docs/data.json",
   "league_path": "docs/league.json",
   "pause_seconds": 1.0,
+  "_help_bank_holidays": "Usual bank holidays are worked out automatically. Add one-off extras (e.g. a jubilee) or usual ones the government moves, as YYYY-MM-DD.",
+  "extra_bank_holidays": [],
+  "not_bank_holidays": [],
   "awards": {
     "_help": "Man of the Match / Player of the Month by Match Value from this date. Earlier awards are never changed.",
     "match_value_from": "2027-01-01",

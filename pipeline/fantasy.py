@@ -9,8 +9,10 @@ Squad: 11 starters = 4 batters, 4 bowlers, 2 all-rounders, 1 wicketkeeper, plus 
 budget £100m for all 14. If a starter doesn't play, the first sub (in bench order) of the SAME position who
 did play comes on. Captain scores double; the vice-captain takes over if the captain doesn't play.
 Both must be starters, and subs never take the captaincy.
-Gameweeks: each Saturday (a match belongs to the most recent Saturday on or before it);
+Gameweeks: each Saturday (a match belongs to the most recent Saturday on or before it, so the
+3rd XI's Sunday games, and any bank holiday Monday games, count in the same weekend's gameweek);
 teams lock at 12:00 UK time on that Saturday.
+A player who plays on both days scores for both games.
 Transfers: 2 free a week, -4 points for each extra; one wildcard per season.
 """
 import csv
@@ -18,6 +20,9 @@ import json
 import os
 from collections import defaultdict
 from datetime import date, datetime, timedelta
+
+import bank_holidays
+import fixtures
 
 # ---------------------------------------------------------------- scoring
 POINTS = {
@@ -312,7 +317,7 @@ def team_gameweek_points(team, gw_points, positions=None):
     return sum(pts.values()) + (pts.get(cap, 0) if cap else 0), cap
 
 
-# ---------------------------------------------------------------- price changes (after each Saturday, on form)
+# ---------------------------------------------------------------- price changes (after each weekend, on form)
 PRICE_FLOOR, PRICE_CEILING = 3.0, 12.0
 PRICE_STEP_UP_BIG, PRICE_STEP_UP, PRICE_STEP_DOWN = 0.2, 0.1, 0.1
 
@@ -329,12 +334,29 @@ def expected_for_price(players):
     return lambda price: max(1.0, a + b * price)
 
 
-def price_changes(data, season, players):
+def weekend_end(gw):
+    """The day a gameweek's weekend is over. With that season's fixtures in docs/fixtures.csv: the day after
+    its last game (never before the Monday). Without: Monday, or Tuesday after a bank holiday Monday."""
+    from_fixtures = fixtures.weekend_end(gw)
+    if from_fixtures:
+        return from_fixtures
+    monday = date.fromisoformat(gw) + timedelta(days=2)
+    return monday + timedelta(days=1) if bank_holidays.is_bank_holiday(monday) else monday
+
+
+def weekend_over(gw, today):
+    return today is None or weekend_end(gw) <= today
+
+
+def price_changes(data, season, players, today=None):
     """Recalculated from scratch every run (so reruns and scorecard corrections always agree).
     players: the season's list with STARTING prices. Returns {player: [(gw, price_after_that_gw), ...]}
-    and {player: current_price}. A new price applies from the next gameweek."""
+    and {player: current_price}. A new price applies from the next gameweek.
+    today: only weekends that are over count (from the Monday, or Tuesday after a bank holiday Monday), so
+    prices never move on Saturday's games alone and then move again once Sunday's or Monday's games arrive.
+    None = every gameweek with points."""
     sp = season_points(data, season)
-    gws = list(sp.keys())
+    gws = [gw for gw in sp.keys() if weekend_over(gw, today)]
     expect = expected_for_price(players)
     price = {p['name']: p['price'] for p in players}
     history = {p['name']: [] for p in players}
