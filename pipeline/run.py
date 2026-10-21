@@ -324,7 +324,11 @@ def main():
 
     # league tables for each XI's current division
     league = load_json(league_path, {"tables": {}})
-    for team, (_, div) in sorted(divisions.items()):
+    for team, (when, div) in sorted(divisions.items()):
+        newest = max((m["Date"] for m in data["matches"] if m["Team"] == team), default=when)
+        if when[:4] < newest[:4]:   # an older-season backfill: keep the current table
+            report["warnings"].append(f"{team} XI league table left as it is: this run's latest {team} XI league game is from {when[:4]}, older than {newest[:4]}")
+            continue
         try:
             lt = client.league_table(div)
         except PlayCricketError as e:

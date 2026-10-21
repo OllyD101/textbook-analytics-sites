@@ -11,8 +11,9 @@ Match Value measures each contribution in runs, judged only against that match:
 Rules (agreed with the club):
   * Awards are calculated once and then frozen. Nothing here ever recalculates or
     overwrites an existing award, so a corrected scorecard can't change a winner.
-  * Matches before `match_value_from` are never touched (earlier awards came from the
-    Impact formula in Hessle2025.xlsx and stay exactly as they are).
+  * Matches before `match_value_from` keep their existing awards (from the Impact formula in
+    Hessle2025.xlsx) exactly as they are. Games and months before then with no award at all
+    (e.g. seasons before 2018, which the club has no records for) get one by Match Value, once.
   * A captain can override either award via pipeline/manual/*.csv (applied after this).
 """
 from collections import defaultdict
@@ -114,10 +115,11 @@ def award_player_of_the_month(data, cfg, report, today=None):
     awarded = {m for r in data.get("potm", []) for m in r["months"]}
     totals = defaultdict(lambda: defaultdict(float))
     games = defaultdict(lambda: defaultdict(int))
+    past = cfg.get("match_value_past_months", False)   # months before `start` with no award at all
     for m in data["matches"]:
-        if m["Date"] < start:
-            continue
         lab = _month_label(m["Date"])
+        if m["Date"] < start and not (past and lab not in awarded):
+            continue
         for p, x in match_value(data, m, cfg).items():
             totals[lab][p] += x["total"]
             games[lab][p] += 1

@@ -58,6 +58,12 @@ GitHub emails the repository owner. Open the run in the **Actions** tab; the rep
 - **First publish.** Two 2026 matches (6 June, both XIs) have batting marked as 1st innings when Hessle fielded first. Play-Cricket's batting order will correct them automatically.
 - **League page wording** currently says "Final standings". It will need a small change before next season to show a table in progress.
 
+## Seasons before 2018
+
+The club has no award records before 2018, so older games get a Match Value Man of the Match and older months a Match Value Player of the Month (once, then frozen). Every 2018-2026 game and month already has an award, and those never change.
+
+To add older seasons: Actions → Update data → Run workflow, seasons e.g. `2010-2017`, XIs blank. Do a dry run first and read the report: it shows exactly what Hessle has on Play-Cricket for those years. Then run again in publish mode. The current league tables are kept (a run whose latest games are from an older season never replaces them), and the dashboard's start year moves back by itself.
+
 ## Fixtures
 
 When the fixtures come out (usually around January), put them in `docs/fixtures.csv` and upload it to GitHub. It opens in Excel; keep it saved as CSV. One row per game:
@@ -83,4 +89,5 @@ python tests/test_pipeline.py                                   # 11 end-to-end 
 python tests/test_third_xi.py                                   # 3 tests: 3rd XI weekly runs and backfill
 python tests/test_sunday_games.py                               # 7 tests: Sunday and bank holiday Monday games, fantasy gameweeks and prices
 python tests/test_fixtures.py                                   # 5 tests: the fixtures file
+python tests/test_older_seasons.py                              # 2 tests: fetching seasons before 2018
 ```

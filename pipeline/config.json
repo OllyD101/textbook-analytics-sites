@@ -21,9 +21,13 @@
     "runout_share": 0.5,
     "tempo_weight": 0.5,
     "potm_grace_days": 3,
-    "_help_all_seasons": "XIs whose games before match_value_from get a Match Value MoTM if they have none (never changes an existing award).",
+    "_help_all_seasons": "XIs whose games before match_value_from get a Match Value MoTM if they have none (never changes an existing award). All three: the club has no awards before 2018, and 2018-2026 games all have one.",
     "match_value_all_seasons_teams": [
+      "1st",
+      "2nd",
       "3rd"
-    ]
+    ],
+    "_help_past_months": "Months before match_value_from with no Player of the Month at all (e.g. seasons before 2018) get one by Match Value. Months that already have one never change.",
+    "match_value_past_months": true
   }
 }
