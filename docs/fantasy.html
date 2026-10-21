@@ -285,6 +285,56 @@ function scoreEntry(e, gw, pts) {
   const hit = e.gw === gw ? (e.hit || 0) : 0;
   return { gw, points: total - hit, doubled, hit, subs, chip };
 }
+// a gameweek's points can still change until its weekend is over: the 3rd XI play on Sundays,
+// and some games are on bank holiday Mondays (England and Wales; same rules as pipeline/bank_holidays.py)
+const DAY = 86400000;
+function easterSunday(y) { const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3),
+  h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451), n = h + l - 7 * m + 114;
+  return Date.UTC(y, Math.floor(n / 31) - 1, n % 31 + 1); }
+function isBankHolidayMonday(t) {   // t: UTC midnight of a Monday
+  const d = new Date(t), y = d.getUTCFullYear(), mon = d.getUTCMonth(), dd = d.getUTCDate();
+  if (t === easterSunday(y) + DAY) return true;
+  if (mon === 4 && dd <= 7) return true;                 // early May
+  return (mon === 4 || mon === 7) && dd + 7 > new Date(Date.UTC(y, mon + 1, 0)).getUTCDate();   // last Monday of May or August
+}
+// the club's fixtures (fixtures.csv, same file the automation reads); for a season that has them, a gameweek's
+// weekend runs to the day after its last game (never before Monday). Without them: Monday, or Tuesday after a bank holiday.
+async function loadFixtures() {
+  try {
+    const r = await fetch('fixtures.csv', { cache: 'no-store' }); if (!r.ok) return null;
+    const rows = (await r.text()).split(/\r?\n/).map(l => l.split(',').map(x => x.trim()));
+    const head = (rows.shift() || []).map(h => h.toLowerCase()), di = head.indexOf('date'), xi = head.findIndex(h => h === 'xi' || h === 'team');
+    if (di < 0 || xi < 0) return null;
+    const out = { seasons: new Set(), byGw: {} };
+    for (const r of rows) {
+      if (!r[di] || r[0].startsWith('#') || !/^(1st|2nd|3rd)/i.test(r[xi] || '')) continue;
+      let m = r[di].match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/), t;
+      if (m) t = Date.UTC(+m[3], +m[2] - 1, +m[1]); else if ((m = r[di].match(/^(\d{4})-(\d{2})-(\d{2})$/))) t = Date.UTC(+m[1], +m[2] - 1, +m[3]); else continue;
+      const sat = t - ((new Date(t).getUTCDay() + 1) % 7) * DAY, gw = new Date(sat).toISOString().slice(0, 10);
+      out.seasons.add(new Date(t).getUTCFullYear()); (out.byGw[gw] = out.byGw[gw] || []).push(t);
+    }
+    return out.seasons.size ? out : null;
+  } catch (e) { return null; }
+}
+function fixturesFor(gw) { const f = S.fixtures; return f && f.seasons.has(+gw.slice(0, 4)) ? [...new Set(f.byGw[gw] || [])].sort((a, b) => a - b) : null; }
+function weekendEnd(gw) {
+  const sat = Date.parse(gw), mon = sat + 2 * DAY, fx = fixturesFor(gw);
+  if (fx) return Math.max(mon, ...fx.map(d => d + DAY));
+  return mon + (isBankHolidayMonday(mon) ? DAY : 0);
+}
+function weekendOpen(gw) { return API.now() < new Date(weekendEnd(gw)); }
+function openNote(gw) {
+  const fx = fixturesFor(gw), tail = ' still to come: these points may change';
+  if (fx) {
+    const n = API.now(), today = Date.UTC(n.getFullYear(), n.getMonth(), n.getDate());
+    const names = fx.filter(d => d > today).map(d => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][new Date(d).getUTCDay()] + '\u2019s');
+    if (names.length) return (names.length > 1 ? names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1] : names[0]) + ' games' + tail;
+    if (fx.includes(today)) return 'Today\u2019s games' + tail;
+    return 'Late scorecards' + tail;
+  }
+  const sundayDone = API.now() >= new Date(Date.parse(gw) + 2 * DAY), bh = weekendEnd(gw) > Date.parse(gw) + 2 * DAY;
+  return (sundayDone ? 'Monday\u2019s games' : bh ? 'Sunday\u2019s and Monday\u2019s games' : 'Sunday\u2019s games') + ' still to come: these points may change';
+}
 function scoredGws(now) { return S.gws.filter(g => new Date(g.deadline) <= now && S.points[g.gw] && Object.keys(S.points[g.gw]).length).map(g => g.gw); }
 function budgetLimit() {   // £100m, or your current squad's value at today's prices if that's higher
   const ng = nextGw(); if (!ng) return RULES.budget;
@@ -526,6 +576,7 @@ async function boot() {
     await API.init();
     const [pl, gws, pts] = await Promise.all([API.players(), API.gameweeks(), API.points()]);
     S.players = pl; S.byName = Object.fromEntries(pl.map(p => [p.name, p])); S.gws = gws; S.points = pts;
+    S.fixtures = await loadFixtures();
     try { S.priceHist = await API.priceHistory(); } catch (e) { S.priceHist = {}; }
     S.priceMove = {};   // change at the most recent price update
     for (const [n, h] of Object.entries(S.priceHist)) if (h.length) { const prev = h.length > 1 ? h[h.length - 2][1] : (S.byName[n] || {}).start_price; S.priceMove[n] = Math.round((h[h.length - 1][1] - (prev == null ? h[h.length - 1][1] : prev)) * 10) / 10; }
@@ -830,7 +881,7 @@ function drawPoints() {
     ${chip ? `<div class="chipnote">${chip === 'triple' ? `<strong>Triple Captain</strong> played: ${esc(s.doubled || 'nobody')} ${s.doubled ? 'scored ×3' : '(neither captain nor vice played)'}` : '<strong>Bench Boost</strong> played: all 14 players\u2019 points counted'}</div>` : ''}
     <div class="gwnav">
       <button class="btn" onclick="ptsStep(-1)" ${i === 0 ? 'disabled' : ''} aria-label="Previous gameweek">‹</button>
-      <div><strong>${label(s.gw)}</strong><div class="hint">${new Date(s.gw).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</div></div>
+      <div><strong>${label(s.gw)}</strong><div class="hint">${new Date(s.gw).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}${weekendOpen(s.gw) ? ' \u00b7 ' + openNote(s.gw) : ''}</div></div>
       <button class="btn" onclick="ptsStep(1)" ${i === scores.length - 1 ? 'disabled' : ''} aria-label="Next gameweek">›</button>
     </div>
     <div class="strip" style="grid-template-columns:repeat(4,minmax(0,1fr))">
@@ -872,7 +923,8 @@ async function leagueView() {
   }
   const arrow = u => mv[u] > 0 ? `<span class="mv up" title="Up ${mv[u]} since last week">▲${mv[u]}</span>` : mv[u] < 0 ? `<span class="mv down" title="Down ${-mv[u]} since last week">▼${-mv[u]}</span>` : `<span class="mv same" title="No change">–</span>`;
   const me = S.session && S.session.id;
-  v.innerHTML = `<div class="card" style="overflow-x:auto"><table class="league"><thead><tr><th>#</th><th>Team</th><th class="num">This week</th><th class="num">Total</th></tr></thead><tbody>
+  const open = gwsDone.length && weekendOpen(gwsDone[gwsDone.length - 1]);
+  v.innerHTML = `${open ? `<p class="hint">${openNote(gwsDone[gwsDone.length - 1])}.</p>` : ''}<div class="card" style="overflow-x:auto"><table class="league"><thead><tr><th>#</th><th>Team</th><th class="num">This week</th><th class="num">Total</th></tr></thead><tbody>
     ${rows.map(r => `<tr class="${r.user_id === me ? 'me' : ''}" onclick="showTeam('${esc(r.user_id)}','${esc(r.team_name).replace(/'/g, '&#39;')}')"><td>${r.position} ${gwsDone.length > 1 ? arrow(r.user_id) : ''}</td><td><strong>${esc(r.team_name)}</strong><br><small class="muted">${esc(r.manager_name)}</small></td><td class="num">${r.last_week}</td><td class="num"><strong>${r.total}</strong></td></tr>`).join('')}
     </tbody></table></div><p class="hint">Tap a team to see who they picked. Teams are only shown once each gameweek has locked.</p>`;
 }
@@ -941,7 +993,7 @@ function drawAwards() {
   for (const x of all) if (monthGws.includes(x.gw)) mt[x.user_id] = (mt[x.user_id] || 0) + x.points;
   const mTop = Object.keys(mt).length ? Math.max(...Object.values(mt)) : null, motm = Object.keys(mt).filter(u => mt[u] === mTop);
   const monthName = m => new Date(m + '-15').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
-  const complete = monthGws.length && S.gws.filter(g => g.gw.slice(0, 7) === month).every(g => sg.includes(g.gw));
+  const complete = monthGws.length && S.gws.filter(g => g.gw.slice(0, 7) === month).every(g => sg.includes(g.gw)) && !weekendOpen(monthGws.slice().sort().pop());
   // roll of honour
   const months = [...new Set(sg.map(g => g.slice(0, 7)))], wins = {};
   for (const g of sg) { const w = all.filter(x => x.gw === g); const t = Math.max(...w.map(x => x.points)); w.filter(x => x.points === t).forEach(x => wins[x.user_id] = (wins[x.user_id] || 0) + 1); }
@@ -953,10 +1005,10 @@ function drawAwards() {
       <div><strong>Gameweek ${gwNumber(gw)}</strong><div class="hint">${new Date(gw).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</div></div>
       <button class="btn" onclick="awStep(1)" ${i === sg.length - 1 ? 'disabled' : ''} aria-label="Next gameweek">›</button></div>
     <div class="aw-grid">
-      <div class="card aw-card"><div class="aw-h">Manager of the Week</div>${motw.length ? motw.map(x => `<div>${team(x.user_id)}</div>`).join('') + `<div class="aw-big">${top} pts</div>` : '<div class="muted">No teams this week</div>'}</div>
+      <div class="card aw-card"><div class="aw-h">Manager of the Week${weekendOpen(gw) ? ' (so far)' : ''}</div>${motw.length ? motw.map(x => `<div>${team(x.user_id)}</div>`).join('') + `<div class="aw-big">${top} pts</div>` : '<div class="muted">No teams this week</div>'}</div>
       <div class="card aw-card"><div class="aw-h">Manager of the Month · ${monthName(month)}${complete ? '' : ' (so far)'}</div>${motm.length ? motm.map(u => `<div>${team(u)}</div>`).join('') + `<div class="aw-big">${mTop} pts</div>` : '<div class="muted">No teams yet</div>'}</div>
     </div>
-    <div class="aw-h" style="margin:16px 0 8px">Team of the Week <span class="hint">· ${totwPts} points between them</span></div>
+    <div class="aw-h" style="margin:16px 0 8px">Team of the Week <span class="hint">· ${totwPts} points between them${weekendOpen(gw) ? ' · ' + openNote(gw) : ''}</span></div>
     <div class="ground pground" aria-label="Team of the Week">${line('WK')}${line('BAT')}${line('AR')}${line('BOWL')}</div>
     <div class="card" style="margin-top:14px"><div class="detail" style="padding:6px 14px"><div class="aw-h" style="padding:8px 0">Roll of honour: Manager of the Month</div>${roll}
       ${mostWins ? `<div class="prow"><div>Most Manager of the Week wins<br><small>${team(mostWins[0])}</small></div><div class="num"><b>${mostWins[1]}</b></div></div>` : ''}</div></div>`;
@@ -1089,11 +1141,11 @@ function rulesView() {
   document.getElementById('view').innerHTML = `<div class="rules">
     <div class="card"><h3>Your team</h3><p class="muted" style="margin:0">Pick a starting 11 (4 batters, 4 bowlers, 2 all-rounders and 1 wicketkeeper) plus 3 subs of any position, from either XI, with ${money(RULES.budget)} for all 14. Your captain scores double; if they don\u2019t play, your vice-captain scores double instead. Both must be in your 11.</p></div>
     <div class="card"><h3>Subs</h3><p class="muted" style="margin:0">If one of your 11 doesn\u2019t play, your first sub <strong>of the same position</strong> who did play comes on automatically, in your bench order. A batter can only be replaced by a batter, a keeper by a keeper, and so on. Subs never take the captaincy. Moving players between your 11 and the bench is free; only new players count as transfers.</p></div>
-    <div class="card"><h3>Gameweeks and transfers</h3><p class="muted" style="margin:0">Each Saturday is a gameweek, covering both XIs\u2019 matches. Teams lock at 12:00 on Saturday. You get ${RULES.freeTransfers} free transfers a week; each extra costs ${RULES.hit} points. Once a season you can play a wildcard for unlimited free changes. If you don\u2019t change anything, your team carries over.</p></div>
+    <div class="card"><h3>Gameweeks and transfers</h3><p class="muted" style="margin:0">Each Saturday is a gameweek, covering every XI\u2019s matches that weekend: Saturday\u2019s games, the 3rd XI\u2019s on the Sunday, and any on a bank holiday Monday. Teams lock at 12:00 on Saturday. You get ${RULES.freeTransfers} free transfers a week; each extra costs ${RULES.hit} points. Once a season you can play a wildcard for unlimited free changes. If you don\u2019t change anything, your team carries over.</p></div>
     <div class="card"><h3>Chips</h3><p class="muted" style="margin:0"><strong>Triple Captain</strong>: your captain scores ×3 instead of ×2 for one week (the vice-captain gets it if the captain doesn\u2019t play). <strong>Bench Boost</strong>: all 14 players\u2019 points count for one week. Each can be used once a season, and only one chip a week (the wildcard counts as one).</p></div>
-    <div class="card"><h3>Prices</h3><p class="muted" style="margin:0">Prices change after each Saturday on form: compared with what their price suggests, players scoring far more over the last three weeks rise £0.2m, better than expected £0.1m, and those scoring far less (or missing two of three weeks) fall £0.1m. If your squad rises in value, you keep it: your budget is £100m or your squad\u2019s current value, whichever is higher.</p></div>
+    <div class="card"><h3>Prices</h3><p class="muted" style="margin:0">Prices change after each weekend on form: compared with what their price suggests, players scoring far more over the last three weeks rise £0.2m, better than expected £0.1m, and those scoring far less (or missing two of three weeks) fall £0.1m. If your squad rises in value, you keep it: your budget is £100m or your squad\u2019s current value, whichever is higher.</p></div>
     ${RULES.points.map(([h, rows]) => `<div class="card"><h3>${h}</h3><table>${rows.map(([k, n]) => `<tr><td>${k}</td><td>${n}</td></tr>`).join('')}</table></div>`).join('')}
-    <div class="card"><h3>Good to know</h3><p class="muted" style="margin:0">Players who aren\u2019t picked for a Saturday score nothing, so think about who\u2019s likely to play. Points come from the scorecards on Play-Cricket and usually appear on Saturday evening.</p></div></div>`;
+    <div class="card"><h3>Good to know</h3><p class="muted" style="margin:0">Players who don\u2019t play that weekend score nothing, so think about who\u2019s likely to play. A player who plays more than once in a weekend scores for every game. Points come from the scorecards on Play-Cricket and usually appear on Saturday evening, with Sunday\u2019s and bank holiday Monday\u2019s games added that evening. A game on any other day counts in the gameweek before it. New prices appear the day after the weekend\u2019s last game: usually Monday, or Tuesday after a bank holiday.</p></div></div>`;
 }
 
 let _tt; function toast(msg, err) { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast show' + (err ? ' err' : ''); clearTimeout(_tt); _tt = setTimeout(() => t.className = 'toast', 4200); }
