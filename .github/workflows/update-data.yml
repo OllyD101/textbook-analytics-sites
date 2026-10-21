@@ -5,6 +5,7 @@ on:
     # GitHub runs schedules in UTC (UK summer time is UTC+1). Runs can start a few minutes late.
     - cron: "*/30 12-22 * * 6,0"   # every 30 minutes, Saturday and Sunday afternoons and evenings
     - cron: "0 21 * * 1-5"          # once each weekday evening (midweek games, late scorecard edits)
+    - cron: "*/30 12-20 * * 1-5"    # weekday afternoons: only goes ahead on a game day (fixtures file, else bank holidays)
   workflow_dispatch:                # "Run workflow" button in the Actions tab
     inputs:
       mode:
@@ -37,7 +38,18 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Game day check (weekday afternoon runs only)
+        id: gate
+        run: |
+          if [ "${{ github.event.schedule }}" = "*/30 12-20 * * 1-5" ] && ! python pipeline/fixtures.py --today-has-games; then
+            echo "No game today, so this weekday afternoon run stops here."
+            echo "go=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=yes" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Fetch and convert Play-Cricket scorecards
+        if: steps.gate.outputs.go == 'yes'
         env:
           PLAY_CRICKET_API_TOKEN: ${{ secrets.PLAY_CRICKET_API_TOKEN }}
           PLAY_CRICKET_SITE_ID: ${{ vars.PLAY_CRICKET_SITE_ID }}
@@ -51,7 +63,7 @@ jobs:
         run: python pipeline/run.py
 
       - name: Keep the report
-        if: always()
+        if: always() && steps.gate.outputs.go == 'yes'
         uses: actions/upload-artifact@v4
         with:
           name: update-report
@@ -59,7 +71,7 @@ jobs:
           if-no-files-found: ignore
 
       - name: Publish changes to the site
-        if: success()
+        if: success() && steps.gate.outputs.go == 'yes'
         run: |
           git config user.name "dashboard-bot"
           git config user.email "dashboard-bot@users.noreply.github.com"
