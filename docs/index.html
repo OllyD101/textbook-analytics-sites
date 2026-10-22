@@ -28,6 +28,60 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .nav-dropdown-menu .nav-btn{text-align:left;width:100%;border-radius:5px;padding:8px 10px;}
 .filters{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
 .filter-group{display:flex;align-items:center;gap:8px;}
+.tp-head{margin-bottom:16px;}
+.tp-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;font-weight:400;letter-spacing:1px;color:var(--text);}
+.tp-sub{color:var(--muted);font-size:0.88rem;max-width:62ch;margin-top:2px;}
+.tp-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;align-items:start;}
+.tp-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+.tp-card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.tp-card-head h3{font-size:1rem;font-weight:700;}
+.tp-inline{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--muted);}
+.tp-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+.tp-tools input{flex:1;min-width:140px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;font:inherit;font-size:0.85rem;}
+.tp-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 12px;font:inherit;font-size:0.8rem;cursor:pointer;}
+.tp-btn:hover{border-color:var(--accent);}
+.tp-btn-quiet{color:var(--muted);}
+.tp-count{font-size:0.78rem;color:var(--muted);margin-bottom:6px;}
+.tp-squad{max-height:560px;overflow-y:auto;border-top:1px solid var(--border);}
+.tp-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:7px 4px;border-bottom:1px solid var(--border);cursor:pointer;}
+.tp-row:hover{background:var(--surface2);}
+.tp-row input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;}
+.tp-name{font-size:0.88rem;font-weight:600;}
+.tp-meta{font-size:0.74rem;color:var(--muted);}
+.tp-role{font-size:0.66rem;font-weight:700;letter-spacing:0.4px;padding:2px 6px;border-radius:4px;border:1px solid var(--border);color:var(--muted);white-space:nowrap;}
+.tp-role.wk{color:var(--accent2);border-color:var(--accent2);}
+.tp-role.bowl{color:var(--blue);border-color:var(--blue);}
+.tp-role.ar{color:var(--green);border-color:var(--green);}
+.tp-basis{font-size:0.75rem;color:var(--muted);}
+.tp-warn{font-size:0.8rem;padding:8px 10px;border-radius:6px;margin-bottom:8px;border:1px solid var(--red);color:var(--text);background:color-mix(in srgb,var(--red) 10%,transparent);}
+.tp-team{list-style:none;counter-reset:tp;margin:0;padding:0;}
+.tp-team li{counter-increment:tp;display:grid;grid-template-columns:2rem 1fr auto auto;gap:10px;align-items:center;padding:8px 2px;border-bottom:1px solid var(--border);}
+.tp-team li::before{content:counter(tp);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;color:var(--muted);text-align:right;}
+.tp-drop{background:none;border:1px solid transparent;color:var(--muted);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:0.95rem;}
+.tp-drop:hover{border-color:var(--red);color:var(--red);}
+.tp-empty{color:var(--muted);font-size:0.88rem;padding:24px 4px;}
+.tp-reserves{font-size:0.82rem;color:var(--muted);margin:10px 0 4px;}
+.tp-share{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;border-top:1px solid var(--border);padding-top:12px;margin-top:8px;}
+.tp-share label{display:flex;flex-direction:column;gap:3px;font-size:0.74rem;color:var(--muted);}
+.tp-share input{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 8px;font:inherit;font-size:0.85rem;width:140px;}
+.tp-copied{font-size:0.8rem;color:var(--green);}
+.tp-row:focus-within,.tp-btn:focus-visible,.tp-drop:focus-visible{outline:2px solid var(--accent2);outline-offset:1px;}
+@media(max-width:820px){.tp-grid{grid-template-columns:1fr;}.tp-squad{max-height:360px;}.tp-share input{width:100%;}.tp-share label{flex:1 1 140px;}}
+.msel{position:relative;flex:1;min-width:0;}
+.msel-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.82rem;padding:5px 10px;border-radius:6px;cursor:pointer;}
+.msel-btn::after{content:'';flex-shrink:0;width:7px;height:7px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:translateY(-2px) rotate(45deg);transition:transform .15s;}
+.msel-btn[aria-expanded="true"]::after{transform:translateY(1px) rotate(-135deg);}
+.msel-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.msel-btn:hover,.msel-btn[aria-expanded="true"]{border-color:var(--accent);}
+.msel-btn:focus-visible,.msel-opt input:focus-visible{outline:2px solid var(--accent2);outline-offset:2px;}
+.msel-panel{position:absolute;z-index:60;top:calc(100% + 4px);left:0;min-width:100%;max-height:min(340px,60vh);overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.35);}
+.msel-panel[hidden]{display:none;}
+.msel-opt{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:5px;font-size:0.85rem;cursor:pointer;white-space:nowrap;}
+.msel-opt:hover{background:var(--surface2);}
+.msel-opt input{accent-color:var(--accent);width:15px;height:15px;margin:0;cursor:pointer;}
+.msel-all{border-bottom:1px solid var(--border);margin-bottom:4px;padding-bottom:8px;border-radius:5px 5px 0 0;}
+.msel-cols{display:grid;grid-template-columns:repeat(2,minmax(84px,1fr));}
+@media (prefers-reduced-motion: reduce){.msel-btn::after{transition:none;}}
 .data-stamp{margin-left:auto;font-size:0.72rem;color:var(--muted);white-space:nowrap;}
 .data-stamp b{color:var(--text);font-weight:600;}
 .lr-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
@@ -258,9 +312,6 @@ tbody td{padding:8px 14px;white-space:nowrap;}
   /* Profile */
   .profile-grid,.scorecard-grid{grid-template-columns:1fr;}
 
-  /* Best XI pitch — tighter */
-  #bestxi-pitch{padding:16px 8px;}
-  #bestxi-formation{gap:10px;}
 
   /* Entry forms */
   .entry-grid{grid-template-columns:1fr;}
@@ -305,8 +356,6 @@ tbody td{padding:8px 14px;white-space:nowrap;}
   /* Form dots wrap */
   .form-dots{flex-wrap:wrap;}
 
-  /* Best XI table scroll */
-  #tblBestXI{font-size:0.72rem;}
 
   /* Sticky filters on scroll */
   .filters{position:sticky;top:56px;z-index:90;}
@@ -325,7 +374,6 @@ tbody td{padding:8px 14px;white-space:nowrap;}
 @media(max-width:400px){
   .kpi-row{grid-template-columns:1fr 1fr;}
   .kpi-val{font-size:1.6rem;}
-  #bestxi-formation [style*="gap:80px"]{gap:30px !important;}
 }
 
 /* Route to promotion page */
@@ -800,7 +848,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
       <div class="nav-dropdown-menu">
         <button class="nav-btn" onclick="showPage('awards',this)">Awards</button>
         <button class="nav-btn" onclick="showPage('records',this)">Records</button>
-        <button class="nav-btn" onclick="showPage('bestxi',this)">Best XI</button>
+        <button class="nav-btn" onclick="showPage('bestxi',this)">Team Picker</button>
         <button class="nav-btn" onclick="showPage('seasonawards',this)">Season Awards</button>
         <button class="nav-btn" onclick="showPage('methodology',this)">About &amp; Methodology</button>
         <button class="nav-btn" onclick="showPage('dataquality',this)">Data Quality</button>
@@ -866,7 +914,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
       <div class="mobile-nav-section-items">
         <button class="mobile-nav-item" onclick="showPage('awards',this);closeMobileNav()">🏅 Awards</button>
         <button class="mobile-nav-item" onclick="showPage('records',this);closeMobileNav()">📜 Records</button>
-        <button class="mobile-nav-item" onclick="showPage('bestxi',this);closeMobileNav()">⭐ Best XI</button>
+        <button class="mobile-nav-item" onclick="showPage('bestxi',this);closeMobileNav()">📋 Team Picker</button>
         <button class="mobile-nav-item" onclick="showPage('seasonawards',this);closeMobileNav()">🏆 Season Awards</button>
         <button class="mobile-nav-item" onclick="showPage('methodology',this);closeMobileNav()">ℹ️ About &amp; Methodology</button>
         <button class="mobile-nav-item" onclick="showPage('dataquality',this);closeMobileNav()">🩺 Data Quality</button>
@@ -892,17 +940,19 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 </div>
 
 <div class="filters">
-  <div class="filter-group" style="flex:1;min-width:120px">
-    <span class="filter-label">Year</span>
-    <select id="filterYear" onchange="applyFilters()" style="width:100%"><option value="">All Years</option></select>
+  <div class="filter-group" style="flex:1.2;min-width:150px">
+    <span class="filter-label" id="lblYears">Years</span>
+    <div class="msel" id="mselYear" data-all="All years">
+      <button type="button" class="msel-btn" aria-haspopup="true" aria-expanded="false" aria-labelledby="lblYears mselYearText"><span id="mselYearText">All years</span></button>
+      <div class="msel-panel" hidden role="group" aria-labelledby="lblYears"></div>
+    </div>
   </div>
-  <div class="filter-group" style="flex:1;min-width:120px">
-    <span class="filter-label">Team</span>
-    <select id="filterTeam" onchange="applyFilters()" style="width:100%">
-      <option value="">Both XI</option>
-      <option value="1st">1st XI</option>
-      <option value="2nd">2nd XI</option>
-    </select>
+  <div class="filter-group" style="flex:1;min-width:130px">
+    <span class="filter-label" id="lblTeams">Team</span>
+    <div class="msel" id="mselTeam" data-all="All XIs">
+      <button type="button" class="msel-btn" aria-haspopup="true" aria-expanded="false" aria-labelledby="lblTeams mselTeamText"><span id="mselTeamText">All XIs</span></button>
+      <div class="msel-panel" hidden role="group" aria-labelledby="lblTeams"></div>
+    </div>
   </div>
   <div id="data-stamp" class="data-stamp" aria-live="polite"></div>
 </div>
@@ -1212,11 +1262,11 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
   <!-- WIDES & NO BALLS -->
   <div id="bowling-extras" class="sub-page">
     <div class="charts-grid">
-      <div class="chart-card"><div class="chart-title">Wides per Over (min 20 overs)</div><div class="chart-wrap" style="height:260px"><canvas id="chartWides"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">No Balls per Over (min 20 overs)</div><div class="chart-wrap" style="height:260px"><canvas id="chartNoBalls"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Wides per Over (min 20 recorded overs)</div><div class="chart-wrap" style="height:260px"><canvas id="chartWides"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">No Balls per Over (min 20 recorded overs)</div><div class="chart-wrap" style="height:260px"><canvas id="chartNoBalls"></canvas></div></div>
     </div>
     <div class="table-card">
-      <div class="table-header"><span class="table-title">Extras Breakdown per Bowler</span></div>
+      <div class="table-header"><span class="table-title">Extras Breakdown per Bowler</span><span style="font-size:0.75rem;color:var(--muted)">Only games where wides and no-balls were recorded on the scorecard</span></div>
       <div class="table-wrap"><table id="tblExtras"><thead><tr>
         <th onclick="sortTable('tblExtras',0)">Bowler</th>
         <th onclick="sortTable('tblExtras',1)">Overs</th>
@@ -1382,7 +1432,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
     </tr></thead><tbody></tbody></table></div>
   </div>
   <div class="table-card" style="margin-top:16px">
-    <div class="table-header"><span class="table-title">Player Batting Form — Last 5 Innings per Player (min 3 innings)</span></div>
+    <div class="table-header"><span class="table-title">Player Batting Form — Last 5 Innings per Player (min 3 innings)</span><span id="formBatNote" style="font-size:0.75rem;color:var(--muted)"></span></div>
     <div class="table-wrap"><table id="tblFormBat"><thead><tr>
       <th onclick="sortTable('tblFormBat',0)">Player</th>
       <th onclick="sortTable('tblFormBat',1)">Form (W/L)</th>
@@ -1393,7 +1443,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
     </tr></thead><tbody></tbody></table></div>
   </div>
   <div class="table-card" style="margin-top:16px">
-    <div class="table-header"><span class="table-title">Player Bowling Form — Last 5 Spells (min 3 spells)</span></div>
+    <div class="table-header"><span class="table-title">Player Bowling Form — Last 5 Spells (min 3 spells)</span><span id="formBowlNote" style="font-size:0.75rem;color:var(--muted)"></span></div>
     <div class="table-wrap"><table id="tblFormBowl"><thead><tr>
       <th onclick="sortTable('tblFormBowl',0)">Player</th>
       <th onclick="sortTable('tblFormBowl',1)">Form</th>
@@ -1599,53 +1649,48 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- DATA ENTRY -->
 <div id="page-bestxi" class="page">
-  <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:1px;">Best XI Selector</div>
-    <select id="bxiYear" onchange="renderBestXI()" style="font-size:1rem;padding:8px 14px;">
-      <option value="">All Time</option>
-      <option value="2026">2026</option>
-      <option value="2025">2025</option>
-      <option value="2024">2024</option>
-      <option value="2023">2023</option>
-      <option value="2022">2022</option>
-    </select>
-    <select id="bxiTeam" onchange="renderBestXI()" style="font-size:1rem;padding:8px 14px;">
-      <option value="">Both XI</option>
-      <option value="1st">1st XI</option>
-      <option value="2nd">2nd XI</option>
-    </select>
-    <div style="font-size:0.78rem;color:var(--muted);max-width:380px;">Selection based on balanced all-round impact: batting average × innings weight + wicket impact + fielding contributions.</div>
+  <div class="tp-head">
+    <h2 class="tp-title">Team Picker</h2>
+    <p class="tp-sub">Tick who's available and get a balanced side: a keeper, five bowling options, and the strongest batting order from recent form.</p>
   </div>
-  <div id="bestxi-pitch" style="background:linear-gradient(180deg,#0d2a0d 0%,#1a4a1a 40%,#1a5a1a 60%,#0d2a0d 100%);border-radius:16px;padding:30px 20px;margin-bottom:20px;position:relative;border:2px solid #2d5a2d;">
-    <div id="bestxi-formation" style="display:grid;grid-template-rows:repeat(4,1fr);gap:16px;max-width:700px;margin:0 auto;min-height:500px;"></div>
-  </div>
-  <div class="table-card">
-    <div class="table-header"><span class="table-title">Full Impact Rankings</span></div>
-    <div class="table-wrap"><table id="tblBestXI"><thead><tr>
-      <th onclick="sortTable('tblBestXI',0)">#</th>
-      <th onclick="sortTable('tblBestXI',1)">Player</th>
-      <th onclick="sortTable('tblBestXI',2)">Matches</th>
-      <th onclick="sortTable('tblBestXI',3)">Bat Avg</th>
-      <th onclick="sortTable('tblBestXI',4)">Runs</th>
-      <th onclick="sortTable('tblBestXI',5)">Wkts</th>
-      <th onclick="sortTable('tblBestXI',6)">Bowl Avg</th>
-      <th onclick="sortTable('tblBestXI',7)">Econ</th>
-      <th onclick="sortTable('tblBestXI',8)">Field</th>
-      <th onclick="sortTable('tblBestXI',9)">MoTM</th>
-      <th onclick="sortTable('tblBestXI',10)">Impact Score</th>
-    </tr></thead><tbody></tbody></table></div>
+  <div class="tp-grid">
+    <section class="tp-card" aria-labelledby="tpAvailTitle">
+      <div class="tp-card-head">
+        <h3 id="tpAvailTitle">Who's available?</h3>
+        <label class="tp-inline">Picking for
+          <select id="tpXI" onchange="tpChangeXI()"><option value="1st">1st XI</option><option value="2nd">2nd XI</option></select>
+        </label>
+      </div>
+      <div class="tp-tools">
+        <input id="tpSearch" type="search" placeholder="Find a player" aria-label="Find a player" oninput="tpRenderSquad()">
+        <button type="button" class="tp-btn" onclick="tpTickRegulars()">Tick this XI's regulars</button>
+        <button type="button" class="tp-btn tp-btn-quiet" onclick="tpClear()">Clear</button>
+      </div>
+      <div id="tpCount" class="tp-count" aria-live="polite"></div>
+      <div id="tpSquad" class="tp-squad"></div>
+    </section>
+    <section class="tp-card tp-sheet" aria-labelledby="tpSheetTitle">
+      <div class="tp-card-head">
+        <h3 id="tpSheetTitle">Suggested XI</h3>
+        <span id="tpBasis" class="tp-basis"></span>
+      </div>
+      <div id="tpWarnings"></div>
+      <ol id="tpTeam" class="tp-team"></ol>
+      <div id="tpReserves" class="tp-reserves"></div>
+      <div class="tp-share">
+        <label>Opponent <input id="tpOpp" type="text" placeholder="e.g. Cottingham" oninput="tpSave()"></label>
+        <label>Date <input id="tpDate" type="text" placeholder="e.g. Sat 3 May" oninput="tpSave()"></label>
+        <label>Captain <select id="tpCapt" onchange="tpSave();tpRenderTeam()"><option value="">None</option></select></label>
+        <button type="button" class="btn-primary" onclick="tpCopy()">Copy for WhatsApp</button>
+        <span id="tpCopied" class="tp-copied" aria-live="polite"></span>
+      </div>
+    </section>
   </div>
 
   <!-- SQUAD DEPTH -->
   <div style="margin-top:28px;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
     <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--text);letter-spacing:1px;">Squad Depth</div>
-    <select id="depthYear" onchange="renderSquadDepth()" style="font-size:0.9rem;padding:6px 12px;">
-      <option value="2026" selected>2026</option>
-      <option value="2025">2025</option>
-      <option value="2024">2024</option>
-      <option value="2023">2023</option>
-      <option value="2022">2022</option>
-    </select>
+    <select id="depthYear" onchange="renderSquadDepth()" style="font-size:0.9rem;padding:6px 12px;"></select>
     <select id="depthTeam" onchange="renderSquadDepth()" style="font-size:0.9rem;padding:6px 12px;">
       <option value="">Both XI</option>
       <option value="1st" selected>1st XI</option>
@@ -2218,13 +2263,17 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
   <div id="league-main" style="display:none">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
       <div id="league-xi-label" style="font-size:0.8rem;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase"></div>
-      <button onclick="resetLeagueXI()" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 12px;font-size:0.78rem;cursor:pointer">Change XI</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <label for="leagueSeason" class="filter-label">Season</label>
+        <select id="leagueSeason" onchange="selectLeagueSeason(this.value)"></select>
+        <button onclick="resetLeagueXI()" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 12px;font-size:0.78rem;cursor:pointer">Change XI</button>
+      </div>
     </div>
     <div class="kpi-row" id="league-kpis"></div>
     <div class="table-card">
       <div class="table-header">
-        <div class="table-title">Final Standings — 2026 Season</div>
-        <div style="font-size:0.75rem;color:var(--muted);padding:4px 0">
+        <div class="table-title" id="leagueTitle">Final Standings</div>
+        <div id="leagueLegend" style="font-size:0.75rem;color:var(--muted);padding:4px 0">
           <span style="display:inline-block;width:10px;height:10px;background:rgba(63,185,80,0.4);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Promoted&nbsp;&nbsp;
           <span style="display:inline-block;width:10px;height:10px;background:rgba(88,166,255,0.25);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Hessle&nbsp;&nbsp;
           <span style="display:inline-block;width:10px;height:10px;background:rgba(248,81,73,0.18);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Relegated
@@ -2286,6 +2335,7 @@ async function _loadCricketData() {
         if (t['2nd'] && t['2nd'].rows && t['2nd'].rows.length) LEAGUE_TABLE_2ND = t['2nd'].rows;
         Object.keys(t).forEach(function(k) { if (k !== '1st' && k !== '2nd' && t[k] && t[k].rows && t[k].rows.length) LEAGUE_TABLES[k] = t[k].rows; });
         window._leagueUpdated = lg.updated || null;
+        LEAGUE_HISTORY = (lg && lg.history) || {};
       }
     } catch (e) { console.warn('league.json not loaded, using built-in tables', e); }
     // When the automation last changed the data (pipeline/run.py writes data-meta.json). Optional.
@@ -2365,7 +2415,22 @@ function chartNames(names) {
 // ============================================================
 // GLOBAL
 // ============================================================
+// Global filters: any mix of seasons and XIs (an empty set = all). filterYear / filterTeam hold the one
+// season / XI when exactly one is chosen (pages that only make sense for a single season use those).
 let filterYear = '', filterTeam = '';
+let selYears = new Set(), selTeams = new Set();
+function yearInFilter(yr) { return !selYears.size || selYears.has(yr); }
+function teamInFilter(tm) { return !selTeams.size || selTeams.has(tm); }
+function yearFilterLabel() {   // '' (all), '2019', '2019\u20132023' (a run), or '2019, 2021, 2024'
+  var y = [...selYears].sort(); if (!y.length) return '';
+  var run = y.every(function(v, i) { return !i || +v === +y[i - 1] + 1; });
+  if (run && y.length > 2) return y[0] + '\u2013' + y[y.length - 1];
+  return y.length > 4 ? y.slice(0, 3).join(', ') + ' +' + (y.length - 3) + ' more' : y.join(', ');
+}
+function teamFilterLabel() {   // '' (all), '1st XI', '1st & 3rd XI'
+  var t = [...selTeams].sort(function(a, b) { return XI_ORDER.indexOf(a) - XI_ORDER.indexOf(b); });
+  return !t.length ? '' : t.join(' & ') + ' XI';
+}
 let chartInstances = {};
 const COLORS = ['#c8202f','#3d7fe0','#2fa35a','#dfe5ee','#8db8f2','#e8666f','#7fd6a0','#9aa4b2','#1f4f99','#8a1520'];
 // Ranked single-series bars (top scorers, wicket takers, MoTM...): the leader stands out,
@@ -2376,7 +2441,7 @@ function getFiltered(arr, dateKey='Date') {
   return arr.filter(r => {
     const yr = (r[dateKey]||'').slice(0,4);
     const tm = r['Team']||'';
-    return (!filterYear || yr===filterYear) && (!filterTeam || tm===filterTeam);
+    return yearInFilter(yr) && teamInFilter(tm);
   });
 }
 function getMOTM(date, opponent, team) {
@@ -2453,10 +2518,11 @@ function initDashboard() {
     if (headerEl) new ResizeObserver(syncHeaderHeight).observe(headerEl);
   }
   const years = [...new Set(CRICKET_DATA.matches.map(r=>r.Date.slice(0,4)))].sort().reverse();
-  const sel = document.getElementById('filterYear');
+  buildMultiSelect('mselYear', years.map(y => ({value: y, label: y})), selYears);
+  document.getElementById('depthYear').innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+  buildMultiSelect('mselTeam', TEAMS.map(t => ({value: t, label: t + ' XI'})), selTeams);
   // fill each dropdown in one go (adding options one at a time with += re-parsed the whole list every time)
   const _opts = list => list.map(v => `<option value="${v}">${v}</option>`).join('');
-  sel.insertAdjacentHTML('beforeend', _opts(years));
 
   const batters = [...new Set(CRICKET_DATA.batting.map(r=>r.Batter))].filter(Boolean).sort();
   const bowlers = [...new Set(CRICKET_DATA.bowling.map(r=>r.Bowler))].filter(Boolean).sort();
@@ -2494,10 +2560,48 @@ function initDashboard() {
   }, 400);
 };
 
+// ---- multi-select filter picker (Years, Team)
+function buildMultiSelect(id, items, set) {
+  var box = document.getElementById(id), btn = box.querySelector('.msel-btn'), panel = box.querySelector('.msel-panel');
+  var opt = function(value, label, checked, extra) {
+    return '<label class="msel-opt' + (extra || '') + '"><input type="checkbox" value="' + value + '"' + (checked ? ' checked' : '') + '> ' + label + '</label>';
+  };
+  panel.innerHTML = opt('', box.dataset.all, !set.size, ' msel-all') +
+    '<div class="' + (items.length > 6 ? 'msel-cols' : '') + '">' + items.map(function(it) { return opt(it.value, it.label, set.has(it.value)); }).join('') + '</div>';
+  panel.addEventListener('change', function(e) {
+    var v = e.target.value;
+    if (!v) set.clear();                                  // "All" clears the choice
+    else if (e.target.checked) set.add(v); else set.delete(v);
+    if (set.size === items.length) set.clear();           // everything ticked = all
+    syncMultiSelect(id, set); applyFilters();
+  });
+  btn.addEventListener('click', function(e) { e.stopPropagation(); toggleMultiSelect(box, panel.hidden); });
+  box.addEventListener('keydown', function(e) { if (e.key === 'Escape' && !panel.hidden) { toggleMultiSelect(box, false); btn.focus(); e.stopPropagation(); } });
+  panel.addEventListener('click', function(e) { e.stopPropagation(); });
+}
+function toggleMultiSelect(box, open) {
+  document.querySelectorAll('.msel').forEach(function(b) {
+    var o = open && b === box;
+    b.querySelector('.msel-panel').hidden = !o; b.querySelector('.msel-btn').setAttribute('aria-expanded', o ? 'true' : 'false');
+  });
+}
+document.addEventListener('click', function() { toggleMultiSelect(null, false); });
+function syncMultiSelect(id, set) {
+  var box = document.getElementById(id);
+  box.querySelectorAll('input').forEach(function(i) { i.checked = i.value ? set.has(i.value) : !set.size; });
+  var txt = id === 'mselYear' ? yearFilterLabel() : teamFilterLabel();
+  box.querySelector('.msel-btn span').textContent = txt || box.dataset.all;
+}
+function setFilters(years, teams) {   // used by deep links and other pages: arrays, or null to leave alone
+  if (years) { selYears = new Set(years.map(String).filter(Boolean)); syncMultiSelect('mselYear', selYears); }
+  if (teams) { selTeams = new Set(teams.filter(Boolean)); syncMultiSelect('mselTeam', selTeams); }
+  applyFilters();
+}
 function applyFilters() {
-  filterYear = document.getElementById('filterYear').value;
-  filterTeam = document.getElementById('filterTeam').value;
-  updateURL({year:filterYear||null, team:filterTeam||null});
+  filterYear = selYears.size === 1 ? [...selYears][0] : '';
+  filterTeam = selTeams.size === 1 ? [...selTeams][0] : '';
+  var ys = [...selYears].sort(), ts = [...selTeams].sort(function(a, b) { return XI_ORDER.indexOf(a) - XI_ORDER.indexOf(b); });
+  updateURL({year: ys.length ? ys.join(',') : null, to: null, team: ts.length ? ts.join(',') : null});
   renderAll();
 }
 
@@ -2519,7 +2623,7 @@ var PAGE_RENDERERS = {
   opponents: ['renderOpponents'],
   form: ['renderForm'],
   matches: ['renderAllMatches', 'renderStreaks'],
-  bestxi: ['renderBestXI', 'renderSquadDepth'],
+  bestxi: ['renderTeamPicker', 'renderSquadDepth'],
   seasonawards: ['renderSeasonAwards'],
   methodology: ['renderMethodologyMeta'],
   dataquality: ['renderDataQuality'],
@@ -2534,7 +2638,7 @@ var PAGE_DEFERRED = { overview: ['renderBatFirst', 'renderHomeAway', 'renderNRR'
 var LIMITED_TABLES = ['tblBatStats','tblBatInnings','tblBowlStats','tblBowlSpells','tblAllMatches',
    'tblOpponents','tblBatStats','tblPosBat','tblWinSpells','tblBowlPairs',
    'tblExtras','tblBestChases','tblFailedChases','tblBestDef','tblDefLost',
-   'tblBestXI','tblSeason','tblFormBat','tblFormBowl'];
+   'tblSeason','tblFormBat','tblFormBowl'];
 var _pageStale = {};
 function _safeRun(fn, name) { try { fn(); } catch (e) { console.error(name + ' failed:', e); } }
 function renderPage(name) {
@@ -2660,7 +2764,7 @@ function _buildGlobalSearchIndex() {
     { label: 'Opponents', page: 'opponents' }, { label: 'Form', page: 'form' },
     { label: 'Chase/Defend', page: 'chasing' }, { label: 'Stat Query', page: 'statquery' },
     { label: 'Awards', page: 'awards' }, { label: 'Records', page: 'records' },
-    { label: 'Best XI', page: 'bestxi' }, { label: 'Season Awards', page: 'seasonawards' },
+    { label: 'Team Picker', page: 'bestxi' }, { label: 'Season Awards', page: 'seasonawards' },
     { label: 'League Table', page: 'league' },
     { label: 'About & Methodology', page: 'methodology' },
     { label: 'Data Quality', page: 'dataquality' },
@@ -3038,7 +3142,7 @@ function computeBatStats(rows) {
   const p = {};
   rows.forEach(r => {
     const name = r.Batter; if(!name) return;
-    if(!p[name]) p[name]={name,inn:0,runs:0,hs:0,fours:0,sixes:0,balls:0,notOuts:0,dnbs:0,fifties:0,hundreds:0};
+    if(!p[name]) p[name]={name,inn:0,runs:0,hs:0,fours:0,sixes:0,balls:0,srRuns:0,srInn:0,notOuts:0,dnbs:0,fifties:0,hundreds:0};
     const v=p[name], d=(r.Dismissal||'').toLowerCase();
     if(d==='dnb'){v.dnbs++;return;}
     v.inn++;
@@ -3046,14 +3150,16 @@ function computeBatStats(rows) {
     v.runs+=runs; v.hs=Math.max(v.hs,runs);
     v.fours+=(typeof r['4s']==='number'?r['4s']:0);
     v.sixes+=(typeof r['6s']==='number'?r['6s']:0);
-    v.balls+=(typeof r.Balls==='number'?r.Balls:0);
+    // strike rate only counts innings where balls faced were recorded (older scorecards often have none),
+    // so runs without balls don't inflate it
+    if(typeof r.Balls==='number'&&r.Balls>0){ v.balls+=r.Balls; v.srRuns+=runs; v.srInn++; }
     if(d==='not out'||d==='retired not out') v.notOuts++;
     if(runs>=100) v.hundreds++; else if(runs>=50) v.fifties++;
   });
   return Object.values(p).map(v=>{
     const dism=v.inn-v.notOuts;
     v.avg=dism>0?(v.runs/dism).toFixed(2):v.inn>0?'NO':'-';
-    v.sr=v.balls>0?(v.runs/v.balls*100).toFixed(1):'-';
+    v.sr=v.balls>0?(v.srRuns/v.balls*100).toFixed(1):'-';
     return v;
   });
 }
@@ -3077,16 +3183,28 @@ function ballsToOvers(balls) {
   return whole + rem / 10;
 }
 
+// Wides and no-balls weren't recorded on many older scorecards, which then show 0 for every bowler. A game counts
+// as "extras recorded" if any Hessle bowler has a wide or a no-ball in it; extras rates only use those games, so
+// unrecorded games don't drag them down. (A whole innings with no extras at all is very rare.)
+var _extrasGames = null;
+function extrasRecorded(r) {
+  if (!_extrasGames) {
+    _extrasGames = new Set();
+    CRICKET_DATA.bowling.forEach(function(b) { if ((b.Wides || 0) > 0 || (b['No Balls'] || 0) > 0) _extrasGames.add(b.Date + '|' + b.Team); });
+  }
+  return _extrasGames.has(r.Date + '|' + r.Team);
+}
+
 function computeBowlStats(rows) {
   const p={};
   rows.forEach(r=>{
     const name=r.Bowler; if(!name) return;
-    if(!p[name]) p[name]={name,matches:new Set(),ballsBowled:0,maidens:0,runs:0,wickets:0,wides:0,noballs:0,best_w:0,best_r:999,fiveWickets:0};
+    if(!p[name]) p[name]={name,matches:new Set(),ballsBowled:0,maidens:0,runs:0,wickets:0,wides:0,noballs:0,extrasBalls:0,best_w:0,best_r:999,fiveWickets:0};
     const v=p[name];
     v.matches.add(r.Date+r.Opponent);
     v.ballsBowled+=oversToBalls(r.Overs); v.maidens+=(r.Maidens||0); v.runs+=(r.Runs||0);
     const wkts=r.Wickets||0; v.wickets+=wkts;
-    v.wides+=(r.Wides||0); v.noballs+=(r['No Balls']||0);
+    if(extrasRecorded(r)){ v.wides+=(r.Wides||0); v.noballs+=(r['No Balls']||0); v.extrasBalls+=oversToBalls(r.Overs); }
     if(wkts>v.best_w||(wkts===v.best_w&&(r.Runs||0)<v.best_r)){v.best_w=wkts;v.best_r=r.Runs||0;}
     if(wkts>=5) v.fiveWickets++;
   });
@@ -3157,11 +3275,11 @@ function _scoreText(runs, wkts, overs) {
 function renderLatestResults() {
   var el = document.getElementById('latest-results-card');
   if (!el || !CRICKET_DATA) return;
-  var pool = CRICKET_DATA.matches.filter(function(m) { return !filterTeam || m.Team === filterTeam; });
+  var pool = CRICKET_DATA.matches.filter(function(m) { return teamInFilter(m.Team); });
   if (!pool.length) { el.style.display = 'none'; return; }
   var latest = pool.reduce(function(a, m) { return m.Date > a ? m.Date : a; }, '');
   // only on the most recent season, or with no year chosen
-  if (filterYear && filterYear !== latest.slice(0, 4)) { el.style.display = 'none'; return; }
+  if (selYears.size && !yearInFilter(latest.slice(0, 4))) { el.style.display = 'none'; return; }
   // the weekend of the latest game: Saturday to Monday (a midweek game stands on its own)
   var ld = _isoDay(latest), dow = ld.getDay();
   var start = new Date(ld); start.setDate(ld.getDate() - (dow === 0 ? 1 : dow === 1 ? 2 : 0));
@@ -3215,7 +3333,7 @@ function renderLatestResults() {
   var label = multiDay || dow === 6 || dow === 0 || dow === 1 ? 'Latest results &middot; weekend of ' + _shortDate(startIso, true) : 'Latest result &middot; ' + _shortDate(latest, true);
   el.style.display = 'block';
   el.innerHTML = '<div class="lr-card"><div class="lr-head"><span class="lr-title">' + label + '</span>' +
-    '<span class="lr-record">' + season + (filterTeam ? ' ' + _esc(filterTeam) + ' XI' : '') + ' so far: ' + rec.W + 'W ' + rec.L + 'L' + (rec.D ? ' ' + rec.D + 'D' : '') + '</span></div>' +
+    '<span class="lr-record">' + season + (selTeams.size ? ' ' + _esc(teamFilterLabel()) : '') + ' so far: ' + rec.W + 'W ' + rec.L + 'L' + (rec.D ? ' ' + rec.D + 'D' : '') + '</span></div>' +
     rows + '</div>';
   el.querySelectorAll('.lr-row').forEach(function(r) {
     var open = function() { openOnThisDayMatch(r.dataset.date, r.dataset.opp, r.dataset.team); };
@@ -3698,136 +3816,182 @@ function computeImpact(player, batRows, bowlRows, fldRows, kpRows, motmList, mat
   };
 }
 
-function renderBestXI() {
-  // Sync Best XI selects with global filter if set
-  if(filterYear) document.getElementById('bxiYear').value = filterYear;
-  if(filterTeam) document.getElementById('bxiTeam').value = filterTeam;
-  const yr = document.getElementById('bxiYear').value;
-  const tm = document.getElementById('bxiTeam').value;
+// ============================================================
+// TEAM PICKER — tick who's available, get a balanced XI to send round
+// ============================================================
+// Ratings come from the last two seasons on record (the most recent counts double), with stats from a lower XI
+// counting for a little less when picking a higher one. A side is a keeper, the five best bowling options and the
+// five best batters left; the batting order follows where each player usually bats.
+var TP = { xi: '1st', avail: new Set(), availByXI: {}, dropped: new Set(), squad: [], byName: {}, team: [], reserves: [], years: [] };
+var TP_LEVEL = { '1st': 1, '2nd': 0.82, '3rd': 0.68 };
 
-  let batF = CRICKET_DATA.batting;
-  let bowlF = CRICKET_DATA.bowling;
-  let fldF = CRICKET_DATA.fielding;
-  let kpF = CRICKET_DATA.keeping;
-  let matchF = CRICKET_DATA.matches;
-
-  if(yr) { batF=batF.filter(r=>r.Date.slice(0,4)===yr); bowlF=bowlF.filter(r=>r.Date.slice(0,4)===yr); fldF=fldF.filter(r=>r.Date.slice(0,4)===yr); kpF=kpF.filter(r=>r.Date.slice(0,4)===yr); matchF=matchF.filter(r=>r.Date.slice(0,4)===yr); }
-  if(tm) { batF=batF.filter(r=>r.Team===tm); bowlF=bowlF.filter(r=>r.Team===tm); fldF=fldF.filter(r=>r.Team===tm); kpF=kpF.filter(r=>r.Team===tm); matchF=matchF.filter(r=>r.Team===tm); }
-
-  const allPlayers = [...new Set([...batF.map(r=>r.Batter),...bowlF.map(r=>r.Bowler)].filter(Boolean))];
-  const matchesPerPlayer = {};
-  allPlayers.forEach(p => {
-    const ms = new Set([...batF.filter(r=>r.Batter===p).map(r=>r.Date+r.Team+r.Opponent), ...bowlF.filter(r=>r.Bowler===p).map(r=>r.Date+r.Team+r.Opponent)]);
-    matchesPerPlayer[p] = ms.size;
+function tpBuildSquad() {
+  var years = [...new Set(CRICKET_DATA.matches.map(function(m) { return m.Date.slice(0, 4); }))].sort();
+  var ly = years[years.length - 1], py = years[years.length - 2];
+  TP.years = [py, ly].filter(Boolean);
+  var weight = function(r) { return r.Date.slice(0, 4) === ly ? 1 : r.Date.slice(0, 4) === py ? 0.5 : 0; };
+  var lvl = function(r) { return Math.min(1.15, (TP_LEVEL[r.Team] || 0.6) / (TP_LEVEL[TP.xi] || 1)); };
+  var P = {};
+  var get = function(n) { return P[n] || (P[n] = { name: n, dates: {}, xiGames: {}, inns: 0, runs: 0, outs: 0, balls: 0, wkts: 0, conc: 0, ct: 0, kpDates: {}, pos: [], ly: { runs: 0, inns: 0, outs: 0, wkts: 0, conc: 0, balls: 0 } }); };
+  var notPlayer = function(n) { return !n || NOT_PLAYERS.has(n); };
+  CRICKET_DATA.batting.forEach(function(r) {
+    var w = weight(r); if (!w || notPlayer(r.Batter)) return;
+    var v = get(r.Batter), k = lvl(r);
+    v.dates[r.Date] = w; v.xiGames[r.Team] = (v.xiGames[r.Team] || 0) + (r.Date.slice(0, 4) === ly ? 1 : 0);
+    if (r.Dismissal === 'DNB' || typeof r.Runs !== 'number') return;
+    var out = !/not out/i.test(r.Dismissal || '');
+    v.inns += w; v.runs += w * k * r.Runs; v.outs += w * (out ? 1 : 0);
+    if (typeof r.Pos === 'number') v.pos.push({ pos: r.Pos, w: w });
+    if (r.Date.slice(0, 4) === ly) { v.ly.runs += r.Runs; v.ly.inns++; v.ly.outs += out ? 1 : 0; }
   });
-
-  // Only include players with at least 3 appearances
-  const qualified = allPlayers.filter(p=>matchesPerPlayer[p]>=3);
-
-  const scored = qualified.map(p => computeImpact(
-    p,
-    batF.filter(r=>r.Batter===p),
-    bowlF.filter(r=>r.Bowler===p),
-    fldF.filter(r=>r.Fielder===p),
-    kpF.filter(r=>r.Keeper===p),
-    CRICKET_DATA.motm,
-    matchesPerPlayer[p]
-  )).sort((a,b)=>b.total-a.total);
-
-  const xi = scored.slice(0,11);
-
-  // Render table
-  document.querySelector('#tblBestXI tbody').innerHTML = scored.map((s,i)=>`<tr style="${i<11?'background:rgba(197,32,47,0.06)':''}">
-    <td><strong>${i+1}</strong>${i<11?` <span class="badge badge-motm" style="font-size:0.65rem">XI</span>`:''}</td>
-    <td><strong>${s.player}</strong></td>
-    <td>${s.matchCount}</td>
-    <td>${s.batAvg}</td><td>${s.runs}</td><td>${s.wickets}</td>
-    <td>${s.bowlAvg}</td><td>${s.econ}</td><td>${s.field}</td><td>${s.motm}</td>
-    <td class="highlight">${s.total}</td>
-  </tr>`).join('');
-
-  // Work out each player's median batting position from actual data
-  // (excluding DNB rows which have no meaningful Pos)
-  function medianBatPos(player, batData) {
-    const positions = batData
-      .filter(r => r.Batter === player && r.Dismissal !== 'DNB' && typeof r.Pos === 'number' && r.Pos > 0)
-      .map(r => r.Pos);
-    if (!positions.length) return null;
-    const sorted = [...positions].sort((a,b) => a-b);
-    const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid-1] + sorted[mid]) / 2;
-  }
-
-  // Also classify role for badge colour — but now driven by position, not inference
-  function classifyByPos(medPos, s) {
-    if (medPos === null) {
-      // No batting data — pure bowler
-      return 'bowler';
-    }
-    if (medPos <= 3) return 'batter';
-    if (medPos <= 6) return s.wickets > s.innings * 0.5 ? 'allrounder' : 'batter';
-    if (medPos <= 8) return s.wickets > 0 ? 'allrounder' : 'batter';
-    return 'bowler';
-  }
-
-  const xiWithRole = xi.map(s => {
-    const medPos = medianBatPos(s.player, batF);
-    const classRole = classifyByPos(medPos, s);
-    return { ...s, medPos, classRole };
+  CRICKET_DATA.bowling.forEach(function(r) {
+    var w = weight(r); if (!w || notPlayer(r.Bowler)) return;
+    var v = get(r.Bowler), k = lvl(r), b = oversToBalls(r.Overs || 0);
+    v.dates[r.Date] = w; v.balls += w * b; v.wkts += w * k * (r.Wickets || 0); v.conc += w * (r.Runs || 0) / k;
+    if (r.Date.slice(0, 4) === ly) { v.ly.wkts += r.Wickets || 0; v.ly.conc += r.Runs || 0; v.ly.balls += b; }
   });
-
-  // Sort XI by median position ascending; players with no batting position go to the tail
-  const orderedXI = [...xiWithRole].sort((a, b) => {
-    const pa = a.medPos ?? 99;
-    const pb = b.medPos ?? 99;
-    if (pa !== pb) return pa - pb;
-    // Tiebreak: within same position group, higher impact score first
-    return b.total - a.total;
-  });
-
-  // Assign display batting positions 1-11 based on sorted order
-  orderedXI.forEach((p, i) => p.batPos = i + 1);
-
-  // Group into 4 pitch rows
-  const pitchRows = [
-    { label: 'Openers', players: orderedXI.slice(0, 2) },
-    { label: 'Middle Order', players: orderedXI.slice(2, 5) },
-    { label: 'Lower Order', players: orderedXI.slice(5, 8) },
-    { label: 'Tail / Bowlers', players: orderedXI.slice(8, 11) },
-  ];
-
-  const roleColour = {batter:'#e5484d', allrounder:'#3fb06a', bowler:'#5b93e8'};
-  const roleLabel = {batter:'BAT', allrounder:'AR', bowler:'BOWL'};
-
-  document.getElementById('bestxi-formation').innerHTML = pitchRows.map((row, ri) => `
-    <div>
-      <div style="text-align:center;font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">${row.label}</div>
-      <div style="display:flex;justify-content:center;gap:${ri===0?'80px':'20px'}">
-        ${row.players.map(s => {
-          const initials = s.player.split(' ').map(w=>w[0]).join('').slice(0,2);
-          const roleC = roleColour[s.classRole];
-          const roleL = roleLabel[s.classRole];
-          return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:80px">
-            <div style="position:relative">
-              <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;border:2px solid ${roleC};background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:${roleC}">${initials}</div>
-              <div style="position:absolute;top:-4px;left:-4px;background:var(--surface);border:1px solid ${roleC};color:${roleC};font-size:0.55rem;font-weight:700;padding:1px 4px;border-radius:3px;letter-spacing:0.5px">${s.batPos}</div>
-              <div style="position:absolute;bottom:-4px;right:-4px;background:${roleC};color:#000;font-size:0.5rem;font-weight:700;padding:1px 4px;border-radius:3px">${roleL}</div>
-            </div>
-            <div style="text-align:center;margin-top:4px">
-              <div style="font-size:0.7rem;font-weight:600;color:#fff;line-height:1.2;max-width:80px">${chartName(s.player)}</div>
-              <div style="font-size:0.6rem;color:rgba(255,255,255,0.45)">${s.total} pts</div>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>
-  `).join('');
+  CRICKET_DATA.fielding.forEach(function(r) { var w = weight(r); if (w && !notPlayer(r.Fielder)) { var v = get(r.Fielder); v.dates[r.Date] = w; v.ct += w; } });
+  CRICKET_DATA.keeping.forEach(function(r) { var w = weight(r); if (w && !notPlayer(r.Keeper)) { var v = get(r.Keeper); v.dates[r.Date] = w; v.kpDates[r.Date] = 1; v.ct += w; } });
+  TP.squad = Object.values(P).map(function(v) {
+    var g = Object.values(v.dates).reduce(function(a, b) { return a + b; }, 0);
+    var shrink = g / (g + 3);                                  // one good game doesn't make a regular
+    var perInn = v.inns ? v.runs / v.inns : 0;
+    var oversPG = g ? v.balls / 6 / g : 0, econ = v.balls ? v.conc / (v.balls / 6) : 9;
+    v.bowls = oversPG >= 2.5 && v.balls >= 60;                 // a genuine bowling option, not an occasional over
+    v.keeper = Object.keys(v.kpDates).length >= 2;
+    v.bat = perInn * shrink;
+    v.bowl = v.bowls ? ((v.wkts / g) * 16 + Math.max(0, 6.5 - econ) * 3) * shrink : 0;
+    v.field = (v.ct / Math.max(g, 1)) * 5 * shrink;
+    v.score = v.bat + v.bowl + v.field;
+    var pw = v.pos.reduce(function(a, x) { return a + x.w; }, 0);
+    v.usualPos = pw ? v.pos.reduce(function(a, x) { return a + x.pos * x.w; }, 0) / pw : 99;
+    v.play = v.bowls ? (v.bat >= 14 ? 'ar' : 'bowl') : 'bat';   // what they do apart from keeping
+    v.role = v.keeper ? 'wk' : v.play;
+    v.lyGames = Object.keys(v.dates).filter(function(d) { return d.slice(0, 4) === ly; }).length;
+    v.home = Object.keys(v.xiGames).sort(function(a, b) { return v.xiGames[b] - v.xiGames[a]; })[0] || '';
+    v.forXI = v.xiGames[TP.xi] || 0;
+    return v;
+  }).sort(function(a, b) { return b.forXI - a.forXI || b.lyGames - a.lyGames || a.name.localeCompare(b.name); });
+  TP.byName = {}; TP.squad.forEach(function(v) { TP.byName[v.name] = v; });
 }
 
+function tpLine(v) {   // a short summary of the most recent season
+  var y = TP.years[TP.years.length - 1], bits = [];
+  if (v.ly.inns) bits.push(v.ly.runs + ' runs' + (v.ly.outs ? ' @ ' + (v.ly.runs / v.ly.outs).toFixed(1) : ''));
+  if (v.ly.balls >= 36) bits.push(v.ly.wkts + (v.ly.wkts === 1 ? ' wkt' : ' wkts') + (v.ly.wkts ? ' @ ' + (v.ly.conc / v.ly.wkts).toFixed(1) : ''));
+  return bits.length ? y + ': ' + bits.join(', ') : (v.lyGames ? y + ': ' + v.lyGames + ' games' : 'Played in ' + TP.years[0]);
+}
+var TP_ROLE = { wk: 'WK', bowl: 'BOWL', ar: 'AR', bat: 'BAT' };
 
-// ============================================================
-// SEASON
-// ============================================================
+function tpPick() {
+  var pool = TP.squad.filter(function(v) { return TP.avail.has(v.name) && !TP.dropped.has(v.name); });
+  var team = [], take = function(v) { if (v && team.indexOf(v) < 0 && team.length < 11) team.push(v); };
+  var keeper = pool.filter(function(v) { return v.keeper; }).sort(function(a, b) { return (b.bat + b.field) - (a.bat + a.field); })[0];
+  take(keeper); TP.keeper = keeper ? keeper.name : '';
+  pool.filter(function(v) { return v.bowls; }).sort(function(a, b) { return b.bowl - a.bowl; }).slice(0, 5).forEach(take);   // five bowling options
+  pool.slice().sort(function(a, b) { return b.bat - a.bat; }).forEach(take);                                                  // then the best batters
+  pool.slice().sort(function(a, b) { return b.score - a.score; }).forEach(take);                                              // short on batters: anyone
+  team.sort(function(a, b) { return a.usualPos - b.usualPos || b.bat - a.bat; });
+  TP.team = team;
+  TP.reserves = pool.filter(function(v) { return team.indexOf(v) < 0; }).sort(function(a, b) { return b.score - a.score; }).slice(0, 3);
+  team.forEach(function(v) { v.shown = v.name === TP.keeper ? 'wk' : v.play; });
+}
+
+function tpSave() {
+  try {
+    TP.availByXI[TP.xi] = [...TP.avail];
+    localStorage.setItem('hessle-team-picker', JSON.stringify({ xi: TP.xi, availByXI: TP.availByXI, opp: document.getElementById('tpOpp').value,
+      date: document.getElementById('tpDate').value, capt: document.getElementById('tpCapt').value }));
+  } catch (e) {}
+}
+function tpLoad() {
+  try { return JSON.parse(localStorage.getItem('hessle-team-picker') || 'null'); } catch (e) { return null; }
+}
+
+function renderTeamPicker() {
+  if (!TP.ready) {
+    var sel = document.getElementById('tpXI');
+    sel.innerHTML = TEAMS.map(function(t) { return '<option value="' + t + '">' + t + ' XI</option>'; }).join('');
+    var saved = tpLoad();
+    if (saved && TEAMS.indexOf(saved.xi) >= 0) TP.xi = saved.xi;
+    sel.value = TP.xi;
+    tpBuildSquad();
+    TP.availByXI = (saved && saved.availByXI) || {};
+    tpUseXI();
+    if (saved) { document.getElementById('tpOpp').value = saved.opp || ''; document.getElementById('tpDate').value = saved.date || ''; TP.capt = saved.capt || ''; }
+    TP.ready = true;
+  }
+  tpRenderSquad(); tpRenderTeam();
+}
+function tpUseXI() {   // each XI keeps its own availability; first time, its regulars are ticked
+  TP.avail = new Set((TP.availByXI[TP.xi] || []).filter(function(n) { return TP.byName[n]; }));
+  if (!TP.availByXI[TP.xi]) tpTickRegulars(true);
+}
+function tpChangeXI() {
+  TP.availByXI[TP.xi] = [...TP.avail];
+  TP.xi = document.getElementById('tpXI').value; TP.dropped.clear();
+  tpBuildSquad(); tpUseXI(); tpSave(); tpRenderSquad(); tpRenderTeam();
+}
+function tpTickRegulars(quiet) {   // anyone who played at least 3 games for this XI in the most recent season
+  TP.squad.forEach(function(v) { if (v.forXI >= 3) TP.avail.add(v.name); });
+  TP.dropped.clear();
+  if (!quiet) { tpSave(); tpRenderSquad(); tpRenderTeam(); }
+}
+function tpClear() { TP.avail.clear(); TP.dropped.clear(); tpSave(); tpRenderSquad(); tpRenderTeam(); }
+function tpToggle(name, on) { if (on) TP.avail.add(name); else TP.avail.delete(name); TP.dropped.delete(name); tpSave(); tpRenderTeam(); tpCount(); }
+function tpDrop(name) { TP.dropped.add(name); tpRenderTeam(); }
+function tpCount() {
+  var n = TP.squad.filter(function(v) { return TP.avail.has(v.name); }).length;
+  document.getElementById('tpCount').textContent = n + ' of ' + TP.squad.length + ' ticked as available';
+}
+
+function tpRenderSquad() {
+  var q = (document.getElementById('tpSearch').value || '').toLowerCase();
+  var rows = TP.squad.filter(function(v) { return !q || v.name.toLowerCase().indexOf(q) >= 0; });
+  document.getElementById('tpSquad').innerHTML = rows.map(function(v) {
+    var id = 'tpp_' + v.name.replace(/[^A-Za-z0-9]/g, '_');
+    return '<label class="tp-row" for="' + id + '"><input type="checkbox" id="' + id + '" data-name="' + _esc(v.name) + '"' + (TP.avail.has(v.name) ? ' checked' : '') + '>' +
+      '<span><span class="tp-name">' + _esc(v.name) + '</span><br><span class="tp-meta">' + (v.forXI ? v.forXI + ' games for the ' + TP.xi + ' XI last season' : v.home ? 'Mostly ' + v.home + ' XI' : '') + ' · ' + _esc(tpLine(v)) + '</span></span>' +
+      '<span class="tp-role ' + v.role + '">' + TP_ROLE[v.role] + '</span></label>';
+  }).join('') || '<div class="tp-empty">No players match that name.</div>';
+  document.querySelectorAll('#tpSquad input').forEach(function(cb) { cb.addEventListener('change', function() { tpToggle(cb.dataset.name, cb.checked); }); });
+  tpCount();
+}
+
+function tpRenderTeam() {
+  tpPick();
+  var t = TP.team, bowlOpts = t.filter(function(v) { return v.bowls; }).length, keeper = !!TP.keeper;
+  var warn = [];
+  if (t.length && t.length < 11) warn.push('Only ' + t.length + ' available, so you need ' + (11 - t.length) + ' more to make a full side.');
+  if (t.length && !keeper) warn.push('No regular wicketkeeper is available.');
+  if (t.length && bowlOpts < 5) warn.push('Only ' + bowlOpts + ' regular bowling option' + (bowlOpts === 1 ? '' : 's') + ': you may be short of overs.');
+  document.getElementById('tpWarnings').innerHTML = warn.map(function(w) { return '<div class="tp-warn">' + w + '</div>'; }).join('');
+  document.getElementById('tpBasis').textContent = 'Based on ' + TP.years.join(' and ') + ' · ' + bowlOpts + ' bowling options';
+  var capt = document.getElementById('tpCapt'), cv = TP.capt !== undefined ? TP.capt : capt.value; TP.capt = undefined;
+  capt.innerHTML = '<option value="">None</option>' + t.map(function(v) { return '<option>' + _esc(v.name) + '</option>'; }).join('');
+  capt.value = t.some(function(v) { return v.name === cv; }) ? cv : '';
+  document.getElementById('tpTeam').innerHTML = t.length ? t.map(function(v) {
+    return '<li><span><span class="tp-name">' + _esc(v.name) + (capt.value === v.name ? ' (c)' : '') + (v.name === TP.keeper ? ' (wk)' : '') + '</span><br><span class="tp-meta">' + _esc(tpLine(v)) + '</span></span>' +
+      '<span class="tp-role ' + v.shown + '">' + TP_ROLE[v.shown] + '</span>' +
+      '<button type="button" class="tp-drop" title="Leave out" aria-label="Leave out ' + _esc(v.name) + '" data-name="' + _esc(v.name) + '">✕</button></li>';
+  }).join('') : '<li class="tp-empty" style="display:block">Tick the players who are available and the side appears here.</li>';
+  document.querySelectorAll('#tpTeam .tp-drop').forEach(function(b) { b.addEventListener('click', function() { tpDrop(b.dataset.name); }); });
+  var dropped = [...TP.dropped].filter(function(n) { return TP.avail.has(n); });
+  document.getElementById('tpReserves').innerHTML = (TP.reserves.length ? 'Reserves: ' + TP.reserves.map(function(v) { return _esc(v.name); }).join(', ') : '') +
+    (dropped.length ? (TP.reserves.length ? ' · ' : '') + 'Left out: ' + dropped.map(_esc).join(', ') + ' <button type="button" class="tp-btn tp-btn-quiet" onclick="TP.dropped.clear();tpRenderTeam()">Restore</button>' : '');
+}
+
+function tpCopy() {
+  var t = TP.team; if (!t.length) return;
+  var opp = document.getElementById('tpOpp').value.trim(), dt = document.getElementById('tpDate').value.trim(), capt = document.getElementById('tpCapt').value;
+  var lines = ['*Hessle CC ' + TP.xi + ' XI*' + (opp ? ' v ' + opp : '') + (dt ? ', ' + dt : ''), ''];
+  t.forEach(function(v, i) { lines.push((i + 1) + '. ' + v.name + (v.name === capt ? ' (c)' : '') + (v.name === TP.keeper ? ' (wk)' : '')); });
+  if (TP.reserves.length) lines.push('', 'Reserves: ' + TP.reserves.map(function(v) { return v.name; }).join(', '));
+  var text = lines.join('\n'), done = function() { var c = document.getElementById('tpCopied'); c.textContent = 'Copied'; setTimeout(function() { c.textContent = ''; }, 2500); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function() { window.prompt('Copy the team sheet:', text); });
+  else window.prompt('Copy the team sheet:', text);
+}
+
 function renderSeason() {
   const yr=document.getElementById('seasonYear').value, tm=document.getElementById('seasonTeam').value;
   document.getElementById('season-label').textContent=yr+' Season';
@@ -4394,8 +4558,15 @@ function renderForm() {
     return `<tr><td>${r.Date}</td><td><span class="badge badge-${xiClass(r.Team)}">${r.Team} XI</span></td><td>${r.Opponent}</td><td>${r['Home/Away']}</td><td><span class="badge badge-${r.Result==='W'?'w':'l'}">${r.Result}</span></td><td>${r['Runs Scored']}/${r['Wickets Lost']}</td><td>${r['Runs Conceded']}/${r['Wickets Taken']}</td><td>${motm?`<span class="badge badge-motm">⭐ ${motm}</span>`:''}</td></tr>`;
   }).join('');
 
+  // Players: only those who played in the most recent season within the current filters
+  const formYear=m.reduce((y,r)=>r.Date.slice(0,4)>y?r.Date.slice(0,4):y,'');
+  const inYear=r=>r.Date.slice(0,4)===formYear;
+  const active=new Set();
+  [['batting','Batter'],['bowling','Bowler'],['fielding','Fielder'],['keeping','Keeper']].forEach(([ds,c])=>getFiltered(CRICKET_DATA[ds]).forEach(r=>{ if(inYear(r)&&r[c]) active.add(r[c]); }));
+  ['formBatNote','formBowlNote'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=formYear?'Players who played in '+formYear:''; });
+
   // Player batting form
-  const batters=[...new Set(CRICKET_DATA.batting.map(r=>r.Batter))].filter(Boolean);
+  const batters=[...new Set(CRICKET_DATA.batting.map(r=>r.Batter))].filter(b=>b&&active.has(b));
   const batFormRows=[];
   batters.forEach(batter=>{
     const innings=getFiltered(CRICKET_DATA.batting).filter(r=>r.Batter===batter&&r.Dismissal!=='DNB'&&typeof r.Runs==='number').sort((a,b)=>a.Date<b.Date?1:-1);
@@ -4457,17 +4628,17 @@ function renderForm() {
   }, 50);
 
   // Player bowling form
-  const bowlers=[...new Set(CRICKET_DATA.bowling.map(r=>r.Bowler))].filter(Boolean);
+  const bowlers=[...new Set(CRICKET_DATA.bowling.map(r=>r.Bowler))].filter(b=>b&&active.has(b));
   const bowlFormRows=[];
   bowlers.forEach(bowler=>{
     const spells=getFiltered(CRICKET_DATA.bowling).filter(r=>r.Bowler===bowler).sort((a,b)=>a.Date<b.Date?1:-1);
     if(spells.length<3) return;
     const last5s=spells.slice(0,5), allS=spells;
     const l5wkts=last5s.reduce((s,r)=>s+(r.Wickets||0),0);
-    const l5overs=last5s.reduce((s,r)=>s+(r.Overs||0),0);
+    const l5overs=last5s.reduce((s,r)=>s+oversToBalls(r.Overs||0),0)/6;   // overs added as balls (4.3 + 3.4 = 8.1)
     const l5runs=last5s.reduce((s,r)=>s+(r.Runs||0),0);
     const l5econ=l5overs>0?(l5runs/l5overs).toFixed(2):'—';
-    const allOvers=allS.reduce((s,r)=>s+(r.Overs||0),0);
+    const allOvers=allS.reduce((s,r)=>s+oversToBalls(r.Overs||0),0)/6;
     const allRuns=allS.reduce((s,r)=>s+(r.Runs||0),0);
     const allEcon=allOvers>0?(allRuns/allOvers).toFixed(2):'—';
     const trend=parseFloat(l5econ)<parseFloat(allEcon)?'↑':'↓';
@@ -4917,6 +5088,9 @@ function renderNRR() {
 // ============================================================
 // OVERVIEW — CLOSE GAMES
 // ============================================================
+// a colour from the current theme (light or dark), for charts
+function themeColor(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#8b949e'; }
+
 function renderCloseGames() {
   const m = getFiltered(CRICKET_DATA.matches);
   // Close = decided by ≤20 runs (batting first result) or opponent lost last 2 wickets
@@ -4982,7 +5156,7 @@ function renderCloseGames() {
   `;
 
   makeChart('chartClose1',{type:'bar',data:{labels:['Close (≤20 runs/2 wkts)','Comfortable'],datasets:[
-    {label:'Win %',data:[cpct,compct],backgroundColor:['#f0a500','#3fb950']}
+    {label:'Win %',data:[cpct,compct],backgroundColor:[cpct,compct].map(v => v >= 50 ? themeColor('--green') : themeColor('--red')),borderRadius:4}
   ]},options:{...chartOpts({plugins:{legend:{display:false}}}),scales:{x:{ticks:{color:'#8b949e'},grid:{color:'#21262d'}},y:{max:100,ticks:{color:'#8b949e',callback:v=>v+'%'},grid:{color:'#21262d'}}}}});
 
   // Margin distribution buckets
@@ -4998,10 +5172,10 @@ function renderCloseGames() {
     data:{
       labels:closeYears,
       datasets:[
-        {label:'Close Wins',data:closeWinsBySeason,backgroundColor:'#3fb950',stack:'a'},
-        {label:'Close Losses',data:closeLossesBySeason,backgroundColor:'#f85149',stack:'a'},
-        {type:'line',label:'Win %',data:closeWinPctBySeason,borderColor:'#f0a500',backgroundColor:'transparent',
-         pointBackgroundColor:'#f0a500',pointRadius:5,tension:0.3,yAxisID:'y2',borderWidth:2}
+        {label:'Close Wins',data:closeWinsBySeason,backgroundColor:themeColor('--green'),stack:'a'},
+        {label:'Close Losses',data:closeLossesBySeason,backgroundColor:themeColor('--red'),stack:'a'},
+        {type:'line',label:'Win %',data:closeWinPctBySeason,borderColor:themeColor('--accent2'),backgroundColor:'transparent',
+         pointBackgroundColor:themeColor('--accent2'),pointRadius:5,tension:0.3,yAxisID:'y2',borderWidth:2}
       ]
     },
     options:{
@@ -5010,7 +5184,7 @@ function renderCloseGames() {
       scales:{
         x:{stacked:true,ticks:{color:'#8b949e'},grid:{color:'#21262d'}},
         y:{stacked:true,ticks:{color:'#8b949e'},grid:{color:'#21262d'},title:{display:true,text:'Matches',color:'#8b949e',font:{size:11}}},
-        y2:{position:'right',min:0,max:100,ticks:{color:'#f0a500',callback:v=>v+'%'},grid:{display:false},title:{display:true,text:'Win %',color:'#f0a500',font:{size:11}}}
+        y2:{position:'right',min:0,max:100,ticks:{color:themeColor('--accent2'),callback:v=>v+'%'},grid:{display:false},title:{display:true,text:'Win %',color:themeColor('--accent2'),font:{size:11}}}
       }
     }
   });
@@ -5309,16 +5483,17 @@ function renderBowlExtras() {
   const rows=getFiltered(CRICKET_DATA.bowling);
   const bowlers=[...new Set(rows.map(r=>r.Bowler))].filter(Boolean);
   const data=bowlers.map(b=>{
-    const br=rows.filter(r=>r.Bowler===b);
-    const overs=br.reduce((s,r)=>s+(r.Overs||0),0);
+    // only games where extras were recorded; overs added up as balls (4.3 + 3.4 overs = 8.1, not 7.7)
+    const br=rows.filter(r=>r.Bowler===b&&extrasRecorded(r));
+    const balls=br.reduce((s,r)=>s+oversToBalls(r.Overs||0),0), overs=balls/6;
     const wides=br.reduce((s,r)=>s+(r.Wides||0),0);
     const nb=br.reduce((s,r)=>s+(r['No Balls']||0),0);
-    return {b,overs:Math.round(overs*10)/10,wides,nb,total:wides+nb,widePO:overs>0?(wides/overs).toFixed(3):'-',nbPO:overs>0?(nb/overs).toFixed(3):'-',totalPO:overs>0?((wides+nb)/overs).toFixed(3):'-'};
-  }).filter(d=>d.overs>=20).sort((a,b)=>parseFloat(a.widePO)-parseFloat(b.widePO));
+    return {b,overs:ballsToOvers(balls),trueOvers:overs,wides,nb,total:wides+nb,widePO:overs>0?(wides/overs).toFixed(3):'-',nbPO:overs>0?(nb/overs).toFixed(3):'-',totalPO:overs>0?((wides+nb)/overs).toFixed(3):'-'};
+  }).filter(d=>d.trueOvers>=20).sort((a,b)=>parseFloat(a.widePO)-parseFloat(b.widePO));
 
   const top10w=data.slice(0,10), top10nb=[...data].sort((a,b)=>parseFloat(a.nbPO)-parseFloat(b.nbPO)).slice(0,10);
-  makeChart('chartWides',{type:'bar',data:{labels:chartNames(top10w.map(d=>d.b)),datasets:[{label:'Wides/Over',data:top10w.map(d=>parseFloat(d.widePO)),backgroundColor:'#f0a500'}]},options:{...hBarOpts()}});
-  makeChart('chartNoBalls',{type:'bar',data:{labels:chartNames(top10nb.map(d=>d.b)),datasets:[{label:'No Balls/Over',data:top10nb.map(d=>parseFloat(d.nbPO)),backgroundColor:'#f85149'}]},options:{...hBarOpts()}});
+  makeChart('chartWides',{type:'bar',data:{labels:chartNames(top10w.map(d=>d.b)),datasets:[{label:'Wides/Over',data:top10w.map(d=>parseFloat(d.widePO)),backgroundColor:themeColor('--accent2')}]},options:{...hBarOpts()}});
+  makeChart('chartNoBalls',{type:'bar',data:{labels:chartNames(top10nb.map(d=>d.b)),datasets:[{label:'No Balls/Over',data:top10nb.map(d=>parseFloat(d.nbPO)),backgroundColor:themeColor('--red')}]},options:{...hBarOpts()}});
 
   const sorted=[...data].sort((a,b)=>parseFloat(b.totalPO)-parseFloat(a.totalPO));
   document.querySelector('#tblExtras tbody').innerHTML=sorted.map(d=>`<tr>
@@ -6338,7 +6513,7 @@ function renderOverviewSparklines() {
   var winPcts=[], avgScored=[], avgConceded=[];
   years.forEach(function(y){
     var m = CRICKET_DATA.matches.filter(function(r){
-      return r.Date.slice(0,4)===y && (!filterTeam||r.Team===filterTeam) && (r.Result==='W'||r.Result==='L');
+      return r.Date.slice(0,4)===y && teamInFilter(r.Team) && (r.Result==='W'||r.Result==='L');
     });
     if(!m.length){winPcts.push(null);avgScored.push(null);avgConceded.push(null);return;}
     var wins = m.filter(function(r){return r.Result==='W';}).length;
@@ -6381,9 +6556,10 @@ function applyDeepLink() {
   var year     = getURLParam('year');
   var team     = getURLParam('team');
 
-  if(year) { document.getElementById('filterYear').value=year; filterYear=year; }
-  if(team) { document.getElementById('filterTeam').value=team; filterTeam=team; }
-  if(year||team) renderAll();
+  var yearTo   = getURLParam('to');
+  var ys = year ? year.split(',') : null;
+  if (ys && ys.length === 1 && yearTo) { ys = []; for (var y = +year; y <= +yearTo; y++) ys.push(String(y)); }
+  if(year||team) setFilters(ys, team ? team.split(',') : null);
 
   function findNavBtn(pageName) {
     var found = null;
@@ -7890,7 +8066,25 @@ var SCENARIO_ODDS_2ND = {3: 100.0, 2: 90.3, 1: 58.4, 0: 4.3};
 var TOTAL_SEASON_2ND = 17;
 var PROMO_SPOTS_2ND = 2;
 var LEAGUE_TABLES = {};   // tables for other XIs (e.g. the 3rd XI), from league.json
-function leagueTable(xi) { return xi === '1st' ? LEAGUE_TABLE : xi === '2nd' ? LEAGUE_TABLE_2ND : (LEAGUE_TABLES[xi] || []); }
+// Past seasons' final tables (league.json "history": season -> XI -> table), kept by the automation
+var LEAGUE_HISTORY = {};
+function leaguePast(xi) {   // the chosen past season's table for this XI, or null for the current one
+  var y = window._leagueSeason; return y && LEAGUE_HISTORY[y] && LEAGUE_HISTORY[y][xi] ? LEAGUE_HISTORY[y][xi] : null;
+}
+function leagueTable(xi) {
+  var past = leaguePast(xi); if (past) return past.rows;
+  return xi === '1st' ? LEAGUE_TABLE : xi === '2nd' ? LEAGUE_TABLE_2ND : (LEAGUE_TABLES[xi] || []);
+}
+function leagueCurrentYear(xi) {
+  var last = CRICKET_DATA.matches.filter(function(m) { return m.Team === xi; }).reduce(function(a, m) { return m.Date > a ? m.Date : a; }, '');
+  return last.slice(0, 4);
+}
+function selectLeagueSeason(y) {
+  var xi = window._leagueXI || '1st';
+  window._leagueSeason = y === leagueCurrentYear(xi) ? '' : y;
+  document.getElementById('league-xi-label').textContent = xi + ' XI — ' + (leaguePast(xi) ? 'Final Standing, ' + y : leagueSeasonLabel(xi));
+  renderLeague(xi);
+}
 function buildLeagueButtons() {
   var box = document.getElementById('league-xi-buttons'); if (!box) return;
   var xis = ['1st', '2nd'].concat(Object.keys(LEAGUE_TABLES).sort(function(a, b) { return ((XI_ORDER.indexOf(a) + 1) || 99) - ((XI_ORDER.indexOf(b) + 1) || 99); }));
@@ -7964,6 +8158,12 @@ function leagueSeasonLabel(xi) {
 
 function selectLeagueXI(xi) {
   window._leagueXI = xi; // persist so re-renders after toggle picks use correct xi
+  window._leagueSeason = '';
+  var cur = leagueCurrentYear(xi);
+  var years = [cur].concat(Object.keys(LEAGUE_HISTORY).filter(function(y) { return LEAGUE_HISTORY[y][xi] && y !== cur; })).filter(Boolean).sort().reverse();
+  var ls = document.getElementById('leagueSeason');
+  ls.innerHTML = years.map(function(y) { return '<option value="' + y + '">' + y + '</option>'; }).join('');
+  ls.value = cur; ls.disabled = years.length < 2;
   document.getElementById('league-xi-picker').style.display = 'none';
   document.getElementById('league-main').style.display = 'block';
   document.getElementById('league-xi-label').textContent = xi + ' XI — ' + leagueSeasonLabel(xi);
@@ -7980,6 +8180,11 @@ function renderLeague(xi) {
   xi = xi || '1st';
   var is2nd    = xi !== '1st';   // XIs below the 1st use the 2nd XI's rules: promotion places, no relegation
   var tbl      = leagueTable(xi);
+  var past     = leaguePast(xi);   // a finished past season: no promotion/relegation claims (the rules varied)
+  var titleEl = document.getElementById('leagueTitle'), legendEl = document.getElementById('leagueLegend');
+  if (titleEl) titleEl.textContent = past ? 'Final Standings — ' + window._leagueSeason + (past.division_name ? ' · ' + past.division_name : '')
+                                          : leagueSeasonLabel(xi).replace(/^Final Standing/, 'Final Standings').replace(/^Standing/, 'Standings');
+  if (legendEl) legendEl.style.display = past ? 'none' : '';
 
   var hessleIdx = tbl.findIndex(function(t){ return t.isHessle; });
   var hessle   = tbl[hessleIdx];
@@ -8009,7 +8214,12 @@ function renderLeague(xi) {
   var ordinal = function(n) { var s=['th','st','nd','rd'],v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); };
 
   var kpisEl = document.getElementById('league-kpis');
-  if (kpisEl) kpisEl.innerHTML =
+  if (kpisEl && past) {
+    kpisEl.innerHTML =
+      '<div class="kpi blue"><div class="kpi-val">' + hPts + '</div><div class="kpi-label">Final Points</div></div>' +
+      '<div class="kpi"><div class="kpi-val">' + ordinal(hPos) + '</div><div class="kpi-label">Final Position (of ' + tbl.length + ')</div></div>' +
+      '<div class="kpi"><div class="kpi-val">' + hessle.W + '–' + hessle.L + (hessle.T ? '–' + hessle.T : '') + '</div><div class="kpi-label">Won–Lost' + (hessle.T ? '–Tied' : '') + '</div></div>';
+  } else if (kpisEl) kpisEl.innerHTML =
     '<div class="kpi blue"><div class="kpi-val">' + hPts + '</div><div class="kpi-label">Final Points</div></div>' +
     '<div class="kpi"><div class="kpi-val">' + ordinal(hPos) + '</div><div class="kpi-label">Final Position</div></div>' +
     '<div class="kpi amber"><div class="kpi-val">' + gapVal + ' pts</div><div class="kpi-label">' + gapLabel + '</div></div>' +
@@ -8022,6 +8232,7 @@ function renderLeague(xi) {
     tbl.forEach(function(team) {
       var rowStyle = '';
       if (team.isHessle)       rowStyle = 'background:rgba(88,166,255,0.10);font-weight:600;';
+      else if (past)           rowStyle = '';
       else if (team.pos <= promoSpots)  rowStyle = 'background:rgba(63,185,80,0.10);';
       else if (!is2nd && team.pos > tbl.length - RELG_SPOTS) rowStyle = 'background:rgba(248,81,73,0.10);';
 
@@ -8995,8 +9206,8 @@ function _countBy(rows, playerFn, valueFn) {
 }
 function _plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
 function _filterNote() {
-  return 'Top 10' + ((typeof filterYear !== 'undefined' && filterYear) ? ', ' + filterYear : ', all years') +
-         ((typeof filterTeam !== 'undefined' && filterTeam) ? ', ' + filterTeam + ' XI' : ', both XIs');
+  return 'Top 10' + (yearFilterLabel() ? ', ' + yearFilterLabel() : ', all years') +
+         (teamFilterLabel() ? ', ' + teamFilterLabel() : ', all XIs');
 }
 var KPI_BOARDS = [
   { box: 'overview-kpis', match: /Top MoTM/i, title: 'Most Man of the Match awards', note: function() { return 'Top 10, all time'; },
