@@ -30,7 +30,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 120             # long backfills (many seasons) need time; weekly runs take a few minutes
     steps:
       - uses: actions/checkout@v4
 
