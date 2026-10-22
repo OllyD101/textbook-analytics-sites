@@ -112,7 +112,7 @@ Without the file, Sundays and bank holiday Mondays are still handled, using the 
 ## Testing without Play-Cricket
 
 ```
-python tests/make_fixtures.py docs/data.json tests/fixtures   # builds Play-Cricket-format scorecards from 2026 data
+python tests/make_fixtures.py tests/baseline_data.json tests/fixtures   # builds Play-Cricket-format scorecards from 2026 data
 python pipeline/run.py --mode dry_run --fixtures tests/fixtures
 python tests/test_pipeline.py                                   # 11 end-to-end tests on a throwaway copy
 python tests/test_third_xi.py                                   # 3 tests: 3rd XI weekly runs and backfill

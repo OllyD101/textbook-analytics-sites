@@ -23,7 +23,7 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 from pc_api import FixtureClient, PlayCricketClient, PlayCricketError  # noqa: E402
 from transform import Names, convert, overs_to_balls, valid_overs, r2, norm_name  # noqa: E402
-from awards import award_match_of_the_match, award_player_of_the_month, recheck_potm_for_teams  # noqa: E402
+from awards import award_match_of_the_match, award_player_of_the_month, recheck_potm_for_teams, drop_placeholder_awards  # noqa: E402
 
 DATASETS = ("matches", "batting", "bowling", "fielding", "keeping")
 
@@ -529,7 +529,8 @@ def main():
         # automatic awards first (Match Value, frozen once given), then any captain overrides
         acfg = cfg["awards"]
         today = date.fromisoformat(os.environ["PIPELINE_TODAY"]) if os.environ.get("PIPELINE_TODAY") else None  # tests only
-        n_awards = award_match_of_the_match(data, acfg, report, today=today) + award_player_of_the_month(data, acfg, report, today=today) \
+        n_awards = drop_placeholder_awards(data, report)
+        n_awards += award_match_of_the_match(data, acfg, report, today=today) + award_player_of_the_month(data, acfg, report, today=today) \
             + recheck_potm_for_teams(data, acfg, report)
         apply_manual(data, report)
         problems = blocking_checks(data)

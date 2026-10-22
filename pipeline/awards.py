@@ -32,6 +32,24 @@ def _key(r):
     return (r["Date"], r["Team"], r["Opponent"])
 
 
+# Placeholder names for players the scorecard doesn't name: never a candidate for an award (same list as
+# NOT_PLAYERS in fantasy.py and in the dashboard). Their catches still count against the bowler's share.
+NOT_PLAYERS = {"Unsure"}
+
+
+def drop_placeholder_awards(data, report):
+    """Remove any Man of the Match / Player of the Month held by a placeholder, so it's re-awarded properly."""
+    gone = [r for r in data.get("motm", []) if r.get("MOTM") in NOT_PLAYERS]
+    data["motm"] = [r for r in data.get("motm", []) if r.get("MOTM") not in NOT_PLAYERS]
+    for r in gone:
+        report.setdefault("awards", []).append(f"Man of the Match {r['Date']} {r['Team']} XI was '{r['MOTM']}' (not a player) - re-awarded below")
+    months = [m for r in data.get("potm", []) if r.get("player") in NOT_PLAYERS for m in r["months"]]
+    data["potm"] = [r for r in data.get("potm", []) if r.get("player") not in NOT_PLAYERS]
+    for mo in months:
+        report.setdefault("awards", []).append(f"Player of the Month {mo} was a placeholder - re-awarded below")
+    return len(gone) + len(months)
+
+
 def match_value(data, m, cfg):
     """Per-player Match Value for one match: {player: {'bat','bowl','field','total','wkts','runs'}}."""
     W, cs, rs, tw = cfg["wicket_value"], cfg["catch_share"], cfg["runout_share"], cfg["tempo_weight"]
@@ -71,7 +89,7 @@ def match_value(data, m, cfg):
                     v[bw]["bowl"] -= cs * W
     for p, x in v.items():
         x["total"] = x["bat"] + x["bowl"] + x["field"]
-    return dict(v)
+    return {p: x for p, x in v.items() if p not in NOT_PLAYERS}
 
 
 def ranked(values):
