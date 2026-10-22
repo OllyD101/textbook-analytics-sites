@@ -33,3 +33,9 @@ From the updated `Hessle2025 Data.xlsx` (36 matches, mostly 2026): batting order
 Craig Asquith bowling row on 23 Aug 2025. Awards unchanged. Strike rates, % of team runs, boundary %,
 economy and bowling strike rates were recalculated for the 13 matches whose workbook formulas
 hadn't followed the edits. Steve Cooper added to `pipeline/aliases.json`.
+
+## After the 2018-2025 dry run (23 October 2026)
+
+Two corrections from `Hessle2025 Data.xlsx`: 23 Jun 2018 1st XI wickets taken 10 -> 9; Oliver Davison
+4 Jun 2022 (2nd XI) 75 balls, not 119. The workbook's fours and sixes for 2018-2024 had been cleared by
+accident; the site kept them, and `Hessle2025_boundaries_restore.xlsx` puts them back in the workbook.
