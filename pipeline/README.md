@@ -62,6 +62,18 @@ GitHub emails the repository owner. Open the run in the **Actions** tab; the rep
 
 Whenever a run changes the data, it also writes `docs/data-meta.json` (when, and the latest match date). The dashboard shows this under the filters, e.g. "Updated today, 7:42pm · Results to 3 May 2027", and the Overview page opens with the latest weekend's results. Matches fetched from Play-Cricket that are identical to the site are left untouched, so the stamp only moves when something really changed.
 
+## Cup games, T20s and friendlies
+
+Cup games, friendlies and T20s are never fetched or published: anything whose Play-Cricket competition type is Cup or Friendly, whose competition/league name or match type mentions T20, Twenty20 or Friendly, or that is a 20-over game. One already on the site is removed on publish, with its Man of the Match (a dry run lists it as "would be removed"). Each run's report lists every match left out and why, under "Not included". Change the rules in `match_filter` in `pipeline/config.json` (for example add "Cup" to `exclude_competition_types` to leave out cup games too).
+
+## Player of the Month and the 3rd XI
+
+Months before 2027 kept their original winner (1st and 2nd XI only). When 3rd XI games are added to one of those months, the award passes to a player who played for the 3rd XI that month if those games lift their Match Value total above the existing winner's and it wouldn't have without them; otherwise the existing winner stays. The report lists every change as "... replaces ...". Set `potm_recheck_teams` to `[]` in `config.json` to turn this off.
+
+## Balls, fours and sixes not on Play-Cricket
+
+Older Play-Cricket scorecards often have no balls faced, fours or sixes. A blank there (or a 0 where the site has a blank) counts as "not recorded": the dry run doesn't list it, and publishing keeps the site's figures. If both have a number and they differ, it's still reported and Play-Cricket's figure is used.
+
 ## Seasons before 2018
 
 The club has no award records before 2018, so older games get a Match Value Man of the Match and older months a Match Value Player of the Month (once, then frozen). Every 2018-2026 game and month already has an award, and those never change.
@@ -95,5 +107,7 @@ python tests/test_sunday_games.py                               # 7 tests: Sunda
 python tests/test_fixtures.py                                   # 5 tests: the fixtures file
 python tests/test_older_seasons.py                              # 2 tests: fetching seasons before 2018
 python tests/test_data_meta.py                                  # 2 tests: the dashboard's "Updated" stamp
+python tests/test_pc_detail.py                                  # 4 tests: balls/fours/sixes Play-Cricket doesn't record
+python tests/test_filters_awards.py                             # 5 tests: cup/T20/friendly games left out or removed; award rules
 python pipeline/check_data.py                                   # consistency checks on docs/data.json (changes nothing)
 ```

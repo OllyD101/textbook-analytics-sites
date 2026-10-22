@@ -28,6 +28,31 @@
       "3rd"
     ],
     "_help_past_months": "Months before match_value_from with no Player of the Month at all (e.g. seasons before 2018) get one by Match Value. Months that already have one never change.",
-    "match_value_past_months": true
+    "match_value_past_months": true,
+    "_help_motm_settle": "From match_value_from, a game's Man of the Match is worked out again on every run for this many days after it's played (so scorers' corrections count), then frozen.",
+    "motm_settle_days": 3,
+    "_help_potm_recheck": "Months before match_value_from that include games for these XIs: Player of the Month passes to a player who played for one of them that month if those games lift their Match Value total above the existing winner's (and it wouldn't have without them). Otherwise the existing winner stays.",
+    "potm_recheck_teams": [
+      "3rd"
+    ]
+  },
+  "match_filter": {
+    "_help": "Matches that are not fetched or published. Checked against Play-Cricket's competition type, competition/league name, match type and game type (any wording, any case), and the number of overs. Every match left out is listed in the report under 'Not included', with the reason.",
+    "exclude_competition_types": [
+      "Friendly",
+      "Cup"
+    ],
+    "exclude_if_name_contains": [
+      "T20",
+      "Twenty20",
+      "Twenty 20",
+      "20 over",
+      "20-over",
+      "Friendly"
+    ],
+    "exclude_overs": [
+      20
+    ],
+    "_help_removal": "A match already on the site that Play-Cricket shows as one of these is removed on publish (a dry run lists it as 'would be removed')."
   }
 }

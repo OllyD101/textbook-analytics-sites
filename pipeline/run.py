@@ -22,8 +22,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 from pc_api import FixtureClient, PlayCricketClient, PlayCricketError  # noqa: E402
-from transform import Names, convert, overs_to_balls, valid_overs, r2  # noqa: E402
-from awards import award_match_of_the_match, award_player_of_the_month  # noqa: E402
+from transform import Names, convert, overs_to_balls, valid_overs, r2, norm_name  # noqa: E402
+from awards import award_match_of_the_match, award_player_of_the_month, recheck_potm_for_teams  # noqa: E402
 
 DATASETS = ("matches", "batting", "bowling", "fielding", "keeping")
 
@@ -132,6 +132,55 @@ def keep_site_detail(new, data):
             r["SR"] = "-" if not num(b) else (r2(runs / b * 100) if b and num(runs) else 0)
             r["Boundary%"] = r2((r["4s"] + r["6s"]) / b * 100) if num(b) and b and num(r.get("4s")) and num(r.get("6s")) else "0"
     return kept
+
+
+FILTER_FIELDS = ("competition_type", "competition_name", "league_name", "match_type", "game_type")
+
+
+def excluded_reason(m, cfg):
+    """Why a Play-Cricket match (listing entry or full details) is left out, or None to include it."""
+    f = cfg.get("match_filter") or {}
+    ctype = (m.get("competition_type") or "").strip()
+    if ctype and ctype.lower() in {t.lower() for t in f.get("exclude_competition_types", [])}:
+        return f"competition type '{ctype}'"
+    text = " | ".join(str(m.get(k)) for k in FILTER_FIELDS if m.get(k))
+    for word in f.get("exclude_if_name_contains", []):
+        if word.lower() in text.lower():
+            return f"'{word}' in '{text}'"
+    try:
+        overs = int(float(m.get("no_of_overs") or 0))
+    except (TypeError, ValueError):
+        overs = 0
+    if overs and overs in f.get("exclude_overs", []):
+        return f"{overs}-over game"
+    return None
+
+
+def remove_excluded(m, data, cfg, aliases, report, mode, why):
+    """A match Play-Cricket shows as excluded (cup, T20, friendly) that's already on the site: remove it on publish."""
+    try:
+        d = datetime.strptime(m.get("match_date") or "", "%d/%m/%Y").date().isoformat()
+    except ValueError:
+        return False
+    club = cfg["club_name_match"].lower()
+    sides = [sd for sd in ("home", "away") if club in (m.get(f"{sd}_club_name") or "").lower()]
+    if len(sides) != 1:
+        return False
+    team = cfg["teams"].get((m.get(f"{sides[0]}_team_name") or "").strip())
+    other = "away" if sides[0] == "home" else "home"
+    opp = norm_name(m.get(f"{other}_club_name"))
+    opp = norm_name(next((v for k, v in aliases.get("opponents", {}).items() if norm_name(k) == opp), opp))
+    hit = [x for x in data["matches"] if x["Date"] == d and x["Team"] == team and norm_name(x["Opponent"]) == opp]
+    if not hit:
+        return False
+    label = f"{d} {team} XI v {hit[0]['Opponent']} ({why})"
+    if mode != "publish":
+        report["would_remove"].append(label)
+        return True
+    for ds in DATASETS + ("motm",):
+        data[ds] = [r for r in data.get(ds, []) if not (r["Date"] == d and r["Team"] == team)]
+    report["removed"].append(label)
+    return True
 
 
 def compare_match(new, data):
@@ -312,7 +361,7 @@ def main():
         {r.get("Fielder") for r in data["fielding"]} | {r.get("Keeper") for r in data["keeping"]}
     names = Names({m["Opponent"] for m in data["matches"]}, existing_players, aliases, state.setdefault("players", {}))
     report = {"mode": mode, "added": [], "amended": [], "unchanged": [], "identical": [], "compared_ok": [], "compared_diff": {},
-              "skipped": [], "warnings": [], "errors": [], "league": {}, "bonus": []}
+              "skipped": [], "filtered": [], "removed": [], "would_remove": [], "warnings": [], "errors": [], "league": {}, "bonus": []}
     divisions = {}
 
     for season in seasons:
@@ -337,6 +386,11 @@ def main():
             if only_teams and not {cfg["teams"].get((m.get(f"{sd}_team_name") or "").strip()) for sd in hs} & only_teams:
                 continue  # this run is limited to some XIs (e.g. the 3rd XI backfill), so leave the others alone
             mid = str(m.get("id"))
+            why = excluded_reason(m, cfg)
+            if why:
+                report["filtered"].append(f"{m.get('match_date')} {m.get('home_team_name') or ''} v {m.get('away_team_name') or ''} ({m.get('home_club_name') or ''} v {m.get('away_club_name') or ''}): {why}")
+                remove_excluded(m, data, cfg, aliases, report, mode, why)
+                continue
             prev = state["matches"].get(mid)
             if mode == "publish" and prev and prev.get("last_updated") == m.get("last_updated") and prev.get("published"):
                 report["unchanged"].append(mid)
@@ -347,6 +401,11 @@ def main():
                 report["errors"].append(str(e))
                 continue
             if not md:
+                continue
+            why = excluded_reason(md, cfg)
+            if why:
+                report["filtered"].append(f"{md.get('match_date')} {md.get('home_club_name') or ''} v {md.get('away_club_name') or ''}: {why}")
+                remove_excluded(md, data, cfg, aliases, report, mode, why)
                 continue
             rows, issues = convert(md, names, cfg["club_name_match"], cfg["teams"])
             if rows is None:
@@ -402,14 +461,15 @@ def main():
         # automatic awards first (Match Value, frozen once given), then any captain overrides
         acfg = cfg["awards"]
         today = date.fromisoformat(os.environ["PIPELINE_TODAY"]) if os.environ.get("PIPELINE_TODAY") else None  # tests only
-        n_awards = award_match_of_the_match(data, acfg, report) + award_player_of_the_month(data, acfg, report, today=today)
+        n_awards = award_match_of_the_match(data, acfg, report, today=today) + award_player_of_the_month(data, acfg, report, today=today) \
+            + recheck_potm_for_teams(data, acfg, report)
         apply_manual(data, report)
         problems = blocking_checks(data)
         if problems:
             report["errors"] += problems
             write_report(report, names)
             sys.exit("Blocking data problems - nothing was published. See the report.")
-        if report["added"] or report["amended"] or n_awards or os.environ.get("FORCE_WRITE"):
+        if report["added"] or report["amended"] or report["removed"] or n_awards or os.environ.get("FORCE_WRITE"):
             write_json(data_path, shrink(data, fwd))
             write_meta(os.path.join(os.path.dirname(data_path), "data-meta.json"), data)
         if report["league"]:
@@ -472,7 +532,10 @@ def write_report(report, names):
         L += ["", "## Player names not seen before", "If any of these is an existing player under a different spelling, add it to `pipeline/aliases.json`:", ""] + [f"- {p}" for p in sorted(names.new_players)]
     if names.new_opponents:
         L += ["", "## Opponent names not matched", "Add these to the `opponents` section of `pipeline/aliases.json` if they're existing opponents:", ""] + [f"- {o}" for o in sorted(names.new_opponents)]
-    for title, key in (("Errors (blocking)", "errors"), ("Warnings", "warnings"), ("Skipped", "skipped")):
+    for title, key in (("Errors (blocking)", "errors"), ("Warnings", "warnings"), ("Skipped", "skipped"),
+                       ("Not included (cup games, T20s, friendlies: see match_filter in config.json)", "filtered"),
+                       ("Removed from the site (cup game, T20 or friendly)", "removed"),
+                       ("Would be removed from the site on publish (cup game, T20 or friendly)", "would_remove")):
         if report[key]:
             L += ["", f"## {title}", ""] + [f"- {x}" for x in report[key][:200]]
     text = "\n".join(L) + "\n"
