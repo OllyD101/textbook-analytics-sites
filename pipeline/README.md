@@ -70,6 +70,19 @@ Cup games, friendlies and T20s are never fetched or published: anything whose Pl
 
 Months before 2027 kept their original winner (1st and 2nd XI only). When 3rd XI games are added to one of those months, the award passes to a player who played for the 3rd XI that month if those games lift their Match Value total above the existing winner's and it wouldn't have without them; otherwise the existing winner stays. The report lists every change as "... replaces ...". Set `potm_recheck_teams` to `[]` in `config.json` to turn this off.
 
+## When Play-Cricket is wrong: keep_site.csv
+
+If a match on the site is right and Play-Cricket's scorecard isn't (and can't be fixed on Play-Cricket), add it to `pipeline/manual/keep_site.csv`:
+
+```
+Date,XI,Reason
+2022-08-29,1st XI,opposition innings not fully entered on Play-Cricket
+```
+
+That match is then never compared or replaced; the report lists it under "Kept as on the site". Delete the line to let Play-Cricket's version in again.
+
+Automatically handled: batters are matched by name (a different batting order is one line in the report, not a run of false differences); overs missing on Play-Cricket keep the site's; and a Play-Cricket wicket total lower than its own scorecard shows is corrected from the scorecard (with a warning).
+
 ## Balls, fours and sixes not on Play-Cricket
 
 Older Play-Cricket scorecards often have no balls faced, fours or sixes. A blank there (or a 0 where the site has a blank) counts as "not recorded": the dry run doesn't list it, and publishing keeps the site's figures. If both have a number and they differ, it's still reported and Play-Cricket's figure is used.
@@ -109,5 +122,6 @@ python tests/test_older_seasons.py                              # 2 tests: fetch
 python tests/test_data_meta.py                                  # 2 tests: the dashboard's "Updated" stamp
 python tests/test_pc_detail.py                                  # 4 tests: balls/fours/sixes Play-Cricket doesn't record
 python tests/test_filters_awards.py                             # 5 tests: cup/T20/friendly games left out or removed; award rules
+python tests/test_dry_run_report.py                             # 5 tests: batting order, missing overs, wicket totals, keep list, new matches
 python pipeline/check_data.py                                   # consistency checks on docs/data.json (changes nothing)
 ```

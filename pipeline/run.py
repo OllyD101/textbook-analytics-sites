@@ -107,14 +107,60 @@ def same_detail(site_v, pc_v):
     return site_v == pc_v or _blank(pc_v) or (pc_v == 0 and _blank(site_v))
 
 
+NOT_OUT = {"Not Out", "DNB", "Retired", "Retired Not Out", "Retired Hurt", "Did Not Bat", "Absent", "Absent Hurt"}
+OVERS = ("Overs Batted", "Overs Bowled")
+
+
+def _bat_key(rows):
+    """Batting rows keyed by (innings, name, n-th time that name appears) - so a different batting order
+    doesn't pair a batter with the wrong person, and repeated names like 'Unsure' still line up."""
+    seen, out = Counter(), {}
+    for r in sorted(rows, key=lambda r: (r["Innings"], r.get("Pos") or 99)):
+        k = (r["Innings"], r["Batter"]); seen[k] += 1
+        out[k + (seen[k],)] = r
+    return out
+
+
+def fix_totals(rows, report, label):
+    """A Play-Cricket innings total can say fewer wickets than its own scorecard shows (opposition innings
+    not fully entered). Use the scorecard's count when it's higher, and say so in the report."""
+    m = rows["match"]
+    taken = sum(r["Wickets"] for r in rows["bowling"] if isinstance(r.get("Wickets"), (int, float))) + \
+        sum(1 for r in rows["fielding"] if r.get("Dismissal") == "Run Out")
+    lost = sum(1 for r in rows["batting"] if r.get("Dismissal") not in NOT_OUT)
+    for f, n in (("Wickets Taken", taken), ("Wickets Lost", lost)):
+        if isinstance(m.get(f), (int, float)) and n > m[f] and n <= 10:
+            report["warnings"].append(f"{label}: Play-Cricket total says {m[f]} {f.lower()}, but its scorecard shows {n} - using {n}")
+            m[f] = n
+
+
+def load_keep_site():
+    """pipeline/manual/keep_site.csv: matches where the site's version is right and Play-Cricket's isn't."""
+    path = os.path.join(HERE, "manual", "keep_site.csv")
+    keep = {}
+    if os.path.exists(path):
+        with open(path, newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                d = (row.get("Date") or "").strip()
+                team = {"1st XI": "1st", "2nd XI": "2nd", "3rd XI": "3rd"}.get((row.get("XI") or "").strip(), (row.get("XI") or "").strip())
+                if d and team:
+                    keep[(d, team)] = (row.get("Reason") or "").strip()
+    return keep
+
+
 def keep_site_detail(new, data):
     """Before a match is replaced, carry over balls/fours/sixes that Play-Cricket doesn't have."""
     k = mkey(new["match"])
-    old = {(r["Innings"], r.get("Pos"), r["Batter"]): r for r in data["batting"] if (r["Date"], r["Team"]) == k[:2]}
     num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)
+    om = next((m for m in data["matches"] if (m["Date"], m["Team"]) == k[:2]), None)
+    if om:
+        for f in OVERS:   # no overs recorded on Play-Cricket: keep the site's
+            if new["match"].get(f) in (None, 0, 0.0) and num(om.get(f)) and om[f]:
+                new["match"][f] = om[f]
+    old = _bat_key([r for r in data["batting"] if (r["Date"], r["Team"]) == k[:2]])
     kept = 0
-    for r in new["batting"]:
-        o = old.get((r["Innings"], r.get("Pos"), r["Batter"]))
+    for key, r in _bat_key(new["batting"]).items():
+        o = old.get(key)
         if not o or r.get("Dismissal") == "DNB" or o.get("Dismissal") == "DNB":
             continue
         changed = False
@@ -197,6 +243,8 @@ def compare_match(new, data):
         if f in ("Opponent",):
             continue
         ov = om.get(f)
+        if f in OVERS and v in (None, 0, 0.0) and isinstance(ov, (int, float)):
+            continue  # Play-Cricket has no overs recorded: the site's stand
         if isinstance(v, (int, float)) and isinstance(ov, (int, float)):
             if abs(v - ov) > 0.01:
                 diffs.append(f"{f}: site {ov} vs PC {v}")
@@ -207,13 +255,19 @@ def compare_match(new, data):
     def rows(ds, src, opp):
         return [r for r in src if (r["Date"], r["Team"], r["Opponent"]) == (k[0], k[1], opp)]
 
-    ob, nb = {r.get("Pos"): r for r in rows("batting", data["batting"], okey[2])}, {r.get("Pos"): r for r in new["batting"]}
-    for pos in sorted(set(ob) | set(nb), key=lambda x: (x is None, x)):
-        a, b = ob.get(pos), nb.get(pos)
+    site_bat, pc_bat = rows("batting", data["batting"], okey[2]), new["batting"]
+    order = lambda rs: [r["Batter"] for r in sorted(rs, key=lambda r: (r["Innings"], r.get("Pos") or 99)) if r.get("Dismissal") != "DNB"]
+    if sorted(order(site_bat)) == sorted(order(pc_bat)) and order(site_bat) != order(pc_bat):
+        moved = [f"{n} {i + 1}->{order(pc_bat).index(n) + 1}" for i, n in enumerate(order(site_bat)) if order(pc_bat).index(n) != i]
+        diffs.append("batting order: " + ", ".join(moved[:8]) + (" ..." if len(moved) > 8 else ""))
+    ob, nb = _bat_key(site_bat), _bat_key(pc_bat)
+    for key in sorted(set(ob) | set(nb), key=lambda k: ((ob.get(k) or nb.get(k)).get("Pos") or 99, k[1])):
+        a, b = ob.get(key), nb.get(key)
+        pos = (b or a).get("Pos")
         if not a or not b:
             diffs.append(f"batting #{pos}: {'missing on site' if not a else 'missing from PC'} ({(b or a).get('Batter')})")
             continue
-        for f in ("Batter", "Dismissal", "Runs", "Balls", "4s", "6s"):
+        for f in ("Dismissal", "Runs", "Balls", "4s", "6s"):
             if f == "Balls" and a.get("BallsEstimated"):
                 continue
             av, bv = a.get(f), b.get(f)
@@ -361,8 +415,9 @@ def main():
         {r.get("Fielder") for r in data["fielding"]} | {r.get("Keeper") for r in data["keeping"]}
     names = Names({m["Opponent"] for m in data["matches"]}, existing_players, aliases, state.setdefault("players", {}))
     report = {"mode": mode, "added": [], "amended": [], "unchanged": [], "identical": [], "compared_ok": [], "compared_diff": {},
-              "skipped": [], "filtered": [], "removed": [], "would_remove": [], "warnings": [], "errors": [], "league": {}, "bonus": []}
+              "skipped": [], "filtered": [], "removed": [], "would_remove": [], "kept": [], "warnings": [], "errors": [], "league": {}, "bonus": []}
     divisions = {}
+    keep_site = load_keep_site()
 
     for season in seasons:
         try:
@@ -414,6 +469,10 @@ def main():
             report["warnings"] += issues
             k = mkey(rows["match"])
             label = f"{k[0]} {k[1]} XI v {k[2]}"
+            if (k[0], k[1]) in keep_site:
+                report["kept"].append(f"{label}" + (f" - {keep_site[(k[0], k[1])]}" if keep_site[(k[0], k[1])] else ""))
+                continue
+            fix_totals(rows, report, label)
             if md.get("competition_type") == "League" and md.get("competition_id"):
                 divisions[k[1]] = (k[0], md["competition_id"])  # latest league match per XI wins
             if rows["points"]:
@@ -519,6 +578,11 @@ def write_report(report, names):
               f"- New matches not on the site yet: **{len(report['added'])}**", ""]
         for label, diffs in report["compared_diff"].items():
             L += [f"### {label}"] + [f"- {d}" for d in diffs[:40]] + [""]
+        if report["added"]:
+            by = Counter((x[:4], x.split(" ")[1]) for x in report["added"])
+            L += ["## New matches (not on the site yet)", "",
+                  "By season: " + ", ".join(f"{y} {t} XI {n}" for (y, t), n in sorted(by.items())), ""] + \
+                 [f"- {x.replace(' (new - not on the site yet)', '')}" for x in report["added"][:300]] + [""]
     else:
         L += [f"- Added: **{len(report['added'])}**  ", f"- Amended: **{len(report['amended'])}**  ",
               f"- Unchanged since last run: {len(report['unchanged'])}",
@@ -535,6 +599,7 @@ def write_report(report, names):
     for title, key in (("Errors (blocking)", "errors"), ("Warnings", "warnings"), ("Skipped", "skipped"),
                        ("Not included (cup games, T20s, friendlies: see match_filter in config.json)", "filtered"),
                        ("Removed from the site (cup game, T20 or friendly)", "removed"),
+                       ("Kept as on the site (pipeline/manual/keep_site.csv)", "kept"),
                        ("Would be removed from the site on publish (cup game, T20 or friendly)", "would_remove")):
         if report[key]:
             L += ["", f"## {title}", ""] + [f"- {x}" for x in report[key][:200]]
