@@ -28,6 +28,20 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .nav-dropdown-menu .nav-btn{text-align:left;width:100%;border-radius:5px;padding:8px 10px;}
 .filters{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
 .filter-group{display:flex;align-items:center;gap:8px;}
+.data-stamp{margin-left:auto;font-size:0.72rem;color:var(--muted);white-space:nowrap;}
+.data-stamp b{color:var(--text);font-weight:600;}
+.lr-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.lr-head{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;}
+.lr-title{font-size:0.7rem;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.lr-record{font-size:0.75rem;color:var(--muted);}
+.lr-row{padding:12px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;border-top:1px solid var(--border);}
+.lr-row:first-of-type{border-top:none;}
+.lr-row:hover,.lr-row:focus{background:var(--surface2);outline:none;}
+.lr-main{min-width:0;}
+.lr-line{font-size:0.95rem;}
+.lr-score{font-size:0.82rem;color:var(--text);margin-top:4px;font-variant-numeric:tabular-nums;}
+.lr-stars{font-size:0.78rem;color:var(--muted);margin-top:4px;}
+.lr-go{font-size:0.75rem;color:var(--accent);white-space:nowrap;font-weight:600;flex-shrink:0;}
 .filter-label{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;}
 select,.filter-select{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.82rem;padding:5px 10px;border-radius:6px;cursor:pointer;outline:none;}
 select:hover{border-color:var(--accent);}
@@ -208,6 +222,8 @@ tbody td{padding:8px 14px;white-space:nowrap;}
   .filters{padding:8px 16px;gap:8px;}
   .filter-group{width:100%;}
   .filter-group select{flex:1;width:100%;}
+  .data-stamp{margin-left:0;width:100%;white-space:normal;}
+  .lr-row{padding:12px 14px;} .lr-head{padding:10px 14px;} .lr-go{display:none;}
 
   /* Main padding */
   .main{padding:12px 16px;padding-bottom:20px;}
@@ -888,6 +904,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
       <option value="2nd">2nd XI</option>
     </select>
   </div>
+  <div id="data-stamp" class="data-stamp" aria-live="polite"></div>
 </div>
 
 <div class="main">
@@ -904,6 +921,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
   <!-- SUMMARY -->
   <div id="overview-summary" class="sub-page active">
+    <div id="latest-results-card" style="display:none"></div>
     <div class="kpi-row" id="overview-kpis"></div>
     <div id="on-this-day-card" style="display:none;margin-top:16px"></div>
     <div class="charts-grid">
@@ -2238,7 +2256,7 @@ let CRICKET_DATA = null;
 
 async function _loadCricketData() {
   try {
-    const res = await fetch('./data.json');
+    const res = await fetch('./data.json', { cache: 'no-cache' });   // always check for a newer copy
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const raw = await res.json();
     for (const grp in raw) {
@@ -2258,8 +2276,14 @@ async function _loadCricketData() {
         window._leagueUpdated = lg.updated || null;
       }
     } catch (e) { console.warn('league.json not loaded, using built-in tables', e); }
+    // When the automation last changed the data (pipeline/run.py writes data-meta.json). Optional.
+    try {
+      const mr = await fetch('./data-meta.json', { cache: 'no-store' });
+      if (mr.ok) window._dataMeta = await mr.json();
+    } catch (e) { window._dataMeta = null; }
     document.getElementById('data-loading-overlay').style.display = 'none';
     initDashboard();
+    _safeRun(renderDataStamp, 'data stamp');
   } catch (err) {
     console.error('Failed to load data.json:', err);
     document.getElementById('data-loading-overlay').style.display = 'none';
@@ -2475,7 +2499,7 @@ function updateLoadingMsg(msg) {
 // the page you're on, every other page is built the first time you open it, and a filter change
 // rebuilds the current page straight away and the rest when you next visit them.
 var PAGE_RENDERERS = {
-  overview: ['renderOverview', 'renderOnThisDay'],
+  overview: ['renderLatestResults', 'renderOverview', 'renderOnThisDay'],
   batting: ['renderBatStats', 'renderBatInnings', 'renderBatCharts', 'renderBatByPosition'],
   bowling: ['renderBowlStats', 'renderBowlSpells', 'renderBowlCharts', 'renderWinSpells', 'renderBowlPartnerships', 'renderBowlExtras'],
   fielding: ['renderFielding', 'renderBowlerFielderPartnerships'],
@@ -3077,6 +3101,115 @@ function openOnThisDayMatch(date, opponent, team) {
   // it stays invisible if opened while on a different page — navigate there
   // first, then open the detail once that page is actually showing.
   openMatchDetail(date, opponent, team);
+}
+
+// ============================================================
+// LAST UPDATED STAMP + LATEST RESULTS
+// ============================================================
+var _MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var _DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function _isoDay(iso) { var p = iso.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+function _shortDate(iso, withDay) {
+  var d = _isoDay(iso);
+  return (withDay ? _DAYS[d.getDay()] + ' ' : '') + d.getDate() + ' ' + _MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+}
+function _esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function _latestMatchDate() {
+  return CRICKET_DATA.matches.reduce(function(a, m) { return m.Date > a ? m.Date : a; }, '');
+}
+
+function renderDataStamp() {
+  var el = document.getElementById('data-stamp');
+  if (!el || !CRICKET_DATA) return;
+  var latest = [window._dataMeta && window._dataMeta.latest_match, _latestMatchDate()].filter(Boolean).sort().pop();
+  var parts = [];
+  var up = window._dataMeta && window._dataMeta.updated ? new Date(window._dataMeta.updated) : null;
+  if (up && !isNaN(up)) {
+    var now = new Date(), day = function(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); };
+    var diff = Math.round((day(now) - day(up)) / 86400000);
+    var time = up.toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Europe/London' }).replace(' ', '');
+    var when = diff === 0 ? 'today, ' + time : diff === 1 ? 'yesterday, ' + time : up.getDate() + ' ' + _MONTHS[up.getMonth()] + ' ' + up.getFullYear();
+    parts.push('Updated <b>' + when + '</b>');
+    el.title = 'Data last changed ' + up.toLocaleString('en-GB', { timeZone: 'Europe/London' });
+  }
+  if (latest) parts.push('Results to <b>' + _shortDate(latest) + '</b>');
+  el.innerHTML = parts.join(' &middot; ');
+}
+
+function _scoreText(runs, wkts, overs) {
+  if (typeof runs !== 'number') return '';
+  var s = wkts === 10 ? runs + ' all out' : runs + '/' + (typeof wkts === 'number' ? wkts : '?');
+  return s + (overs != null && overs !== '' ? ' (' + overs + ')' : '');
+}
+
+function renderLatestResults() {
+  var el = document.getElementById('latest-results-card');
+  if (!el || !CRICKET_DATA) return;
+  var pool = CRICKET_DATA.matches.filter(function(m) { return !filterTeam || m.Team === filterTeam; });
+  if (!pool.length) { el.style.display = 'none'; return; }
+  var latest = pool.reduce(function(a, m) { return m.Date > a ? m.Date : a; }, '');
+  // only on the most recent season, or with no year chosen
+  if (filterYear && filterYear !== latest.slice(0, 4)) { el.style.display = 'none'; return; }
+  // the weekend of the latest game: Saturday to Monday (a midweek game stands on its own)
+  var ld = _isoDay(latest), dow = ld.getDay();
+  var start = new Date(ld); start.setDate(ld.getDate() - (dow === 0 ? 1 : dow === 1 ? 2 : 0));
+  var startIso = start.getFullYear() + '-' + String(start.getMonth() + 1).padStart(2, '0') + '-' + String(start.getDate()).padStart(2, '0');
+  var games = pool.filter(function(m) { return m.Date >= startIso && m.Date <= latest; })
+    .sort(function(a, b) { return a.Date.localeCompare(b.Date) || (XI_ORDER.indexOf(a.Team) - XI_ORDER.indexOf(b.Team)); });
+  var multiDay = games.some(function(m) { return m.Date !== games[0].Date; });
+  var motm = {};
+  CRICKET_DATA.motm.forEach(function(r) { motm[r.Date + '|' + r.Team] = r.MOTM; });
+  var season = latest.slice(0, 4);
+  var sm = pool.filter(function(m) { return m.Date.slice(0, 4) === season; });
+  var rec = { W: 0, L: 0, D: 0 };
+  sm.forEach(function(m) { if (rec[m.Result] != null) rec[m.Result]++; });
+
+  var rows = games.map(function(m) {
+    var k = m.Date + '|' + m.Team;
+    var word = m.Result === 'W' ? 'beat' : m.Result === 'L' ? 'lost to' : 'drew with';
+    var col = m.Result === 'W' ? 'var(--green)' : m.Result === 'L' ? 'var(--red)' : 'var(--muted)';
+    var ours = 'Hessle ' + _scoreText(m['Runs Scored'], m['Wickets Lost'], m['Overs Batted']);
+    var theirs = _esc(m.Opponent) + ' ' + _scoreText(m['Runs Conceded'], m['Wickets Taken'], m['Overs Bowled']);
+    var score = m['Bat/Field First'] === 'Field' ? theirs + ' &middot; ' + ours : ours + ' &middot; ' + theirs;
+    var bats = CRICKET_DATA.batting.filter(function(r) { return r.Date === m.Date && r.Team === m.Team && typeof r.Runs === 'number'; })
+      .sort(function(a, b) { return b.Runs - a.Runs; });
+    var bowls = CRICKET_DATA.bowling.filter(function(r) { return r.Date === m.Date && r.Team === m.Team && typeof r.Wickets === 'number'; })
+      .sort(function(a, b) { return b.Wickets - a.Wickets || (a.Runs || 0) - (b.Runs || 0); });
+    var stars = [];
+    bats.filter(function(r, i) { return i === 0 || r.Runs >= 30; }).slice(0, 2).forEach(function(r) {
+      if (r.Runs > 0) stars.push(_esc(r.Batter) + ' ' + r.Runs + (r.Dismissal === 'Not Out' || r.Dismissal === 'Retired Not Out' ? '*' : ''));
+    });
+    bowls.filter(function(r, i) { return (i === 0 && r.Wickets > 0) || r.Wickets >= 3; }).slice(0, 2).forEach(function(r) {
+      stars.push(_esc(r.Bowler) + ' ' + r.Wickets + '/' + (r.Runs || 0));
+    });
+    // the Man of the Match gets a star on their own figures, or on their name if they had none above
+    var star = ' <span title="Man of the Match" aria-label="Man of the Match" style="color:var(--gold)">&#9733;</span>';
+    var starred = false;
+    stars = stars.map(function(t) { if (motm[k] && !starred && t.indexOf(_esc(motm[k]) + ' ') === 0) { starred = true; return t + star; } return t; });
+    var line2 = (motm[k] && !starred ? [_esc(motm[k]) + star] : []).concat(stars);
+    return '<div class="lr-row" role="button" tabindex="0" data-date="' + _esc(m.Date) + '" data-team="' + _esc(m.Team) + '" data-opp="' + _esc(m.Opponent) + '"' +
+        ' aria-label="Open the scorecard: ' + _esc(m.Team) + ' XI ' + word + ' ' + _esc(m.Opponent) + '">' +
+      '<div class="lr-main">' +
+        '<div class="lr-line"><span class="badge badge-' + xiClass(m.Team) + '" style="margin-right:6px">' + _esc(m.Team) + '</span>' +
+          'Hessle <span style="color:' + col + ';font-weight:700">' + word + '</span> ' + _esc(m.Opponent) +
+          ' <span style="color:var(--muted);font-size:0.8rem">(' + (m['Home/Away'] === 'Home' ? 'H' : 'A') + (multiDay ? ', ' + _DAYS[_isoDay(m.Date).getDay()] : '') + ')</span></div>' +
+        '<div class="lr-score">' + score + '</div>' +
+        (line2.length ? '<div class="lr-stars">' + line2.join(' &middot; ') + '</div>' : '') +
+      '</div>' +
+      '<div class="lr-go">Scorecard &rarr;</div>' +
+    '</div>';
+  }).join('');
+
+  var label = multiDay || dow === 6 || dow === 0 || dow === 1 ? 'Latest results &middot; weekend of ' + _shortDate(startIso, true) : 'Latest result &middot; ' + _shortDate(latest, true);
+  el.style.display = 'block';
+  el.innerHTML = '<div class="lr-card"><div class="lr-head"><span class="lr-title">' + label + '</span>' +
+    '<span class="lr-record">' + season + (filterTeam ? ' ' + _esc(filterTeam) + ' XI' : '') + ' so far: ' + rec.W + 'W ' + rec.L + 'L' + (rec.D ? ' ' + rec.D + 'D' : '') + '</span></div>' +
+    rows + '</div>';
+  el.querySelectorAll('.lr-row').forEach(function(r) {
+    var open = function() { openOnThisDayMatch(r.dataset.date, r.dataset.opp, r.dataset.team); };
+    r.addEventListener('click', open);
+    r.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  });
 }
 
 function renderOnThisDay() {
@@ -6187,7 +6320,8 @@ function drawSparkline(canvasId, values, colour) {
 
 function renderOverviewSparklines() {
   // Build season-by-season data for sparklines
-  var years = ['2022','2023','2024','2025','2026'];
+  // the last five seasons on record (moves on by itself each year)
+  var years = Array.from(new Set(CRICKET_DATA.matches.map(function(r){ return r.Date.slice(0,4); }))).sort().slice(-5);
   var winPcts=[], avgScored=[], avgConceded=[];
   years.forEach(function(y){
     var m = CRICKET_DATA.matches.filter(function(r){
@@ -7805,11 +7939,21 @@ var LEAGUE_FIXTURES_REMAINING_2ND = [
 // Full remaining-fixture list for a league, combining the "other teams"
 // list above with Hessle's own remaining games — built on demand (not as a
 // top-level constant) since HESSLE_REMAINING is declared further down.
+// "Final Standing, 2026" once that XI's season is over; "Standing, 2027 · after 15 May" while it's on
+// (the table follows the latest league game the automation fetched, so the year follows the data)
+function leagueSeasonLabel(xi) {
+  var last = CRICKET_DATA.matches.filter(function(m) { return m.Team === xi; }).reduce(function(a, m) { return m.Date > a ? m.Date : a; }, '');
+  if (!last) return 'League Standing';
+  var year = last.slice(0, 4), days = (Date.now() - _isoDay(last).getTime()) / 86400000;
+  var over = days > 21 || new Date().getFullYear() > +year;
+  return over ? 'Final Standing, ' + year : 'Standing, ' + year + ' \u00b7 after ' + _isoDay(last).getDate() + ' ' + _MONTHS[_isoDay(last).getMonth()];
+}
+
 function selectLeagueXI(xi) {
   window._leagueXI = xi; // persist so re-renders after toggle picks use correct xi
   document.getElementById('league-xi-picker').style.display = 'none';
   document.getElementById('league-main').style.display = 'block';
-  document.getElementById('league-xi-label').textContent = xi + ' XI — Final Standing, 2026';
+  document.getElementById('league-xi-label').textContent = xi + ' XI — ' + leagueSeasonLabel(xi);
   renderLeague(xi);
 }
 
