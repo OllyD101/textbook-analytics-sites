@@ -424,6 +424,7 @@ def main():
     divisions = {}
     keep_site = load_keep_site()
 
+    site_keys = {(x["Date"], x["Team"]) for x in data["matches"]}
     for season in seasons:
         try:
             listing = client.matches(site_id, season)
@@ -452,7 +453,10 @@ def main():
                 remove_excluded(m, data, cfg, aliases, report, mode, why)
                 continue
             prev = state["matches"].get(mid)
-            if mode == "publish" and prev and prev.get("last_updated") == m.get("last_updated") and prev.get("published"):
+            # skip a match only if Play-Cricket hasn't changed it AND it's really on the site (if data.json was
+            # replaced by an older copy, the memory says "published" but the match is gone: fetch it again)
+            on_site = prev and tuple(prev.get("key", [])[:2]) in site_keys
+            if mode == "publish" and prev and prev.get("last_updated") == m.get("last_updated") and prev.get("published") and on_site:
                 report["unchanged"].append(mid)
                 continue
             try:
