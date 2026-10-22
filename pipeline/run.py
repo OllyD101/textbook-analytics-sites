@@ -22,7 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 from pc_api import FixtureClient, PlayCricketClient, PlayCricketError  # noqa: E402
-from transform import Names, convert, overs_to_balls, valid_overs  # noqa: E402
+from transform import Names, convert, overs_to_balls, valid_overs, r2  # noqa: E402
 from awards import award_match_of_the_match, award_player_of_the_month  # noqa: E402
 
 DATASETS = ("matches", "batting", "bowling", "fielding", "keeping")
@@ -93,6 +93,47 @@ def blocking_checks(data):
 
 
 # ---------------------------------------------------------------- compare (dry run)
+# Balls faced, fours and sixes: Play-Cricket often has none recorded for older games. A blank there (or a 0
+# against a blank on the site) means "not recorded", not a difference: the site's figure stands, in the
+# dry-run report and when publishing. Two different numbers are still a difference.
+DETAIL = ("Balls", "4s", "6s")
+
+
+def _blank(v):
+    return v in ("-", None, "")
+
+
+def same_detail(site_v, pc_v):
+    return site_v == pc_v or _blank(pc_v) or (pc_v == 0 and _blank(site_v))
+
+
+def keep_site_detail(new, data):
+    """Before a match is replaced, carry over balls/fours/sixes that Play-Cricket doesn't have."""
+    k = mkey(new["match"])
+    old = {(r["Innings"], r.get("Pos"), r["Batter"]): r for r in data["batting"] if (r["Date"], r["Team"]) == k[:2]}
+    num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)
+    kept = 0
+    for r in new["batting"]:
+        o = old.get((r["Innings"], r.get("Pos"), r["Batter"]))
+        if not o or r.get("Dismissal") == "DNB" or o.get("Dismissal") == "DNB":
+            continue
+        changed = False
+        for f in DETAIL:
+            if r.get(f) != o.get(f) and same_detail(o.get(f), r.get(f)):
+                r[f] = o.get(f); changed = True
+        if not changed:
+            continue
+        kept += 1
+        if all(r.get(f) == o.get(f) for f in DETAIL):
+            for f in ("SR", "Boundary%", "BallsEstimated"):
+                if f in o: r[f] = o[f]
+        else:
+            b, runs = r.get("Balls"), r.get("Runs")
+            r["SR"] = "-" if not num(b) else (r2(runs / b * 100) if b and num(runs) else 0)
+            r["Boundary%"] = r2((r["4s"] + r["6s"]) / b * 100) if num(b) and b and num(r.get("4s")) and num(r.get("6s")) else "0"
+    return kept
+
+
 def compare_match(new, data):
     """Return a list of differences between a converted match and what's on the site."""
     k = mkey(new["match"])
@@ -128,6 +169,8 @@ def compare_match(new, data):
                 continue
             av, bv = a.get(f), b.get(f)
             if av in ("-", None, "") and bv in ("-", None, ""):
+                continue
+            if f in DETAIL and same_detail(av, bv):
                 continue
             if av != bv:
                 diffs.append(f"batting #{pos} {b.get('Batter')}: {f} site {av!r} vs PC {bv!r}")
@@ -327,6 +370,7 @@ def main():
             elif compare_match(rows, data) == []:
                 report["identical"].append(label)   # same as the site already has: leave it untouched
             else:
+                keep_site_detail(rows, data)        # balls/fours/sixes Play-Cricket doesn't have stay as they are
                 report[merge_match(rows, data)].append(label)
                 state["matches"][mid] = {"key": list(k), "last_updated": m.get("last_updated"), "published": True}
 
