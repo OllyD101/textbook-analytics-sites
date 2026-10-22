@@ -14,7 +14,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from test_pipeline import REPO, KM, REV, DS, sandbox, data, sig   # noqa: E402
+from test_pipeline import REPO, KM, REV, DS, sandbox, data, sig, put   # noqa: E402
 
 THIRD_DIV = "5003"
 
@@ -108,8 +108,26 @@ def test_backfill_season_range():
     return f"a season range works: 2026 alone finds {one} new 3rd XI games, 2025-2026 finds {both} (including the 2025 one)"
 
 
+
+def test_lost_matches_are_fetched_again():
+    """data.json replaced by an older copy after a publish: the matches it lost come back on the next publish."""
+    tmp = sandbox(); add_third_xi_fixtures(tmp, n=3)
+    env = {"PIPELINE_TODAY": "2026-10-01"}
+    run_with(tmp, env, "--seasons", "2026")
+    d = data(tmp); assert sum(m["Team"] == "3rd" for m in d["matches"]) == 3
+    for ds in DS:
+        d[ds] = [r for r in d[ds] if r.get("Team") != "3rd"]
+    d["motm"] = [r for r in d["motm"] if r["Team"] != "3rd"]
+    put(tmp, d)                                            # an older data.json uploaded over the published one
+    run_with(tmp, env, "--seasons", "2026")
+    back = sum(m["Team"] == "3rd" for m in data(tmp)["matches"]); shutil.rmtree(tmp)
+    assert back == 3, back
+    return "3rd XI games lost from data.json (state still said published) are fetched and added again"
+
+
 if __name__ == "__main__":
-    ok = 0; tests = [test_backfill_only_adds_third_xi, test_weekly_run_includes_third_xi, test_backfill_season_range]
+    ok = 0; tests = [test_backfill_only_adds_third_xi, test_weekly_run_includes_third_xi, test_backfill_season_range,
+                     test_lost_matches_are_fetched_again]
     for t in tests:
         try:
             print("PASS", t.__name__ + ":", t()); ok += 1
