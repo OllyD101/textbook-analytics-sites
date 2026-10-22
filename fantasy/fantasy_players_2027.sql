@@ -19,7 +19,7 @@ insert into public.fantasy_players (name, position, price, xi, active, start_pri
   ('Peter Shally', 'BAT', 6.0, '1st', true, 6.0),
   ('Shamsher Akhtar', 'BAT', 6.0, '2nd', true, 6.0),
   ('Clarke Brown', 'BAT', 5.5, '1st', true, 5.5),
-  ('Peter Walker', 'BAT', 5.5, '2nd', true, 5.5),
+  ('Pete Walker', 'BAT', 5.5, '2nd', true, 5.5),
   ('Tariq Mehmood', 'BAT', 5.5, '2nd', true, 5.5),
   ('Tom Biglin', 'BAT', 5.5, '2nd', true, 5.5),
   ('Danny Hudson', 'BAT', 5.0, '1st', true, 5.0),
