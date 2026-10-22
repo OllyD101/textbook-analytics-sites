@@ -28,7 +28,9 @@
     "reason": "Scorecard incomplete; no further details available (Olly, Oct 2026)",
     "items": [
       "2021-04-24 1st XI v Welton CC: Unsure",
-      "2025-09-13 1st XI v Driffield Town: Jacob Hudson"
+      "2025-09-13 1st XI v Driffield Town: Jacob Hudson",
+      "2026-05-23 2nd XI v Kirkella CC: Unsure",
+      "2026-07-11 2nd XI v Londesborough Park CC: Unsure"
     ]
   },
   "Player listed twice": {
@@ -81,9 +83,9 @@
     "all": true
   },
   "Placeholder names": {
-    "reason": "Scorecard incomplete; no further details available (Olly, Oct 2026)",
+    "reason": "Scorecard does not name the player (catches with no fielder, unknown batters); no further details available",
     "items": [
-      "'Unsure' (9 rows)"
+      "'Unsure' (11 rows)"
     ]
   }
 }
