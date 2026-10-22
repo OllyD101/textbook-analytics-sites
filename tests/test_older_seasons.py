@@ -76,15 +76,33 @@ def test_backfill_2016():
     assert [r for r in before["motm"]] == [r for r in after["motm"] if r["Date"] >= "2018"], "2018+ MoTM changed"
     old_potm = {x for r in before["potm"] for x in r["months"]}
     assert {(r["player"], x) for r in before["potm"] for x in r["months"]} == {(r["player"], x) for r in after["potm"] for x in r["months"] if x in old_potm}
-    assert open(lp).read() == league_before, "current league tables were replaced"
+    lg_after = json.load(open(lp))
+    assert lg_after["tables"] == json.loads(league_before)["tables"], "current league tables were replaced"
     assert "league table left as it is" in report
-    # a second run changes nothing (awards are frozen)
-    data_file = open(os.path.join(tmp, "docs", "data.json")).read()
-    run(tmp, "--seasons", "2016")
+    hist = lg_after.get("history", {})
+    assert set(hist.get("2016", {})) == {"1st", "2nd"}, hist.keys()      # past seasons' tables kept by season
+    assert hist["2016"]["1st"]["division_name"] == "Old Division 2016" and any(r["isHessle"] for r in hist["2016"]["1st"]["rows"])
+    assert "2016 1st XI: saved" in report
+    # a second run changes nothing (awards are frozen, past tables aren't fetched again)
+    data_file = open(os.path.join(tmp, "docs", "data.json")).read(); league_file = open(lp).read()
+    rep2 = run(tmp, "--seasons", "2016")
     assert open(os.path.join(tmp, "docs", "data.json")).read() == data_file, "second run changed something"
+    assert "2016 1st XI: saved" not in rep2
     shutil.rmtree(tmp)
     n_months = len(months)
-    return f"{len(old)} 2016 games added, each with a Match Value MoTM; {n_months} 2016 months got a PotM; 2018+ data, awards and league tables untouched; rerun changes nothing"
+    return f"{len(old)} 2016 games added, each with a Match Value MoTM; {n_months} 2016 months got a PotM; 2016 league tables kept in the history; current tables untouched; rerun changes nothing"
+
+
+def test_history_for_seasons_already_published():
+    # seasons published before the history existed: their games are skipped as unchanged, so the division is
+    # looked up from one of the season's scorecards
+    tmp = sandbox(); add_2016_fixtures(tmp); lp = os.path.join(tmp, "docs", "league.json")
+    run(tmp, "--seasons", "2026"); run(tmp, "--seasons", "2016")
+    lg = json.load(open(lp)); lg.pop("history", None); json.dump(lg, open(lp, "w"))
+    rep = run(tmp, "--seasons", "2016"); hist = json.load(open(lp)).get("history", {}); shutil.rmtree(tmp)
+    assert "Unchanged since last run: 12" in rep, rep[:600]
+    assert set(hist.get("2016", {})) == {"1st", "2nd"}, hist
+    return "2016 already published (games skipped as unchanged): division found from a scorecard, both tables saved"
 
 
 def test_current_season_tables_still_update():
@@ -96,7 +114,7 @@ def test_current_season_tables_still_update():
 
 
 if __name__ == "__main__":
-    ok = 0; tests = [test_backfill_2016, test_current_season_tables_still_update]
+    ok = 0; tests = [test_backfill_2016, test_history_for_seasons_already_published, test_current_season_tables_still_update]
     for t in tests:
         try:
             print("PASS", t.__name__, "-", t()); ok += 1
