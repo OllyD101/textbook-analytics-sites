@@ -112,12 +112,14 @@ OVERS = ("Overs Batted", "Overs Bowled")
 
 
 def _bat_key(rows):
-    """Batting rows keyed by (innings, name, n-th time that name appears) - so a different batting order
-    doesn't pair a batter with the wrong person, and repeated names like 'Unsure' still line up."""
+    """One match's batting rows keyed by (name, n-th time that name appears). Hessle bat once per match, so the
+    innings number is left out (it differs whenever the site and Play-Cricket disagree on who batted first);
+    a different batting order doesn't pair a batter with the wrong person, and repeated names like 'Unsure'
+    still line up."""
     seen, out = Counter(), {}
-    for r in sorted(rows, key=lambda r: (r["Innings"], r.get("Pos") or 99)):
-        k = (r["Innings"], r["Batter"]); seen[k] += 1
-        out[k + (seen[k],)] = r
+    for r in sorted(rows, key=lambda r: r.get("Pos") or 99):
+        seen[r["Batter"]] += 1
+        out[(r["Batter"], seen[r["Batter"]])] = r
     return out
 
 
@@ -256,9 +258,12 @@ def compare_match(new, data):
         return [r for r in src if (r["Date"], r["Team"], r["Opponent"]) == (k[0], k[1], opp)]
 
     site_bat, pc_bat = rows("batting", data["batting"], okey[2]), new["batting"]
-    order = lambda rs: [r["Batter"] for r in sorted(rs, key=lambda r: (r["Innings"], r.get("Pos") or 99)) if r.get("Dismissal") != "DNB"]
-    if sorted(order(site_bat)) == sorted(order(pc_bat)) and order(site_bat) != order(pc_bat):
-        moved = [f"{n} {i + 1}->{order(pc_bat).index(n) + 1}" for i, n in enumerate(order(site_bat)) if order(pc_bat).index(n) != i]
+    order = lambda rs: [r["Batter"] for r in sorted(rs, key=lambda r: r.get("Pos") or 99) if r.get("Dismissal") != "DNB"]
+    so, po = order(site_bat), order(pc_bat)
+    both = [n for n in so if n in po and so.count(n) == 1 and po.count(n) == 1]   # compare the order of names both have
+    s_rank, p_rank = [n for n in so if n in both], [n for n in po if n in both]
+    if s_rank != p_rank:
+        moved = [f"{n} {so.index(n) + 1}->{po.index(n) + 1}" for n in s_rank if so.index(n) != po.index(n)]
         diffs.append("batting order: " + ", ".join(moved[:8]) + (" ..." if len(moved) > 8 else ""))
     ob, nb = _bat_key(site_bat), _bat_key(pc_bat)
     for key in sorted(set(ob) | set(nb), key=lambda k: ((ob.get(k) or nb.get(k)).get("Pos") or 99, k[1])):

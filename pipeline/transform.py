@@ -105,7 +105,11 @@ class Names:
             return None
         pid = str(pid) if pid not in (None, "") else None
         if pid and pid in self.by_id:
-            return self.by_id[pid]
+            # a remembered name still follows aliases.json, so an alias added later applies to players already seen
+            known = self.by_id[pid]
+            resolved = self.player_alias.get(name.lower()) or self.player_alias.get(known.lower()) or known
+            self.by_id[pid] = resolved
+            return resolved
         resolved = self.player_alias.get(name.lower(), name)
         if resolved not in self.known_players:
             self.new_players.add(resolved)

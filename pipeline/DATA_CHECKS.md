@@ -39,3 +39,5 @@ hadn't followed the edits. Steve Cooper added to `pipeline/aliases.json`.
 Two corrections from `Hessle2025 Data.xlsx`: 23 Jun 2018 1st XI wickets taken 10 -> 9; Oliver Davison
 4 Jun 2022 (2nd XI) 75 balls, not 119. The workbook's fours and sixes for 2018-2024 had been cleared by
 accident; the site kept them, and `Hessle2025_boundaries_restore.xlsx` puts them back in the workbook.
+
+31 Aug 2024 1st XI v Welton: the bowling (6-0-32-1) and Luke Picken's catch were Adnan Khan's, not Hasnain Khan's (as on Play-Cricket).
