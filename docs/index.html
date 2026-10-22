@@ -2254,6 +2254,8 @@ function _expand(rec) {
 
 let CRICKET_DATA = null;
 
+var NOT_PLAYERS = new Set(['Unsure']);   // same list as NOT_PLAYERS in pipeline/fantasy.py and pipeline/awards.py
+
 async function _loadCricketData() {
   try {
     const res = await fetch('./data.json', { cache: 'no-cache' });   // always check for a newer copy
@@ -2262,6 +2264,16 @@ async function _loadCricketData() {
     for (const grp in raw) {
       raw[grp] = raw[grp].map(_expand);
     }
+    // Placeholder names ("Unsure" = a player the scorecard doesn't name) aren't a person, so they're left out of
+    // every player stat, leaderboard, record and game. Team totals and match scorecards still use every row (_all).
+    raw._all = { batting: raw.batting, bowling: raw.bowling, fielding: raw.fielding, keeping: raw.keeping };
+    const notPlayer = function(n) { return NOT_PLAYERS.has(n); };
+    raw.batting = raw.batting.filter(function(r) { return !notPlayer(r.Batter); });
+    raw.bowling = raw.bowling.filter(function(r) { return !notPlayer(r.Bowler); });
+    raw.fielding = raw.fielding.filter(function(r) { return !notPlayer(r.Fielder); });
+    raw.keeping = raw.keeping.filter(function(r) { return !notPlayer(r.Keeper); });
+    if (raw.motm) raw.motm = raw.motm.filter(function(r) { return !notPlayer(r.MOTM); });
+    if (raw.potm) raw.potm = raw.potm.filter(function(r) { return !notPlayer(r.player); });
     CRICKET_DATA = raw;
     // League tables written by the Play-Cricket automation (pipeline/run.py).
     // Optional: if league.json isn't there yet, the built-in tables are used.
@@ -3474,9 +3486,10 @@ function renderBowlCharts() {
 // FIELDING
 // ============================================================
 function renderFielding() {
-  const fRows=getFiltered(CRICKET_DATA.fielding), kRows=getFiltered(CRICKET_DATA.keeping);
+  // team totals count every dismissal (including ones the scorecard doesn't credit to a named player)
+  const fRows=getFiltered((CRICKET_DATA._all || CRICKET_DATA).fielding), kRows=getFiltered((CRICKET_DATA._all || CRICKET_DATA).keeping);
   const fp={};
-  fRows.forEach(r=>{const name=r.Fielder;if(!name)return;if(!fp[name])fp[name]={name,catches:0,runouts:0};if((r.Dismissal||'').toLowerCase()==='caught')fp[name].catches++;else fp[name].runouts++;});
+  fRows.forEach(r=>{const name=r.Fielder;if(!name||NOT_PLAYERS.has(name))return;if(!fp[name])fp[name]={name,catches:0,runouts:0};if((r.Dismissal||'').toLowerCase()==='caught')fp[name].catches++;else fp[name].runouts++;});
   const fStats=Object.values(fp).map(v=>({...v,total:v.catches+v.runouts})).sort((a,b)=>b.total-a.total);
   document.getElementById('fielding-kpis').innerHTML=`
     <div class="kpi"><div class="kpi-val">${fRows.length}</div><div class="kpi-label">Field Dismissals</div></div>
@@ -3488,7 +3501,7 @@ function renderFielding() {
   document.querySelector('#tblFielding tbody').innerHTML=fStats.map(s=>`<tr><td><strong>${s.name}</strong></td><td>${s.catches}</td><td>${s.runouts}</td><td class="highlight">${s.total}</td></tr>`).join('');
   if (typeof initTableLimit === 'function') initTableLimit('tblFielding');
   const kp={};
-  kRows.forEach(r=>{const name=r.Keeper;if(!name)return;if(!kp[name])kp[name]={name,catches:0,stumpings:0};if((r.Dismissal||'').toLowerCase()==='caught')kp[name].catches++;else kp[name].stumpings++;});
+  kRows.forEach(r=>{const name=r.Keeper;if(NOT_PLAYERS.has(name))return;if(!name)return;if(!kp[name])kp[name]={name,catches:0,stumpings:0};if((r.Dismissal||'').toLowerCase()==='caught')kp[name].catches++;else kp[name].stumpings++;});
   const kStats=Object.values(kp).map(v=>({...v,total:v.catches+v.stumpings})).sort((a,b)=>b.total-a.total);
   document.querySelector('#tblKeeping tbody').innerHTML=kStats.map(s=>`<tr><td><strong>${s.name}</strong></td><td>${s.catches}</td><td>${s.stumpings}</td><td class="highlight">${s.total}</td></tr>`).join('');
   makeChart('chartFielders',{type:'bar',data:{labels:chartNames(fStats.slice(0,10).map(p=>p.name)),datasets:[{label:'Catches',data:fStats.slice(0,10).map(p=>p.catches),backgroundColor:'#3fb950'},{label:'Run Outs',data:fStats.slice(0,10).map(p=>p.runouts),backgroundColor:'#f0a500'}]},options:{...hBarOpts(),plugins:{legend:{labels:{color:'#8b949e'}}},scales:{x:{stacked:true,ticks:{color:'#8b949e'},grid:{color:'#21262d'}},y:{stacked:true,ticks:{color:'#e6edf3',font:{size:11}},grid:{color:'#21262d'}}}}});
@@ -4541,9 +4554,9 @@ function openMatchDetail(date, opponent, team) {
   const esc = v => String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
   const same = r => r.Date === date && r.Team === team && r.Opponent === opponent;
   const batFirst = match['Bat/Field First'] === 'Bat';
-  const bat = CRICKET_DATA.batting.filter(same).sort((x, y) => (x.Pos || 99) - (y.Pos || 99));
-  const bowl = CRICKET_DATA.bowling.filter(same);
-  const fld = CRICKET_DATA.fielding.filter(same), kp = CRICKET_DATA.keeping.filter(same);
+  const bat = (CRICKET_DATA._all || CRICKET_DATA).batting.filter(same).sort((x, y) => (x.Pos || 99) - (y.Pos || 99));
+  const bowl = (CRICKET_DATA._all || CRICKET_DATA).bowling.filter(same);
+  const fld = (CRICKET_DATA._all || CRICKET_DATA).fielding.filter(same), kp = (CRICKET_DATA._all || CRICKET_DATA).keeping.filter(same);
   const RS = match['Runs Scored'], RC = match['Runs Conceded'], WL = match['Wickets Lost'], WT = match['Wickets Taken'];
   const nice = new Date(date + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 
