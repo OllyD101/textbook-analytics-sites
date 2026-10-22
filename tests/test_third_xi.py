@@ -1,6 +1,6 @@
 """3rd XI tests: weekly runs and the one-off backfill of past seasons.
 
-    python tests/make_fixtures.py docs/data.json tests/fixtures   # once
+    python tests/make_fixtures.py tests/baseline_data.json tests/fixtures   # once
     python tests/test_third_xi.py
 
 Three real 2026 2nd XI scorecards are relabelled as 3rd XI games (with their own league), so the

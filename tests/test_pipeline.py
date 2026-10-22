@@ -1,6 +1,6 @@
 """End-to-end tests. Each one runs the real pipeline on a throwaway copy of the repo.
 
-    python tests/make_fixtures.py docs/data.json tests/fixtures   # once
+    python tests/make_fixtures.py tests/baseline_data.json tests/fixtures   # once
     python tests/test_pipeline.py
 """
 import hashlib
@@ -21,11 +21,19 @@ REV = {v: k for k, v in KM.items()}
 DS = ("matches", "batting", "bowling", "fielding", "keeping")
 
 
+BASELINE = os.path.join(REPO, "tests", "baseline_data.json")   # fixed test data (1st/2nd XI): the live docs/data.json keeps changing
+
+
 def sandbox():
     tmp = tempfile.mkdtemp()
     for d in ("docs", "pipeline", "tests"):
         shutil.copytree(os.path.join(REPO, d), os.path.join(tmp, d), ignore=shutil.ignore_patterns("state.json", "last_report.md", "__pycache__"))
+    shutil.copy(BASELINE, os.path.join(tmp, "docs", "data.json"))
     return tmp
+
+
+def baseline():
+    return expand(json.load(open(BASELINE)), REV)
 
 
 def run(tmp, *extra, ok=True):

@@ -1,6 +1,6 @@
 """Older Play-Cricket scorecards often have no balls faced, fours or sixes.
 
-    python tests/make_fixtures.py docs/data.json tests/fixtures   # once
+    python tests/make_fixtures.py tests/baseline_data.json tests/fixtures   # once
     python tests/test_pc_detail.py
 
 A blank on Play-Cricket (or a 0 against a blank on the site) is "not recorded": the dry run must not list it,

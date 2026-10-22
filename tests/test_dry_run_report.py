@@ -1,6 +1,6 @@
 """Dry-run report fixes, from the first 2018-2026 run.
 
-    python tests/make_fixtures.py docs/data.json tests/fixtures   # once
+    python tests/make_fixtures.py tests/baseline_data.json tests/fixtures   # once
     python tests/test_dry_run_report.py
 """
 import json

@@ -1,6 +1,6 @@
 """docs/data-meta.json: the dashboard's "Updated" stamp.
 
-    python tests/make_fixtures.py docs/data.json tests/fixtures   # once
+    python tests/make_fixtures.py tests/baseline_data.json tests/fixtures   # once
     python tests/test_data_meta.py
 """
 import json

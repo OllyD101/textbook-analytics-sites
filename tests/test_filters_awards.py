@@ -1,6 +1,6 @@
 """T20s and friendlies are left out; Man of the Match settles for 3 days, then freezes.
 
-    python tests/make_fixtures.py docs/data.json tests/fixtures   # once
+    python tests/make_fixtures.py tests/baseline_data.json tests/fixtures   # once
     python tests/test_filters_awards.py
 """
 import json
@@ -156,9 +156,33 @@ def test_potm_changes_only_through_third_xi():
     return f"{lab}: {star['batsman_name']}'s big 3rd XI innings takes it from {owner0[lab]}; other months unchanged; rerun stable"
 
 
+def test_placeholder_never_wins():
+    tmp = sandbox(); run_2026(tmp, "publish"); d = data(tmp)
+    sys.path.insert(0, os.path.join(tmp, "pipeline"))
+    from awards import match_value, ranked
+    import run as runmod
+    cfg = json.load(open(os.path.join(tmp, "pipeline", "config.json")))["awards"]
+    m = d["matches"][5]; k = (m["Date"], m["Team"])
+    best = ranked(match_value(d, m, cfg))[0]
+    for ds, c in (("batting", "Batter"), ("bowling", "Bowler"), ("fielding", "Fielder"), ("keeping", "Keeper")):
+        for r in d[ds]:
+            if (r["Date"], r["Team"]) == k and r.get(c) == best:
+                r[c] = "Unsure"                                  # the best performer becomes a placeholder
+    for r in d["motm"]:
+        if (r["Date"], r["Team"]) == k:
+            r["MOTM"] = "Unsure"
+    from test_pipeline import put
+    put(tmp, d)
+    rep = run_2026(tmp, "publish"); after = data(tmp); shutil.rmtree(tmp)
+    got = [r["MOTM"] for r in after["motm"] if (r["Date"], r["Team"]) == k]
+    assert got and got[0] != "Unsure", got
+    assert "not a player" in rep
+    return f"{k[0]} {k[1]} XI: Man of the Match held by 'Unsure' re-awarded to {got[0]}; a placeholder never wins"
+
+
 if __name__ == "__main__":
     ok = 0; tests = [test_t20_and_friendlies_left_out, test_motm_settles_then_freezes, test_older_awards_never_recalculated,
-             test_cup_game_removed_from_site, test_potm_changes_only_through_third_xi]
+             test_cup_game_removed_from_site, test_potm_changes_only_through_third_xi, test_placeholder_never_wins]
     for t in tests:
         try:
             print("PASS", t.__name__, "-", t()); ok += 1

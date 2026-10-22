@@ -1,7 +1,7 @@
 """Sunday and bank holiday Monday games: the 3rd XI play on Sundays, the 1st and 2nd XI on Saturdays,
 and some games fall on bank holiday Mondays.
 
-    python tests/make_fixtures.py docs/data.json tests/fixtures   # once
+    python tests/make_fixtures.py tests/baseline_data.json tests/fixtures   # once
     python tests/test_sunday_games.py
 
 Checks that a Sunday 3rd XI game:
@@ -20,7 +20,7 @@ import sys
 from datetime import date, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from test_pipeline import REPO, sandbox, data   # noqa: E402
+from test_pipeline import REPO, sandbox, data, baseline   # noqa: E402
 from test_third_xi import add_third_xi_fixtures, run_with   # noqa: E402
 
 sys.path.insert(0, os.path.join(REPO, "pipeline"))
@@ -59,7 +59,7 @@ def busy_saturday(d, season="2026"):
 
 
 def test_sunday_game_counts_in_that_weekends_gameweek():
-    d = data(REPO); sat = busy_saturday(d)
+    d = baseline(); sat = busy_saturday(d)
     first = [r["Batter"] for r in d["batting"] if r["Date"] == sat and r["Team"] == "1st" and r.get("Dismissal") != "DNB" and (r.get("Runs") or 0) > 0]
     both = first[0]
     d2, sun = with_sunday_third_xi(d, sat, extra_player=both)
@@ -78,7 +78,7 @@ def test_sunday_game_counts_in_that_weekends_gameweek():
 
 
 def test_prices_wait_for_the_weekend():
-    d = data(REPO); sat = busy_saturday(d)
+    d = baseline(); sat = busy_saturday(d)
     d2, sun = with_sunday_third_xi(d, sat)
     players = fantasy.build_players(d2, 2026)
     sat_d = date.fromisoformat(sat)
@@ -100,7 +100,7 @@ def test_prices_wait_for_the_weekend():
 
 
 def test_sync_sends_sunday_points_at_once_but_prices_on_monday():
-    d = data(REPO); sat = busy_saturday(d)
+    d = baseline(); sat = busy_saturday(d)
     d2, sun = with_sunday_third_xi(d, sat)
     gw_dates = set(fantasy.season_points(d2, 2026))
     sun_d = date.fromisoformat(sun)
@@ -162,7 +162,7 @@ def test_bank_holiday_dates():
 
 
 def test_bank_holiday_monday_game():
-    d = data(REPO); sat = "2026-05-23"; mon = "2026-05-25"
+    d = baseline(); sat = "2026-05-23"; mon = "2026-05-25"
     src = next(m for m in d["matches"] if m["Date"].startswith("2026") and m["Team"] == "2nd")
     d2 = copy.deepcopy(d); d2["matches"].append(dict(src, Date=mon, Team="3rd"))
     for ds in DS:

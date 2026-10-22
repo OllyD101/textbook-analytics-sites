@@ -1,6 +1,6 @@
 """Seasons before 2018: a one-off backfill from Play-Cricket (e.g. Run workflow with seasons 2010-2017).
 
-    python tests/make_fixtures.py docs/data.json tests/fixtures   # once
+    python tests/make_fixtures.py tests/baseline_data.json tests/fixtures   # once
     python tests/test_older_seasons.py
 
 Real 2026 Play-Cricket-shaped scorecards are copied back to 2016 (1st and 2nd XI, several months),

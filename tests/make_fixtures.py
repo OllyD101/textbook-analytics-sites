@@ -4,7 +4,7 @@ Running the pipeline on these should reproduce the existing data exactly, which
 proves the converter's logic. (The real-API dry run then confirms Play-Cricket's
 actual responses look the way its documentation says.)
 
-    python tests/make_fixtures.py docs/data.json tests/fixtures
+    python tests/make_fixtures.py tests/baseline_data.json tests/fixtures
 """
 import json
 import os
