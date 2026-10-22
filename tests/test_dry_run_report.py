@@ -92,6 +92,47 @@ def test_keep_site_list():
     return f"{date} {team} XI on the keep list: reported as kept, not compared, untouched by publish"
 
 
+def test_batted_first_disagreement():
+    tmp, d, mid, date, names = setup()
+    obj = load_md(tmp, mid); md = obj["match_details"][0]
+    md["batted_first"] = str(md["away_team_id"]) if str(md["batted_first"]) == str(md["home_team_id"]) else str(md["home_team_id"])
+    save_md(tmp, mid, obj)
+    rep = run(tmp, "dry_run"); shutil.rmtree(tmp)
+    sec = section(rep, date); lines = [l for l in sec.splitlines() if l.startswith("- ")]
+    assert not [l for l in lines if "missing" in l], lines[:6]
+    assert any(l.startswith("- Bat/Field First") for l in lines), lines
+    return f"{date}: who batted first differs -> {len(lines)} line(s) ({'; '.join(l[2:50] for l in lines)}), no 'missing' batters"
+
+
+def test_order_line_with_a_name_difference():
+    tmp, d, mid, date, names = setup()
+    obj = load_md(tmp, mid); inn = hessle_bat(obj["match_details"][0], names)
+    bats = [b for b in inn["bat"] if b.get("how_out") not in ("", "dnb", None)]
+    bats[0]["position"], bats[1]["position"] = bats[1]["position"], bats[0]["position"]
+    bats[-1]["batsman_name"] = "Somebody New"; bats[-1]["batsman_id"] = "999999"   # a player the site doesn't have
+    save_md(tmp, mid, obj)
+    rep = run(tmp, "dry_run"); shutil.rmtree(tmp)
+    lines = [l for l in section(rep, date).splitlines() if l.startswith("- ")]
+    assert lines[0].startswith("- batting order:"), lines
+    assert len([l for l in lines if "missing" in l]) == 2 and len(lines) == 3, lines
+    return f"{date}: order swap + one different name -> order line plus the one name ({len(lines)} lines)"
+
+
+def test_alias_added_after_a_publish():
+    tmp, d, mid, date, names = setup()
+    sp = os.path.join(tmp, "pipeline", "state.json"); st = json.load(open(sp))
+    obj = load_md(tmp, mid); inn = hessle_bat(obj["match_details"][0], names)
+    b = next(x for x in inn["bat"] if x["runs"] not in ("", None) and x.get("batsman_id"))
+    real = st["players"][str(b["batsman_id"])]
+    st["players"][str(b["batsman_id"])] = "Old Spelling"          # remembered from a run before the alias existed
+    json.dump(st, open(sp, "w"))
+    ap = os.path.join(tmp, "pipeline", "aliases.json"); al = json.load(open(ap)); al["players"]["Old Spelling"] = real
+    json.dump(al, open(ap, "w"))
+    rep = run(tmp, "dry_run"); shutil.rmtree(tmp)
+    assert not section(rep, date) and "Old Spelling" not in rep, section(rep, date)
+    return f"{date}: ID remembered as 'Old Spelling', alias added later -> resolves to {real}, no differences"
+
+
 def test_new_matches_listed():
     tmp = sandbox(); run(tmp, "publish"); add_third_xi_fixtures(tmp, n=3)
     rep = run(tmp, "dry_run"); shutil.rmtree(tmp)
@@ -102,7 +143,8 @@ def test_new_matches_listed():
 
 if __name__ == "__main__":
     ok = 0; tests = [test_batting_order_is_one_line, test_missing_overs_kept, test_impossible_wicket_total_corrected,
-                     test_keep_site_list, test_new_matches_listed]
+                     test_keep_site_list, test_new_matches_listed, test_batted_first_disagreement,
+             test_order_line_with_a_name_difference, test_alias_added_after_a_publish]
     for t in tests:
         try:
             print("PASS", t.__name__, "-", t()); ok += 1
