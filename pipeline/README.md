@@ -58,6 +58,10 @@ GitHub emails the repository owner. Open the run in the **Actions** tab; the rep
 - **First publish.** Two 2026 matches (6 June, both XIs) have batting marked as 1st innings when Hessle fielded first. Play-Cricket's batting order will correct them automatically.
 - **League page wording** currently says "Final standings". It will need a small change before next season to show a table in progress.
 
+## The "Updated" stamp
+
+Whenever a run changes the data, it also writes `docs/data-meta.json` (when, and the latest match date). The dashboard shows this under the filters, e.g. "Updated today, 7:42pm · Results to 3 May 2027", and the Overview page opens with the latest weekend's results. Matches fetched from Play-Cricket that are identical to the site are left untouched, so the stamp only moves when something really changed.
+
 ## Seasons before 2018
 
 The club has no award records before 2018, so older games get a Match Value Man of the Match and older months a Match Value Player of the Month (once, then frozen). Every 2018-2026 game and month already has an award, and those never change.
@@ -90,4 +94,6 @@ python tests/test_third_xi.py                                   # 3 tests: 3rd X
 python tests/test_sunday_games.py                               # 7 tests: Sunday and bank holiday Monday games, fantasy gameweeks and prices
 python tests/test_fixtures.py                                   # 5 tests: the fixtures file
 python tests/test_older_seasons.py                              # 2 tests: fetching seasons before 2018
+python tests/test_data_meta.py                                  # 2 tests: the dashboard's "Updated" stamp
+python pipeline/check_data.py                                   # consistency checks on docs/data.json (changes nothing)
 ```

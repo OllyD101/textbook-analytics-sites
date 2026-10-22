@@ -36,6 +36,12 @@ def load_json(path, default=None):
         return json.load(f)
 
 
+def write_meta(path, data):
+    """docs/data-meta.json: when the data last changed, for the dashboard's "Updated" stamp."""
+    now = os.environ.get("PIPELINE_NOW") or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")   # PIPELINE_NOW: tests only
+    write_json(path, {"updated": now, "latest_match": max((m["Date"] for m in data["matches"]), default=None)}, compact=False)
+
+
 def write_json(path, obj, compact=True):
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
@@ -262,7 +268,7 @@ def main():
     existing_players = {r.get("Batter") for r in data["batting"]} | {r.get("Bowler") for r in data["bowling"]} | \
         {r.get("Fielder") for r in data["fielding"]} | {r.get("Keeper") for r in data["keeping"]}
     names = Names({m["Opponent"] for m in data["matches"]}, existing_players, aliases, state.setdefault("players", {}))
-    report = {"mode": mode, "added": [], "amended": [], "unchanged": [], "compared_ok": [], "compared_diff": {},
+    report = {"mode": mode, "added": [], "amended": [], "unchanged": [], "identical": [], "compared_ok": [], "compared_diff": {},
               "skipped": [], "warnings": [], "errors": [], "league": {}, "bonus": []}
     divisions = {}
 
@@ -318,6 +324,8 @@ def main():
                     report["compared_diff"][label] = diffs
                 else:
                     report["compared_ok"].append(label)
+            elif compare_match(rows, data) == []:
+                report["identical"].append(label)   # same as the site already has: leave it untouched
             else:
                 report[merge_match(rows, data)].append(label)
                 state["matches"][mid] = {"key": list(k), "last_updated": m.get("last_updated"), "published": True}
@@ -359,6 +367,7 @@ def main():
             sys.exit("Blocking data problems - nothing was published. See the report.")
         if report["added"] or report["amended"] or n_awards or os.environ.get("FORCE_WRITE"):
             write_json(data_path, shrink(data, fwd))
+            write_meta(os.path.join(os.path.dirname(data_path), "data-meta.json"), data)
         if report["league"]:
             league["updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
             write_json(league_path, league, compact=False)
@@ -408,7 +417,8 @@ def write_report(report, names):
             L += [f"### {label}"] + [f"- {d}" for d in diffs[:40]] + [""]
     else:
         L += [f"- Added: **{len(report['added'])}**  ", f"- Amended: **{len(report['amended'])}**  ",
-              f"- Unchanged since last run: {len(report['unchanged'])}", ""]
+              f"- Unchanged since last run: {len(report['unchanged'])}",
+              f"- Fetched but identical to the site: {len(report.get('identical', []))}", ""]
         L += [f"- added {x}" for x in report["added"]] + [f"- amended {x}" for x in report["amended"]] + [""]
     if report.get("awards"):
         L += ["## Awards (Match Value)", ""] + [f"- {a}" for a in report["awards"]] + [""]
