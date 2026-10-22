@@ -1,0 +1,89 @@
+{
+  "_help": "Findings from pipeline/check_data.py that have been looked at and accepted. Listed items are set aside one by one; \"all\": true sets aside the whole check. Delete an entry to see it again.",
+  "Bowlers overs vs match overs": {
+    "reason": "Small overs discrepancy, fine for now",
+    "all": true
+  },
+  "Wickets lost vs dismissals": {
+    "reason": "Scorecard incomplete; no further details available (Olly, Oct 2026)",
+    "items": [
+      "2018-06-16 2nd XI v Gilberdyke: match says 9, batting rows show 8",
+      "2018-07-14 1st XI v Patrington CC: match says 10, batting rows show 9",
+      "2018-07-14 2nd XI v NCCE: match says 10, batting rows show 9",
+      "2019-05-25 2nd XI v Brandesburton CC: match says 6, batting rows show 5",
+      "2019-06-22 2nd XI v Pelican CC: match says 10, batting rows show 9",
+      "2019-08-10 1st XI v NCCE: match says 10, batting rows show 9",
+      "2019-08-24 1st XI v Patrington CC: match says 10, batting rows show 9",
+      "2019-08-24 2nd XI v Pelican CC: match says 10, batting rows show 8",
+      "2020-08-22 2nd XI v Bransholme: match says 10, batting rows show 9",
+      "2021-08-28 1st XI v Driffield Town: match says 10, batting rows show 9",
+      "2023-08-26 1st XI v Patrington CC: match says 10, batting rows show 3",
+      "2024-07-28 2nd XI v Cottingham CC: match says 9, batting rows show 8",
+      "2024-08-17 2nd XI v Humbleton: match says 10, batting rows show 9",
+      "2024-08-24 2nd XI v Gilberdyke: match says 10, batting rows show 9",
+      "2024-08-31 2nd XI v Kirkella CC: match says 9, batting rows show 8"
+    ]
+  },
+  "Fielder not in the team sheet": {
+    "reason": "Scorecard incomplete; no further details available (Olly, Oct 2026)",
+    "items": [
+      "2021-04-24 1st XI v Welton CC: Unsure",
+      "2025-09-13 1st XI v Driffield Town: Jacob Hudson"
+    ]
+  },
+  "Player listed twice": {
+    "reason": "Scorecard incomplete; no further details available (Olly, Oct 2026)",
+    "items": [
+      "2021-08-28 2nd XI v Cottingham CC: batter Unsure",
+      "2023-08-26 2nd XI v Skirlaugh: batter Unsure"
+    ]
+  },
+  "Result vs scores": {
+    "reason": "Rain-affected game (Olly, Oct 2026)",
+    "items": [
+      "2022-07-02 1st XI v Sutton: result W but 146 v 162",
+      "2023-09-09 1st XI v Sutton: result W but 123 v 190",
+      "2023-09-09 2nd XI v South Holderness: result W but 117 v 142"
+    ]
+  },
+  "More than one keeper": {
+    "reason": "Scorecard incomplete; no further details available (Olly, Oct 2026)",
+    "items": [
+      "2024-07-20 2nd XI v Humbleton: ['Andrew Jude', 'Harvey Newton']"
+    ]
+  },
+  "Bowler not in the team sheet": {
+    "reason": "Scorecard incomplete; no further details available (Olly, Oct 2026)",
+    "items": [
+      "2025-08-23 2nd XI v Humbleton: Craig Asquith"
+    ]
+  },
+  "Missing scorecard": {
+    "reason": "Scorecard incomplete; no further details available (Olly, Oct 2026)",
+    "items": [
+      "2018-06-23 2nd XI v Walkington: no bowling rows"
+    ]
+  },
+  "Boundaries more than runs": {
+    "reason": "Scorecard incomplete; no further details available (Olly, Oct 2026)",
+    "items": [
+      "2019-07-06 1st XI v Hull Zingari Zaheer Butt: 38 runs, 6x4 4x6",
+      "2024-06-29 2nd XI v Hull Zingari Jack Walker: 7 runs, 2x4 0x6",
+      "2025-08-30 1st XI v Welton CC Steven Cooper: 6 runs, 2x4 0x6"
+    ]
+  },
+  "Balls vs overs": {
+    "reason": "Small overs discrepancy, fine for now",
+    "all": true
+  },
+  "Text where a number should be": {
+    "reason": "'-' = not recorded on the scorecard",
+    "all": true
+  },
+  "Placeholder names": {
+    "reason": "Scorecard incomplete; no further details available (Olly, Oct 2026)",
+    "items": [
+      "'Unsure' (9 rows)"
+    ]
+  }
+}
