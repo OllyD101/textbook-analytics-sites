@@ -204,6 +204,48 @@ def excluded_reason(m, cfg):
     return None
 
 
+def hessle_xi(m, cfg):
+    """The Hessle XI ('1st', '2nd', '3rd') a Play-Cricket match (listing or details) is for, or None."""
+    club = cfg["club_name_match"].lower()
+    sides = [sd for sd in ("home", "away") if club in (m.get(f"{sd}_club_name") or "").lower()]
+    return cfg["teams"].get((m.get(f"{sides[0]}_team_name") or "").strip()) if len(sides) == 1 else None
+
+
+def league_history(client, league, seasons, candidates, known_divs, report, current_year):
+    """Final league tables for past seasons, fetched once each and kept in league.json under "history"
+    (season -> XI -> table). The division comes from a league match's details when this run didn't already see one."""
+    hist = league.setdefault("history", {})
+    for (season, team) in sorted(candidates):
+        if season >= current_year or team in hist.get(season, {}):
+            continue                                  # the current season comes from the weekly table
+        div = known_divs.get((season, team))
+        for mid in candidates[(season, team)][:4]:    # otherwise look at a few of that season's matches
+            if div:
+                break
+            try:
+                md = client.match_detail(mid)
+            except PlayCricketError as e:
+                report["errors"].append(str(e)); md = None
+            if md and md.get("competition_type") == "League" and md.get("competition_id"):
+                div = md["competition_id"]
+        if not div:
+            report["league_history"].append(f"{season} {team} XI: no league division found")
+            continue
+        try:
+            lt = client.league_table(div)
+        except PlayCricketError as e:
+            report["errors"].append(str(e)); continue
+        if not lt:
+            report["league_history"].append(f"{season} {team} XI: Play-Cricket has no table for division {div}")
+            continue
+        parsed = parse_league(lt, team)
+        if parsed["columns_missing"] or not any(r["isHessle"] for r in parsed["rows"]):
+            report["league_history"].append(f"{season} {team} XI: table for division {div} not usable (missing {parsed['columns_missing'] or 'Hessle'})")
+            continue
+        hist.setdefault(season, {})[team] = parsed
+        report["league_history"].append(f"{season} {team} XI: saved ({parsed.get('division_name') or div}, {len(parsed['rows'])} teams)")
+
+
 def remove_excluded(m, data, cfg, aliases, report, mode, why):
     """A match Play-Cricket shows as excluded (cup, T20, friendly) that's already on the site: remove it on publish."""
     try:
@@ -372,7 +414,7 @@ def parse_league(lt, team_label):
         n = lambda key: (float(v.get(c[key])) if c[key] and str(v.get(c[key])).strip() not in ("", "-") else 0)
         is_h = "hessle" in club.lower()
         rows.append({"pos": int(v.get("position") or len(rows) + 1),
-                     "team": (club + (" 2nd XI" if team_label == "2nd" else "")) if is_h else club,
+                     "team": (club + (f" {team_label} XI" if team_label != "1st" else "")) if is_h else club,
                      "short": club.replace(" CC", "").strip(), "P": int(n("P")), "W": int(n("W")), "T": int(n("T")),
                      "L": int(n("L")), "pts": int(n("pts")), "nrr": round(n("nrr"), 2), "isHessle": is_h, "rem": 0})
     missing = [k for k in ("team", "P", "W", "L", "pts") if not c[k]]
@@ -420,11 +462,12 @@ def main():
         {r.get("Fielder") for r in data["fielding"]} | {r.get("Keeper") for r in data["keeping"]}
     names = Names({m["Opponent"] for m in data["matches"]}, existing_players, aliases, state.setdefault("players", {}))
     report = {"mode": mode, "added": [], "amended": [], "unchanged": [], "identical": [], "compared_ok": [], "compared_diff": {},
-              "skipped": [], "filtered": [], "removed": [], "would_remove": [], "kept": [], "warnings": [], "errors": [], "league": {}, "bonus": []}
+              "skipped": [], "filtered": [], "removed": [], "would_remove": [], "kept": [], "league_history": [], "warnings": [], "errors": [], "league": {}, "bonus": []}
     divisions = {}
     keep_site = load_keep_site()
 
     site_keys = {(x["Date"], x["Team"]) for x in data["matches"]}
+    hist_candidates, hist_divs = {}, {}
     for season in seasons:
         try:
             listing = client.matches(site_id, season)
@@ -447,6 +490,9 @@ def main():
             if only_teams and not {cfg["teams"].get((m.get(f"{sd}_team_name") or "").strip()) for sd in hs} & only_teams:
                 continue  # this run is limited to some XIs (e.g. the 3rd XI backfill), so leave the others alone
             mid = str(m.get("id"))
+            xi = hessle_xi(m, cfg)
+            if xi and not excluded_reason(m, cfg) and (not only_teams or xi in only_teams):
+                hist_candidates.setdefault((season, xi), []).append(mid)
             why = excluded_reason(m, cfg)
             if why:
                 report["filtered"].append(f"{m.get('match_date')} {m.get('home_team_name') or ''} v {m.get('away_team_name') or ''} ({m.get('home_club_name') or ''} v {m.get('away_club_name') or ''}): {why}")
@@ -484,6 +530,7 @@ def main():
             fix_totals(rows, report, label)
             if md.get("competition_type") == "League" and md.get("competition_id"):
                 divisions[k[1]] = (k[0], md["competition_id"])  # latest league match per XI wins
+                hist_divs[(k[0][:4], k[1])] = md["competition_id"]
             if rows["points"]:
                 report["bonus"].append((label, rows["points"]))
             if mode == "dry_run":
@@ -520,6 +567,10 @@ def main():
                 report["warnings"].append(f"{team} XI league table: couldn't find columns {parsed['columns_missing']} - left unchanged")
             else:
                 league["tables"][team] = parsed
+                league.setdefault("history", {}).setdefault(when[:4], {})[team] = parsed
+    if mode == "publish":
+        this_year = (os.environ.get("PIPELINE_TODAY") or date.today().isoformat())[:4]
+        league_history(client, league, seasons, hist_candidates, hist_divs, report, this_year)
 
     if report["errors"] and not (report["added"] or report["amended"] or report["compared_ok"] or report["compared_diff"]):
         write_report(report, names)
@@ -541,7 +592,7 @@ def main():
         if report["added"] or report["amended"] or report["removed"] or n_awards or os.environ.get("FORCE_WRITE"):
             write_json(data_path, shrink(data, fwd))
             write_meta(os.path.join(os.path.dirname(data_path), "data-meta.json"), data)
-        if report["league"]:
+        if report["league"] or any(": saved" in x for x in report["league_history"]):
             league["updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
             write_json(league_path, league, compact=False)
         state["last_run"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -610,6 +661,7 @@ def write_report(report, names):
                        ("Not included (cup games, T20s, friendlies: see match_filter in config.json)", "filtered"),
                        ("Removed from the site (cup game, T20 or friendly)", "removed"),
                        ("Kept as on the site (pipeline/manual/keep_site.csv)", "kept"),
+                       ("Past league tables", "league_history"),
                        ("Would be removed from the site on publish (cup game, T20 or friendly)", "would_remove")):
         if report[key]:
             L += ["", f"## {title}", ""] + [f"- {x}" for x in report[key][:200]]
