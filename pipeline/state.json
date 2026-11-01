@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-11-01T23:19:54Z",
+  "last_run": "2026-11-01T23:40:47Z",
   "matches": {
     "3584354": {
       "key": [
@@ -8,7 +8,8 @@
         "Driffield Town"
       ],
       "last_updated": "22/05/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3584359": {
       "key": [
@@ -17,7 +18,8 @@
         "Carlton Towers CC"
       ],
       "last_updated": "04/06/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3584369": {
       "key": [
@@ -26,7 +28,8 @@
         "Beverley Town"
       ],
       "last_updated": "13/12/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3584374": {
       "key": [
@@ -35,7 +38,8 @@
         "Patrington CC"
       ],
       "last_updated": "08/01/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3678153": {
       "key": [
@@ -53,7 +57,8 @@
         "Drax CC"
       ],
       "last_updated": "02/07/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3584384": {
       "key": [
@@ -62,7 +67,8 @@
         "Sutton"
       ],
       "last_updated": "30/07/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3584393": {
       "key": [
@@ -71,7 +77,8 @@
         "Welton CC"
       ],
       "last_updated": "12/07/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3584398": {
       "key": [
@@ -80,7 +87,8 @@
         "Hull Zingari"
       ],
       "last_updated": "30/07/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3584402": {
       "key": [
@@ -89,7 +97,8 @@
         "Eastrington CC"
       ],
       "last_updated": "30/07/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3695420": {
       "key": [
@@ -98,7 +107,8 @@
         "Patrington CC"
       ],
       "last_updated": "08/01/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3695429": {
       "key": [
@@ -107,7 +117,8 @@
         "Goole Town CC"
       ],
       "last_updated": "15/09/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3695432": {
       "key": [
@@ -116,7 +127,8 @@
         "Gilberdyke"
       ],
       "last_updated": "25/09/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869487": {
       "key": [
@@ -125,7 +137,8 @@
         "Welton CC"
       ],
       "last_updated": "09/05/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869491": {
       "key": [
@@ -134,7 +147,8 @@
         "Beverley Town"
       ],
       "last_updated": "22/05/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869495": {
       "key": [
@@ -143,7 +157,8 @@
         "Driffield Town"
       ],
       "last_updated": "22/05/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869501": {
       "key": [
@@ -152,7 +167,8 @@
         "Sutton"
       ],
       "last_updated": "09/06/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869503": {
       "key": [
@@ -161,7 +177,8 @@
         "Drax CC"
       ],
       "last_updated": "09/06/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869511": {
       "key": [
@@ -170,7 +187,8 @@
         "Patrington CC"
       ],
       "last_updated": "08/01/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869515": {
       "key": [
@@ -179,7 +197,8 @@
         "Hull Zingari"
       ],
       "last_updated": "16/06/2026",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869525": {
       "key": [
@@ -188,7 +207,8 @@
         "Goole Town CC"
       ],
       "last_updated": "07/07/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869535": {
       "key": [
@@ -197,7 +217,8 @@
         "Carlton Towers CC"
       ],
       "last_updated": "19/07/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869541": {
       "key": [
@@ -206,7 +227,8 @@
         "Goole Town CC"
       ],
       "last_updated": "27/07/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869546": {
       "key": [
@@ -215,7 +237,8 @@
         "Hull Zingari"
       ],
       "last_updated": "07/08/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869556": {
       "key": [
@@ -224,7 +247,8 @@
         "Goole Town CC"
       ],
       "last_updated": "18/08/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869560": {
       "key": [
@@ -233,7 +257,8 @@
         "Hull Zingari"
       ],
       "last_updated": "28/08/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3869564": {
       "key": [
@@ -242,7 +267,8 @@
         "Gilberdyke"
       ],
       "last_updated": "03/10/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4441170": {
       "key": [
@@ -251,7 +277,8 @@
         "Gilberdyke"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4441175": {
       "key": [
@@ -260,7 +287,8 @@
         "Brandesburton CC"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4441183": {
       "key": [
@@ -269,7 +297,8 @@
         "Hull Zingari"
       ],
       "last_updated": "02/09/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4441187": {
       "key": [
@@ -278,7 +307,8 @@
         "Patrington CC"
       ],
       "last_updated": "02/09/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4441194": {
       "key": [
@@ -287,7 +317,8 @@
         "Sutton"
       ],
       "last_updated": "02/09/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4441198": {
       "key": [
@@ -296,7 +327,8 @@
         "Carlton Towers CC"
       ],
       "last_updated": "02/09/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4441204": {
       "key": [
@@ -305,7 +337,8 @@
         "Welton CC"
       ],
       "last_updated": "05/09/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4441222": {
       "key": [
@@ -314,7 +347,8 @@
         "Driffield Town"
       ],
       "last_updated": "13/02/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615028": {
       "key": [
@@ -323,7 +357,8 @@
         "Sutton"
       ],
       "last_updated": "09/05/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615036": {
       "key": [
@@ -332,7 +367,8 @@
         "Driffield Town"
       ],
       "last_updated": "18/05/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615049": {
       "key": [
@@ -341,7 +377,8 @@
         "Gilberdyke"
       ],
       "last_updated": "01/06/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615055": {
       "key": [
@@ -350,7 +387,8 @@
         "Welton CC"
       ],
       "last_updated": "22/06/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615067": {
       "key": [
@@ -359,7 +397,8 @@
         "Beverley Town"
       ],
       "last_updated": "22/06/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615077": {
       "key": [
@@ -368,7 +407,8 @@
         "Carlton Towers CC"
       ],
       "last_updated": "29/06/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615079": {
       "key": [
@@ -377,7 +417,8 @@
         "Drax CC"
       ],
       "last_updated": "05/07/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615088": {
       "key": [
@@ -386,7 +427,8 @@
         "Patrington CC"
       ],
       "last_updated": "07/07/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615096": {
       "key": [
@@ -395,7 +437,8 @@
         "Driffield Town"
       ],
       "last_updated": "22/03/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615099": {
       "key": [
@@ -404,7 +447,8 @@
         "Brandesburton CC"
       ],
       "last_updated": "22/03/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615109": {
       "key": [
@@ -413,7 +457,8 @@
         "Hull Strikers CC"
       ],
       "last_updated": "22/03/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615117": {
       "key": [
@@ -422,7 +467,8 @@
         "Drax CC"
       ],
       "last_updated": "22/03/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615119": {
       "key": [
@@ -431,7 +477,8 @@
         "Pelican CC"
       ],
       "last_updated": "07/09/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615125": {
       "key": [
@@ -440,7 +487,8 @@
         "Welton CC"
       ],
       "last_updated": "07/09/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615137": {
       "key": [
@@ -449,7 +497,8 @@
         "Carlton Towers CC"
       ],
       "last_updated": "07/09/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4615151": {
       "key": [
@@ -458,7 +507,8 @@
         "Gilberdyke"
       ],
       "last_updated": "22/03/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5119502": {
       "key": [
@@ -467,7 +517,8 @@
         "Welton CC"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5119504": {
       "key": [
@@ -476,7 +527,8 @@
         "Driffield Town"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5119509": {
       "key": [
@@ -485,7 +537,8 @@
         "Carlton Towers CC"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5119512": {
       "key": [
@@ -494,7 +547,8 @@
         "Gilberdyke"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5119515": {
       "key": [
@@ -503,7 +557,8 @@
         "Beverley Town"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5119496": {
       "key": [
@@ -512,7 +567,8 @@
         "Drax CC"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5119521": {
       "key": [
@@ -521,7 +577,8 @@
         "Welton CC"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5119523": {
       "key": [
@@ -530,7 +587,8 @@
         "Driffield Town"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5119488": {
       "key": [
@@ -539,7 +597,8 @@
         "Carlton Towers CC"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5119535": {
       "key": [
@@ -548,7 +607,8 @@
         "Gilberdyke"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5119481": {
       "key": [
@@ -557,7 +617,8 @@
         "Beverley Town"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5482959": {
       "key": [
@@ -566,7 +627,8 @@
         "Hull Zingari"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5482942": {
       "key": [
@@ -575,7 +637,8 @@
         "Cottingham CC"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5482956": {
       "key": [
@@ -584,7 +647,8 @@
         "Welton CC"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5482954": {
       "key": [
@@ -593,7 +657,8 @@
         "Sutton"
       ],
       "last_updated": "04/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5658365": {
       "key": [
@@ -602,7 +667,8 @@
         "Welton CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5658380": {
       "key": [
@@ -611,7 +677,8 @@
         "Hull Zingari"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5658387": {
       "key": [
@@ -620,7 +687,8 @@
         "Kirkella CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5663567": {
       "key": [
@@ -638,7 +706,8 @@
         "Patrington CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5658401": {
       "key": [
@@ -647,7 +716,8 @@
         "Gilberdyke"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5658411": {
       "key": [
@@ -656,7 +726,8 @@
         "Pelican CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5658422": {
       "key": [
@@ -665,7 +736,8 @@
         "Welton CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5663569": {
       "key": [
@@ -683,7 +755,8 @@
         "Beverley Town"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5658432": {
       "key": [
@@ -692,7 +765,8 @@
         "Carlton Towers CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5663572": {
       "key": [
@@ -710,7 +784,8 @@
         "Driffield Town"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5658468": {
       "key": [
@@ -719,7 +794,8 @@
         "Goole Town CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286575": {
       "key": [
@@ -728,7 +804,8 @@
         "Walkington"
       ],
       "last_updated": "02/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286583": {
       "key": [
@@ -737,7 +814,8 @@
         "Hull Zingari"
       ],
       "last_updated": "02/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286589": {
       "key": [
@@ -746,7 +824,8 @@
         "Kirkella CC"
       ],
       "last_updated": "02/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286608": {
       "key": [
@@ -755,7 +834,8 @@
         "Patrington CC"
       ],
       "last_updated": "02/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286616": {
       "key": [
@@ -764,7 +844,8 @@
         "Pelican CC"
       ],
       "last_updated": "02/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286633": {
       "key": [
@@ -773,7 +854,8 @@
         "Welton CC"
       ],
       "last_updated": "23/06/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286639": {
       "key": [
@@ -782,7 +864,8 @@
         "Beverley Town"
       ],
       "last_updated": "01/07/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286651": {
       "key": [
@@ -791,7 +874,8 @@
         "Brandesburton CC"
       ],
       "last_updated": "14/07/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286679": {
       "key": [
@@ -800,7 +884,8 @@
         "Drax CC"
       ],
       "last_updated": "10/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286729": {
       "key": [
@@ -809,7 +894,8 @@
         "Welton CC"
       ],
       "last_updated": "09/09/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286703": {
       "key": [
@@ -818,7 +904,8 @@
         "Goole Town CC"
       ],
       "last_updated": "27/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6286698": {
       "key": [
@@ -827,7 +914,8 @@
         "Driffield Town"
       ],
       "last_updated": "01/09/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889750": {
       "key": [
@@ -836,7 +924,8 @@
         "North Ferriby"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889752": {
       "key": [
@@ -845,7 +934,8 @@
         "Gilberdyke"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889761": {
       "key": [
@@ -854,7 +944,8 @@
         "Walkington"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889767": {
       "key": [
@@ -863,7 +954,8 @@
         "Brandesburton CC"
       ],
       "last_updated": "06/01/2026",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889773": {
       "key": [
@@ -872,7 +964,8 @@
         "Welton CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889777": {
       "key": [
@@ -881,7 +974,8 @@
         "Cottingham CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889871": {
       "key": [
@@ -890,7 +984,8 @@
         "Kirkella CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889858": {
       "key": [
@@ -899,7 +994,8 @@
         "Drax CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889800": {
       "key": [
@@ -908,7 +1004,8 @@
         "Gilberdyke"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889821": {
       "key": [
@@ -917,7 +1014,8 @@
         "Welton CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889877": {
       "key": [
@@ -926,7 +1024,8 @@
         "Kirkella CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889812": {
       "key": [
@@ -935,7 +1034,8 @@
         "Brandesburton CC"
       ],
       "last_updated": "06/01/2026",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889833": {
       "key": [
@@ -944,7 +1044,8 @@
         "Drax CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889823": {
       "key": [
@@ -953,7 +1054,8 @@
         "Cottingham CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "7379726": {
       "key": [
@@ -1142,7 +1244,8 @@
         "Patrington CC"
       ],
       "last_updated": "08/01/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3583259": {
       "key": [
@@ -1151,7 +1254,8 @@
         "Brandesburton CC"
       ],
       "last_updated": "04/06/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3567507": {
       "key": [
@@ -1160,7 +1264,8 @@
         "South Holderness"
       ],
       "last_updated": "04/06/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3583284": {
       "key": [
@@ -1169,7 +1274,8 @@
         "Walkington"
       ],
       "last_updated": "30/07/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3567557": {
       "key": [
@@ -1178,7 +1284,8 @@
         "Patrington CC"
       ],
       "last_updated": "03/02/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3583299": {
       "key": [
@@ -1187,7 +1294,8 @@
         "NCCE"
       ],
       "last_updated": "30/07/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3567562": {
       "key": [
@@ -1196,7 +1304,8 @@
         "NCCE"
       ],
       "last_updated": "08/10/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3567586": {
       "key": [
@@ -1205,7 +1314,8 @@
         "Hull Zingari"
       ],
       "last_updated": "31/08/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3583328": {
       "key": [
@@ -1214,7 +1324,8 @@
         "Walkington"
       ],
       "last_updated": "15/09/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3567599": {
       "key": [
@@ -1223,7 +1334,8 @@
         "South Holderness"
       ],
       "last_updated": "15/09/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3567479": {
       "key": [
@@ -1232,7 +1344,8 @@
         "Sutton"
       ],
       "last_updated": "25/09/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3792098": {
       "key": [
@@ -1241,7 +1354,8 @@
         "Middleton & ND"
       ],
       "last_updated": "20/06/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3790110": {
       "key": [
@@ -1250,7 +1364,8 @@
         "Brandesburton CC"
       ],
       "last_updated": "09/06/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3792108": {
       "key": [
@@ -1259,7 +1374,8 @@
         "Humbleton"
       ],
       "last_updated": "09/06/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3790133": {
       "key": [
@@ -1268,7 +1384,8 @@
         "NCCE"
       ],
       "last_updated": "20/06/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3792116": {
       "key": [
@@ -1277,7 +1394,8 @@
         "NCCE"
       ],
       "last_updated": "08/10/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3790141": {
       "key": [
@@ -1286,7 +1404,8 @@
         "Sutton"
       ],
       "last_updated": "02/07/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3792122": {
       "key": [
@@ -1295,7 +1414,8 @@
         "Pelican CC"
       ],
       "last_updated": "13/01/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3790150": {
       "key": [
@@ -1304,7 +1424,8 @@
         "Beverley Town"
       ],
       "last_updated": "16/07/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3792126": {
       "key": [
@@ -1313,7 +1434,8 @@
         "South Holderness"
       ],
       "last_updated": "16/07/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3790159": {
       "key": [
@@ -1322,7 +1444,8 @@
         "Hull Zingari"
       ],
       "last_updated": "16/07/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3792145": {
       "key": [
@@ -1331,7 +1454,8 @@
         "Brandesburton CC"
       ],
       "last_updated": "23/04/2026",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3792157": {
       "key": [
@@ -1340,7 +1464,8 @@
         "Hull Strikers CC"
       ],
       "last_updated": "28/08/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3790189": {
       "key": [
@@ -1349,7 +1474,8 @@
         "NCCE"
       ],
       "last_updated": "28/08/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3792166": {
       "key": [
@@ -1358,7 +1484,8 @@
         "Pelican CC"
       ],
       "last_updated": "03/10/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3790216": {
       "key": [
@@ -1367,7 +1494,8 @@
         "Cottingham CC"
       ],
       "last_updated": "03/10/2019",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4448501": {
       "key": [
@@ -1376,7 +1504,8 @@
         "Middleton & ND"
       ],
       "last_updated": "20/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4448934": {
       "key": [
@@ -1385,7 +1514,8 @@
         "Cottingham CC"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4448944": {
       "key": [
@@ -1394,7 +1524,8 @@
         "Bransholme"
       ],
       "last_updated": "13/02/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4448949": {
       "key": [
@@ -1403,7 +1534,8 @@
         "Dalton Holme"
       ],
       "last_updated": "05/09/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4448535": {
       "key": [
@@ -1412,7 +1544,8 @@
         "South Holderness"
       ],
       "last_updated": "13/02/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4594441": {
       "key": [
@@ -1421,7 +1554,8 @@
         "Eastrington CC"
       ],
       "last_updated": "22/05/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4592489": {
       "key": [
@@ -1430,7 +1564,8 @@
         "Sutton"
       ],
       "last_updated": "22/05/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4592511": {
       "key": [
@@ -1439,7 +1574,8 @@
         "Driffield Town"
       ],
       "last_updated": "22/06/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4592519": {
       "key": [
@@ -1448,7 +1584,8 @@
         "Newport CC"
       ],
       "last_updated": "29/06/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4594466": {
       "key": [
@@ -1457,7 +1594,8 @@
         "Swanland"
       ],
       "last_updated": "29/06/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4592524": {
       "key": [
@@ -1466,7 +1604,8 @@
         "Cottingham CC"
       ],
       "last_updated": "05/07/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4594481": {
       "key": [
@@ -1475,7 +1614,8 @@
         "Eastrington CC"
       ],
       "last_updated": "22/03/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4592543": {
       "key": [
@@ -1484,7 +1624,8 @@
         "North Ferriby"
       ],
       "last_updated": "22/03/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4594487": {
       "key": [
@@ -1493,7 +1634,8 @@
         "NCCE"
       ],
       "last_updated": "08/10/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4594494": {
       "key": [
@@ -1502,7 +1644,8 @@
         "Swanland"
       ],
       "last_updated": "22/03/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4592564": {
       "key": [
@@ -1511,7 +1654,8 @@
         "Beverley Town"
       ],
       "last_updated": "15/01/2026",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4592571": {
       "key": [
@@ -1520,7 +1664,8 @@
         "Brandesburton CC"
       ],
       "last_updated": "19/04/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4594512": {
       "key": [
@@ -1529,7 +1674,8 @@
         "Cottingham CC"
       ],
       "last_updated": "07/09/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4592578": {
       "key": [
@@ -1538,7 +1684,8 @@
         "Driffield Town"
       ],
       "last_updated": "07/09/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "4592503": {
       "key": [
@@ -1547,7 +1694,8 @@
         "Cottingham CC"
       ],
       "last_updated": "22/03/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5118838": {
       "key": [
@@ -1556,7 +1704,8 @@
         "Dalton Holme"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5116114": {
       "key": [
@@ -1565,7 +1714,8 @@
         "Cottingham CC"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5118843": {
       "key": [
@@ -1574,7 +1724,8 @@
         "Old Hymerians CC"
       ],
       "last_updated": "05/06/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5118852": {
       "key": [
@@ -1583,7 +1734,8 @@
         "Skirlaugh"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5118865": {
       "key": [
@@ -1592,7 +1744,8 @@
         "Gilberdyke"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5116133": {
       "key": [
@@ -1601,7 +1754,8 @@
         "Driffield Town"
       ],
       "last_updated": "09/03/2026",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5118876": {
       "key": [
@@ -1610,7 +1764,8 @@
         "Swanland"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5116157": {
       "key": [
@@ -1619,7 +1774,8 @@
         "Middleton & ND"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5116169": {
       "key": [
@@ -1628,7 +1784,8 @@
         "Sutton"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5116180": {
       "key": [
@@ -1637,7 +1794,8 @@
         "Cottingham CC"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5116186": {
       "key": [
@@ -1646,7 +1804,8 @@
         "NCCE"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5116192": {
       "key": [
@@ -1655,7 +1814,8 @@
         "Patrington CC"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5116198": {
       "key": [
@@ -1664,7 +1824,8 @@
         "Hornsea CC"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5116204": {
       "key": [
@@ -1673,7 +1834,8 @@
         "Driffield Town"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5116216": {
       "key": [
@@ -1682,7 +1844,8 @@
         "Beverley Town"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5116228": {
       "key": [
@@ -1691,7 +1854,8 @@
         "Middleton & ND"
       ],
       "last_updated": "02/09/2022",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5648590": {
       "key": [
@@ -1700,7 +1864,8 @@
         "Beverley Town"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5653907": {
       "key": [
@@ -1709,7 +1874,8 @@
         "Hornsea CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5653912": {
       "key": [
@@ -1718,7 +1884,8 @@
         "Kirkella CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5648595": {
       "key": [
@@ -1727,7 +1894,8 @@
         "Hull Strikers CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5653919": {
       "key": [
@@ -1736,7 +1904,8 @@
         "Hull Zingari"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5648602": {
       "key": [
@@ -1745,7 +1914,8 @@
         "North Ferriby"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5653931": {
       "key": [
@@ -1754,7 +1924,8 @@
         "Cottingham CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5653939": {
       "key": [
@@ -1763,7 +1934,8 @@
         "Hutton Cranswick"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5653943": {
       "key": [
@@ -1772,7 +1944,8 @@
         "Skirlaugh"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5648633": {
       "key": [
@@ -1781,7 +1954,8 @@
         "Newport CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5653949": {
       "key": [
@@ -1790,7 +1964,8 @@
         "NCCE"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5648636": {
       "key": [
@@ -1799,7 +1974,8 @@
         "Londesborough Park CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5653964": {
       "key": [
@@ -1808,7 +1984,8 @@
         "South Holderness"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5653965": {
       "key": [
@@ -1817,7 +1994,8 @@
         "Bransholme"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5653972": {
       "key": [
@@ -1826,7 +2004,8 @@
         "Hornsea CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5648669": {
       "key": [
@@ -1835,7 +2014,8 @@
         "North Ferriby"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5653984": {
       "key": [
@@ -1844,7 +2024,8 @@
         "Hull Zingari"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5648680": {
       "key": [
@@ -1853,7 +2034,8 @@
         "Cottingham CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5654003": {
       "key": [
@@ -1862,7 +2044,8 @@
         "Hutton Cranswick"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5654011": {
       "key": [
@@ -1871,7 +2054,8 @@
         "Skirlaugh"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5648705": {
       "key": [
@@ -1880,7 +2064,8 @@
         "Londesborough Park CC"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "5648712": {
       "key": [
@@ -1889,7 +2074,8 @@
         "Sutton"
       ],
       "last_updated": "27/11/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6249352": {
       "key": [
@@ -1898,7 +2084,8 @@
         "North Ferriby"
       ],
       "last_updated": "02/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6249361": {
       "key": [
@@ -1907,7 +2094,8 @@
         "Swanland"
       ],
       "last_updated": "02/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271712": {
       "key": [
@@ -1916,7 +2104,8 @@
         "Hutton Cranswick"
       ],
       "last_updated": "02/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6249365": {
       "key": [
@@ -1925,7 +2114,8 @@
         "Sutton"
       ],
       "last_updated": "02/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271714": {
       "key": [
@@ -1934,7 +2124,8 @@
         "Hull Zingari"
       ],
       "last_updated": "02/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271728": {
       "key": [
@@ -1943,7 +2134,8 @@
         "NCCE"
       ],
       "last_updated": "02/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6249401": {
       "key": [
@@ -1952,7 +2144,8 @@
         "Hull Strikers CC"
       ],
       "last_updated": "24/04/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271741": {
       "key": [
@@ -1961,7 +2154,8 @@
         "Hull Zingari"
       ],
       "last_updated": "29/06/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6249412": {
       "key": [
@@ -1970,7 +2164,8 @@
         "Newport CC"
       ],
       "last_updated": "13/07/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271755": {
       "key": [
@@ -1979,7 +2174,8 @@
         "Humbleton"
       ],
       "last_updated": "26/07/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271760": {
       "key": [
@@ -1988,7 +2184,8 @@
         "Cottingham CC"
       ],
       "last_updated": "29/07/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271706": {
       "key": [
@@ -1997,7 +2194,8 @@
         "Hutton Cranswick"
       ],
       "last_updated": "05/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6249432": {
       "key": [
@@ -2006,7 +2204,8 @@
         "Sutton"
       ],
       "last_updated": "03/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271770": {
       "key": [
@@ -2015,7 +2214,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271774": {
       "key": [
@@ -2024,7 +2224,8 @@
         "Humbleton"
       ],
       "last_updated": "19/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271777": {
       "key": [
@@ -2033,7 +2234,8 @@
         "Gilberdyke"
       ],
       "last_updated": "24/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6249448": {
       "key": [
@@ -2042,7 +2244,8 @@
         "Cherry Burton CC"
       ],
       "last_updated": "24/08/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271782": {
       "key": [
@@ -2051,7 +2254,8 @@
         "Kirkella CC"
       ],
       "last_updated": "01/09/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6271696": {
       "key": [
@@ -2060,7 +2264,8 @@
         "South Holderness"
       ],
       "last_updated": "10/09/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6777355": {
       "key": [
@@ -2069,7 +2274,8 @@
         "Kirkella CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889419": {
       "key": [
@@ -2078,7 +2284,8 @@
         "Cottingham CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889427": {
       "key": [
@@ -2087,7 +2294,8 @@
         "Eastrington CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889436": {
       "key": [
@@ -2096,7 +2304,8 @@
         "South Holderness"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6777382": {
       "key": [
@@ -2105,7 +2314,8 @@
         "Beverley Town"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889440": {
       "key": [
@@ -2114,7 +2324,8 @@
         "Humbleton"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6777395": {
       "key": [
@@ -2123,7 +2334,8 @@
         "Welton CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6890028": {
       "key": [
@@ -2132,7 +2344,8 @@
         "Beverley Town"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6871043": {
       "key": [
@@ -2141,7 +2354,8 @@
         "Kirkella CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6777417": {
       "key": [
@@ -2150,7 +2364,8 @@
         "Kirkella CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889458": {
       "key": [
@@ -2159,7 +2374,8 @@
         "Cottingham CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6871059": {
       "key": [
@@ -2168,7 +2384,8 @@
         "Old Hymerians CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6777440": {
       "key": [
@@ -2177,7 +2394,8 @@
         "Middleton & ND"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6890029": {
       "key": [
@@ -2186,7 +2404,8 @@
         "Dalton Holme"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6889467": {
       "key": [
@@ -2195,7 +2414,8 @@
         "Humbleton"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6890020": {
       "key": [
@@ -2204,7 +2424,8 @@
         "Beverley Town"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6777459": {
       "key": [
@@ -2213,7 +2434,8 @@
         "Welton CC"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6777467": {
       "key": [
@@ -2222,7 +2444,8 @@
         "North Ferriby"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "6777471": {
       "key": [
@@ -2231,7 +2454,8 @@
         "Driffield Town"
       ],
       "last_updated": "06/10/2025",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "7352276": {
       "key": [
@@ -2270,7 +2494,8 @@
         "Kirkella CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648563": {
       "key": [
@@ -2279,7 +2504,8 @@
         "Hutton Cranswick"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648029": {
       "key": [
@@ -2288,7 +2514,8 @@
         "Sutton"
       ],
       "last_updated": "22/07/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647932": {
       "key": [
@@ -2297,7 +2524,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700065": {
       "key": [
@@ -2306,7 +2534,8 @@
         "Walkington"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648522": {
       "key": [
@@ -2315,7 +2544,8 @@
         "Cottingham CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647996": {
       "key": [
@@ -2324,7 +2554,8 @@
         "North Ferriby"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700074": {
       "key": [
@@ -2333,7 +2564,8 @@
         "Newport CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647936": {
       "key": [
@@ -2342,7 +2574,8 @@
         "Patrington CC"
       ],
       "last_updated": "08/01/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700083": {
       "key": [
@@ -2351,7 +2584,8 @@
         "South Holderness"
       ],
       "last_updated": "05/07/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647928": {
       "key": [
@@ -2360,7 +2594,8 @@
         "Airmyn CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648571": {
       "key": [
@@ -2369,7 +2604,8 @@
         "Patrington CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700079": {
       "key": [
@@ -2378,7 +2614,8 @@
         "North Dalton CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647918": {
       "key": [
@@ -2387,7 +2624,8 @@
         "Beverley Town"
       ],
       "last_updated": "29/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648544": {
       "key": [
@@ -2396,7 +2634,8 @@
         "Cottingham CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700062": {
       "key": [
@@ -2405,7 +2644,8 @@
         "Middleton on the Wolds CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647933": {
       "key": [
@@ -2414,7 +2654,8 @@
         "Humbleton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700048": {
       "key": [
@@ -2423,7 +2664,8 @@
         "Brandesburton CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647931": {
       "key": [
@@ -2432,7 +2674,8 @@
         "Hull CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700088": {
       "key": [
@@ -2441,7 +2684,8 @@
         "Nafferton CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648555": {
       "key": [
@@ -2450,7 +2694,8 @@
         "Swanland"
       ],
       "last_updated": "27/04/2015",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647930": {
       "key": [
@@ -2459,7 +2704,8 @@
         "Hill Top CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700068": {
       "key": [
@@ -2468,7 +2714,8 @@
         "Driffield Town"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647934": {
       "key": [
@@ -2477,7 +2724,8 @@
         "Kirkella CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648514": {
       "key": [
@@ -2486,7 +2734,8 @@
         "Bransholme"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700063": {
       "key": [
@@ -2495,7 +2744,8 @@
         "Old Hymerians CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647938": {
       "key": [
@@ -2504,7 +2754,8 @@
         "Sutton"
       ],
       "last_updated": "22/07/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700129": {
       "key": [
@@ -2513,7 +2764,8 @@
         "Walkington"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648548": {
       "key": [
@@ -2522,7 +2774,8 @@
         "Hutton Cranswick"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648007": {
       "key": [
@@ -2531,7 +2784,8 @@
         "Patrington CC"
       ],
       "last_updated": "04/01/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648546": {
       "key": [
@@ -2540,7 +2794,8 @@
         "Gilberdyke"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647935": {
       "key": [
@@ -2549,7 +2804,8 @@
         "North Ferriby"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648529": {
       "key": [
@@ -2558,7 +2814,8 @@
         "East Halton CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700113": {
       "key": [
@@ -2567,7 +2824,8 @@
         "Newport CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648579": {
       "key": [
@@ -2576,7 +2834,8 @@
         "Roos CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700064": {
       "key": [
@@ -2585,7 +2844,8 @@
         "South Holderness"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647907": {
       "key": [
@@ -2594,7 +2854,8 @@
         "Airmyn CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700096": {
       "key": [
@@ -2603,7 +2864,8 @@
         "North Dalton CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647929": {
       "key": [
@@ -2612,7 +2874,8 @@
         "Beverley Town"
       ],
       "last_updated": "29/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1700106": {
       "key": [
@@ -2621,7 +2884,8 @@
         "Middleton on the Wolds CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647974": {
       "key": [
@@ -2630,7 +2894,8 @@
         "Humbleton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648545": {
       "key": [
@@ -2639,7 +2904,8 @@
         "East Halton CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648547": {
       "key": [
@@ -2648,7 +2914,8 @@
         "Swanland"
       ],
       "last_updated": "27/04/2015",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647952": {
       "key": [
@@ -2657,7 +2924,8 @@
         "Hull CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1648538": {
       "key": [
@@ -2666,7 +2934,8 @@
         "Gilberdyke"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1647941": {
       "key": [
@@ -2675,7 +2944,8 @@
         "Hill Top CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799162": {
       "key": [
@@ -2684,7 +2954,8 @@
         "Hull CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799031": {
       "key": [
@@ -2693,7 +2964,8 @@
         "North Ferriby"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799155": {
       "key": [
@@ -2702,7 +2974,8 @@
         "Humbleton"
       ],
       "last_updated": "08/03/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799104": {
       "key": [
@@ -2711,7 +2984,8 @@
         "South Holderness"
       ],
       "last_updated": "10/11/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1795948": {
       "key": [
@@ -2720,7 +2994,8 @@
         "Roos CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799024": {
       "key": [
@@ -2729,7 +3004,8 @@
         "Airmyn CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799189": {
       "key": [
@@ -2738,7 +3014,8 @@
         "Pelican CC"
       ],
       "last_updated": "13/01/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1795925": {
       "key": [
@@ -2747,7 +3024,8 @@
         "Driffield Town"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799157": {
       "key": [
@@ -2756,7 +3034,8 @@
         "Skirlaugh"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799115": {
       "key": [
@@ -2765,7 +3044,8 @@
         "Sutton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799207": {
       "key": [
@@ -2774,7 +3054,8 @@
         "Sutton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799025": {
       "key": [
@@ -2783,7 +3064,8 @@
         "Beverley Town"
       ],
       "last_updated": "15/06/2026",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1795917": {
       "key": [
@@ -2792,7 +3074,8 @@
         "Dalton Holme"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799030": {
       "key": [
@@ -2801,7 +3084,8 @@
         "Newland CC, Yorks"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1795934": {
       "key": [
@@ -2810,7 +3094,8 @@
         "Fenner CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799171": {
       "key": [
@@ -2819,7 +3104,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799134": {
       "key": [
@@ -2828,7 +3114,8 @@
         "Cottingham CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799029": {
       "key": [
@@ -2837,7 +3124,8 @@
         "Kirkella CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1795997": {
       "key": [
@@ -2846,7 +3134,8 @@
         "South Cave & Brantingham CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799082": {
       "key": [
@@ -2855,7 +3144,8 @@
         "North Ferriby"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799093": {
       "key": [
@@ -2864,7 +3154,8 @@
         "Patrington CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799156": {
       "key": [
@@ -2873,7 +3164,8 @@
         "Pelican CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799038": {
       "key": [
@@ -2882,7 +3174,8 @@
         "Hill Top CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1795953": {
       "key": [
@@ -2891,7 +3184,8 @@
         "Hornsea CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799180": {
       "key": [
@@ -2900,7 +3194,8 @@
         "Humbleton"
       ],
       "last_updated": "08/03/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799033": {
       "key": [
@@ -2909,7 +3204,8 @@
         "South Holderness"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1795988": {
       "key": [
@@ -2918,7 +3214,8 @@
         "Roos CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799125": {
       "key": [
@@ -2927,7 +3224,8 @@
         "Beverley Town"
       ],
       "last_updated": "29/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799026": {
       "key": [
@@ -2936,7 +3234,8 @@
         "Cottingham CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799198": {
       "key": [
@@ -2945,7 +3244,8 @@
         "Skirlaugh"
       ],
       "last_updated": "27/05/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799034": {
       "key": [
@@ -2954,7 +3254,8 @@
         "Sutton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1795979": {
       "key": [
@@ -2963,7 +3264,8 @@
         "Leven CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799071": {
       "key": [
@@ -2972,7 +3274,8 @@
         "Newland CC, Yorks"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799151": {
       "key": [
@@ -2981,7 +3284,8 @@
         "Cottingham CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799154": {
       "key": [
@@ -2990,7 +3294,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799049": {
       "key": [
@@ -2999,7 +3304,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799060": {
       "key": [
@@ -3008,7 +3314,8 @@
         "Kirkella CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1799158": {
       "key": [
@@ -3017,7 +3324,8 @@
         "Sutton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1798993": {
       "key": [
@@ -3026,7 +3334,8 @@
         "Airmyn CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994166": {
       "key": [
@@ -3035,7 +3344,8 @@
         "North Ferriby"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073117": {
       "key": [
@@ -3044,7 +3354,8 @@
         "Dalton Holme"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994249": {
       "key": [
@@ -3053,7 +3364,8 @@
         "Pelican CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994079": {
       "key": [
@@ -3062,7 +3374,8 @@
         "Airmyn CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994210": {
       "key": [
@@ -3071,7 +3384,8 @@
         "East Halton CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994105": {
       "key": [
@@ -3080,7 +3394,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994212": {
       "key": [
@@ -3089,7 +3404,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073144": {
       "key": [
@@ -3098,7 +3414,8 @@
         "Gilberdyke"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994084": {
       "key": [
@@ -3107,7 +3424,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994116": {
       "key": [
@@ -3116,7 +3434,8 @@
         "Humbleton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994211": {
       "key": [
@@ -3125,7 +3444,8 @@
         "Hull CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073150": {
       "key": [
@@ -3134,7 +3454,8 @@
         "South Holderness"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994240": {
       "key": [
@@ -3143,7 +3464,8 @@
         "Patrington CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994082": {
       "key": [
@@ -3152,7 +3474,8 @@
         "Eastrington CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994208": {
       "key": [
@@ -3161,7 +3484,8 @@
         "Cottingham CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994094": {
       "key": [
@@ -3170,7 +3494,8 @@
         "Hill Top CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073126": {
       "key": [
@@ -3179,7 +3504,8 @@
         "Driffield Town"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994089": {
       "key": [
@@ -3188,7 +3514,8 @@
         "Sutton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073189": {
       "key": [
@@ -3197,7 +3524,8 @@
         "Skidby CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994209": {
       "key": [
@@ -3206,7 +3534,8 @@
         "Driffield Town"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994148": {
       "key": [
@@ -3215,7 +3544,8 @@
         "South Holderness"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073147": {
       "key": [
@@ -3224,7 +3554,8 @@
         "Newport CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994201": {
       "key": [
@@ -3233,7 +3564,8 @@
         "East Halton CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994087": {
       "key": [
@@ -3242,7 +3574,8 @@
         "North Ferriby"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073162": {
       "key": [
@@ -3251,7 +3584,8 @@
         "Hull Zingari"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994159": {
       "key": [
@@ -3260,7 +3594,8 @@
         "Sutton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073149": {
       "key": [
@@ -3269,7 +3604,8 @@
         "Skidby CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073135": {
       "key": [
@@ -3278,7 +3614,8 @@
         "Gilberdyke"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994214": {
       "key": [
@@ -3287,7 +3624,8 @@
         "Pelican CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994038": {
       "key": [
@@ -3296,7 +3634,8 @@
         "Airmyn CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073171": {
       "key": [
@@ -3305,7 +3644,8 @@
         "Newport CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994081": {
       "key": [
@@ -3314,7 +3654,8 @@
         "Cottingham CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994171": {
       "key": [
@@ -3323,7 +3664,8 @@
         "Beverley Town"
       ],
       "last_updated": "27/06/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994215": {
       "key": [
@@ -3332,7 +3674,8 @@
         "Skirlaugh"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994049": {
       "key": [
@@ -3341,7 +3684,8 @@
         "Beverley Town"
       ],
       "last_updated": "29/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073154": {
       "key": [
@@ -3350,7 +3694,8 @@
         "Hornsea CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994086": {
       "key": [
@@ -3359,7 +3704,8 @@
         "Kirkella CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073148": {
       "key": [
@@ -3368,7 +3714,8 @@
         "Roos CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994216": {
       "key": [
@@ -3377,7 +3724,8 @@
         "Sutton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994085": {
       "key": [
@@ -3386,7 +3734,8 @@
         "Humbleton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994221": {
       "key": [
@@ -3395,7 +3744,8 @@
         "Hull CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073198": {
       "key": [
@@ -3404,7 +3754,8 @@
         "South Holderness"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994213": {
       "key": [
@@ -3413,7 +3764,8 @@
         "Patrington CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994083": {
       "key": [
@@ -3422,7 +3774,8 @@
         "Hill Top CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2073143": {
       "key": [
@@ -3431,7 +3784,8 @@
         "Driffield Town"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994181": {
       "key": [
@@ -3440,7 +3794,8 @@
         "Cottingham CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994080": {
       "key": [
@@ -3449,7 +3804,8 @@
         "Beverley Town"
       ],
       "last_updated": "29/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994207": {
       "key": [
@@ -3458,7 +3814,8 @@
         "Beverley Town"
       ],
       "last_updated": "29/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994088": {
       "key": [
@@ -3467,7 +3824,8 @@
         "South Holderness"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994191": {
       "key": [
@@ -3476,7 +3834,8 @@
         "Driffield Town"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994071": {
       "key": [
@@ -3485,7 +3844,8 @@
         "Eastrington CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994060": {
       "key": [
@@ -3494,7 +3854,8 @@
         "Cottingham CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994258": {
       "key": [
@@ -3503,7 +3864,8 @@
         "Skirlaugh"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994268": {
       "key": [
@@ -3512,7 +3874,8 @@
         "Sutton"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "1994127": {
       "key": [
@@ -3521,7 +3884,8 @@
         "Kirkella CC"
       ],
       "last_updated": "07/11/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2187625": {
       "key": [
@@ -3530,7 +3894,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2187532": {
       "key": [
@@ -3539,7 +3904,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2187898": {
       "key": [
@@ -3548,7 +3914,8 @@
         "Roos CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2187633": {
       "key": [
@@ -3557,7 +3924,8 @@
         "North Ferriby"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2187902": {
       "key": [
@@ -3566,7 +3934,8 @@
         "NCCE"
       ],
       "last_updated": "06/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2187947": {
       "key": [
@@ -3575,7 +3944,8 @@
         "NCCE"
       ],
       "last_updated": "06/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2187524": {
       "key": [
@@ -3584,7 +3954,8 @@
         "North Dalton CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2187987": {
       "key": [
@@ -3593,7 +3964,8 @@
         "Cottingham CC"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2187705": {
       "key": [
@@ -3602,7 +3974,8 @@
         "Dalton Holme"
       ],
       "last_updated": "25/10/2014",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2383480": {
       "key": [
@@ -3611,7 +3984,8 @@
         "Hornsea CC"
       ],
       "last_updated": "01/02/2023",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2383495": {
       "key": [
@@ -3620,7 +3994,8 @@
         "North Dalton CC"
       ],
       "last_updated": "15/06/2015",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2383500": {
       "key": [
@@ -3629,7 +4004,8 @@
         "NCCE"
       ],
       "last_updated": "01/06/2015",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2402235": {
       "key": [
@@ -3638,7 +4014,8 @@
         "NCCE"
       ],
       "last_updated": "29/06/2015",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2383549": {
       "key": [
@@ -3647,7 +4024,8 @@
         "Hornsea CC"
       ],
       "last_updated": "18/07/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2383562": {
       "key": [
@@ -3656,7 +4034,8 @@
         "North Dalton CC"
       ],
       "last_updated": "18/08/2015",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2383566": {
       "key": [
@@ -3665,7 +4044,8 @@
         "NCCE"
       ],
       "last_updated": "16/08/2015",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2402230": {
       "key": [
@@ -3674,7 +4054,8 @@
         "NCCE"
       ],
       "last_updated": "08/09/2015",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658806": {
       "key": [
@@ -3683,7 +4064,8 @@
         "Patrington CC"
       ],
       "last_updated": "11/05/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667237": {
       "key": [
@@ -3692,7 +4074,8 @@
         "Cherry Burton CC"
       ],
       "last_updated": "11/05/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658814": {
       "key": [
@@ -3701,7 +4084,8 @@
         "Sutton"
       ],
       "last_updated": "11/05/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667242": {
       "key": [
@@ -3710,7 +4094,8 @@
         "South Holderness"
       ],
       "last_updated": "09/05/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667920": {
       "key": [
@@ -3719,7 +4104,8 @@
         "Patrington CC"
       ],
       "last_updated": "11/05/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658817": {
       "key": [
@@ -3728,7 +4114,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667927": {
       "key": [
@@ -3737,7 +4124,8 @@
         "Gilberdyke"
       ],
       "last_updated": "25/05/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658821": {
       "key": [
@@ -3746,7 +4134,8 @@
         "North Dalton CC"
       ],
       "last_updated": "24/05/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667930": {
       "key": [
@@ -3755,7 +4144,8 @@
         "Hull Zingari"
       ],
       "last_updated": "25/05/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658825": {
       "key": [
@@ -3764,7 +4154,8 @@
         "Hornsea CC"
       ],
       "last_updated": "23/07/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667260": {
       "key": [
@@ -3773,7 +4164,8 @@
         "Walkington"
       ],
       "last_updated": "02/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667936": {
       "key": [
@@ -3782,7 +4174,8 @@
         "Sutton"
       ],
       "last_updated": "02/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658830": {
       "key": [
@@ -3791,7 +4184,8 @@
         "Brandesburton CC"
       ],
       "last_updated": "14/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667264": {
       "key": [
@@ -3800,7 +4194,8 @@
         "Cottingham CC"
       ],
       "last_updated": "15/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667940": {
       "key": [
@@ -3809,7 +4204,8 @@
         "Driffield Town"
       ],
       "last_updated": "06/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658835": {
       "key": [
@@ -3818,7 +4214,8 @@
         "Driffield Town"
       ],
       "last_updated": "14/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667268": {
       "key": [
@@ -3827,7 +4224,8 @@
         "North Ferriby"
       ],
       "last_updated": "15/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667949": {
       "key": [
@@ -3836,7 +4234,8 @@
         "North Ferriby"
       ],
       "last_updated": "13/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658841": {
       "key": [
@@ -3845,7 +4244,8 @@
         "Welton CC"
       ],
       "last_updated": "07/12/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667274": {
       "key": [
@@ -3854,7 +4254,8 @@
         "Newport CC"
       ],
       "last_updated": "29/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667954": {
       "key": [
@@ -3863,7 +4264,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658846": {
       "key": [
@@ -3872,7 +4274,8 @@
         "Humbleton"
       ],
       "last_updated": "29/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667276": {
       "key": [
@@ -3881,7 +4284,8 @@
         "Beverley Town"
       ],
       "last_updated": "29/06/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667960": {
       "key": [
@@ -3890,7 +4294,8 @@
         "Welton CC"
       ],
       "last_updated": "07/12/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658851": {
       "key": [
@@ -3899,7 +4304,8 @@
         "Driffield Town"
       ],
       "last_updated": "05/07/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667285": {
       "key": [
@@ -3908,7 +4314,8 @@
         "North Ferriby"
       ],
       "last_updated": "02/07/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667966": {
       "key": [
@@ -3917,7 +4324,8 @@
         "Eastrington CC"
       ],
       "last_updated": "04/07/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667972": {
       "key": [
@@ -3926,7 +4334,8 @@
         "Goole Town CC"
       ],
       "last_updated": "11/07/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658861": {
       "key": [
@@ -3935,7 +4344,8 @@
         "Humbleton"
       ],
       "last_updated": "21/07/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667293": {
       "key": [
@@ -3944,7 +4354,8 @@
         "Beverley Town"
       ],
       "last_updated": "21/07/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667976": {
       "key": [
@@ -3953,7 +4364,8 @@
         "Carlton Towers CC"
       ],
       "last_updated": "14/11/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658866": {
       "key": [
@@ -3962,7 +4374,8 @@
         "Sutton"
       ],
       "last_updated": "26/07/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667300": {
       "key": [
@@ -3971,7 +4384,8 @@
         "South Holderness"
       ],
       "last_updated": "27/07/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667984": {
       "key": [
@@ -3980,7 +4394,8 @@
         "Patrington CC"
       ],
       "last_updated": "24/07/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658871": {
       "key": [
@@ -3989,7 +4404,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667303": {
       "key": [
@@ -3998,7 +4414,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667990": {
       "key": [
@@ -4007,7 +4424,8 @@
         "Gilberdyke"
       ],
       "last_updated": "02/08/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658877": {
       "key": [
@@ -4016,7 +4434,8 @@
         "North Dalton CC"
       ],
       "last_updated": "11/08/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667307": {
       "key": [
@@ -4025,7 +4444,8 @@
         "Eastrington CC"
       ],
       "last_updated": "11/08/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667997": {
       "key": [
@@ -4034,7 +4454,8 @@
         "Hull Zingari"
       ],
       "last_updated": "10/08/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658882": {
       "key": [
@@ -4043,7 +4464,8 @@
         "Hornsea CC"
       ],
       "last_updated": "19/07/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2667314": {
       "key": [
@@ -4052,7 +4474,8 @@
         "Walkington"
       ],
       "last_updated": "17/08/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2668001": {
       "key": [
@@ -4061,7 +4484,8 @@
         "Sutton"
       ],
       "last_updated": "17/08/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2658889": {
       "key": [
@@ -4070,7 +4494,8 @@
         "Welton CC"
       ],
       "last_updated": "07/12/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2668010": {
       "key": [
@@ -4079,7 +4504,8 @@
         "NCCE"
       ],
       "last_updated": "11/08/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2668014": {
       "key": [
@@ -4088,7 +4514,8 @@
         "Driffield Town"
       ],
       "last_updated": "31/08/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2668019": {
       "key": [
@@ -4097,7 +4524,8 @@
         "Welton CC"
       ],
       "last_updated": "07/12/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2668026": {
       "key": [
@@ -4106,7 +4534,8 @@
         "North Ferriby"
       ],
       "last_updated": "13/09/2016",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920494": {
       "key": [
@@ -4115,7 +4544,8 @@
         "Kirkella CC"
       ],
       "last_updated": "27/04/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3020973": {
       "key": [
@@ -4124,7 +4554,8 @@
         "Patrington CC"
       ],
       "last_updated": "03/02/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3153495": {
       "key": [
@@ -4133,7 +4564,8 @@
         "Patrington CC"
       ],
       "last_updated": "08/01/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920502": {
       "key": [
@@ -4142,7 +4574,8 @@
         "Welton CC"
       ],
       "last_updated": "07/12/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2921881": {
       "key": [
@@ -4151,7 +4584,8 @@
         "Beverley Town"
       ],
       "last_updated": "06/05/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3020976": {
       "key": [
@@ -4160,7 +4594,8 @@
         "Welton CC"
       ],
       "last_updated": "07/12/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920507": {
       "key": [
@@ -4169,7 +4604,8 @@
         "Patrington CC"
       ],
       "last_updated": "29/04/2021",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3020978": {
       "key": [
@@ -4178,7 +4614,8 @@
         "Hull Zingari"
       ],
       "last_updated": "16/05/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2921890": {
       "key": [
@@ -4187,7 +4624,8 @@
         "NCCE"
       ],
       "last_updated": "18/05/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920511": {
       "key": [
@@ -4196,7 +4634,8 @@
         "NCCE"
       ],
       "last_updated": "18/05/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2921894": {
       "key": [
@@ -4205,7 +4644,8 @@
         "Cottingham CC"
       ],
       "last_updated": "30/05/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3020984": {
       "key": [
@@ -4214,7 +4654,8 @@
         "NCCE"
       ],
       "last_updated": "30/05/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920523": {
       "key": [
@@ -4223,7 +4664,8 @@
         "Pocklington CC"
       ],
       "last_updated": "01/06/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3020987": {
       "key": [
@@ -4232,7 +4674,8 @@
         "Sutton"
       ],
       "last_updated": "01/06/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920534": {
       "key": [
@@ -4241,7 +4684,8 @@
         "Hull Zingari"
       ],
       "last_updated": "26/06/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920541": {
       "key": [
@@ -4250,7 +4694,8 @@
         "South Holderness"
       ],
       "last_updated": "26/06/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2921907": {
       "key": [
@@ -4259,7 +4704,8 @@
         "South Holderness"
       ],
       "last_updated": "26/06/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3020994": {
       "key": [
@@ -4268,7 +4714,8 @@
         "Patrington CC"
       ],
       "last_updated": "26/06/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920547": {
       "key": [
@@ -4277,7 +4724,8 @@
         "Driffield Town"
       ],
       "last_updated": "26/06/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3020997": {
       "key": [
@@ -4286,7 +4734,8 @@
         "Welton CC"
       ],
       "last_updated": "07/12/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920556": {
       "key": [
@@ -4295,7 +4744,8 @@
         "Sutton"
       ],
       "last_updated": "03/07/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2921914": {
       "key": [
@@ -4304,7 +4754,8 @@
         "Middleton & ND"
       ],
       "last_updated": "24/07/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3020999": {
       "key": [
@@ -4313,7 +4764,8 @@
         "Hull Zingari"
       ],
       "last_updated": "03/07/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920559": {
       "key": [
@@ -4322,7 +4774,8 @@
         "Welton CC"
       ],
       "last_updated": "07/12/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2921919": {
       "key": [
@@ -4331,7 +4784,8 @@
         "Beverley Town"
       ],
       "last_updated": "15/06/2026",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2921922": {
       "key": [
@@ -4340,7 +4794,8 @@
         "NCCE"
       ],
       "last_updated": "24/07/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920564": {
       "key": [
@@ -4349,7 +4804,8 @@
         "NCCE"
       ],
       "last_updated": "17/07/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920571": {
       "key": [
@@ -4358,7 +4814,8 @@
         "Patrington CC"
       ],
       "last_updated": "08/01/2020",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2921927": {
       "key": [
@@ -4367,7 +4824,8 @@
         "North Cave CC"
       ],
       "last_updated": "24/07/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3021008": {
       "key": [
@@ -4376,7 +4834,8 @@
         "Sutton"
       ],
       "last_updated": "24/07/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2921929": {
       "key": [
@@ -4385,7 +4844,8 @@
         "Cottingham CC"
       ],
       "last_updated": "27/07/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920585": {
       "key": [
@@ -4394,7 +4854,8 @@
         "Pocklington CC"
       ],
       "last_updated": "08/03/2018",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3021015": {
       "key": [
@@ -4403,7 +4864,8 @@
         "Patrington CC"
       ],
       "last_updated": "28/05/2024",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2921940": {
       "key": [
@@ -4412,7 +4874,8 @@
         "Walkington"
       ],
       "last_updated": "16/08/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920589": {
       "key": [
@@ -4421,7 +4884,8 @@
         "Hull Zingari"
       ],
       "last_updated": "16/08/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3021018": {
       "key": [
@@ -4430,7 +4894,8 @@
         "Welton CC"
       ],
       "last_updated": "07/12/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920597": {
       "key": [
@@ -4439,7 +4904,8 @@
         "South Holderness"
       ],
       "last_updated": "24/08/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3021020": {
       "key": [
@@ -4448,7 +4914,8 @@
         "Hull Zingari"
       ],
       "last_updated": "24/08/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920601": {
       "key": [
@@ -4457,7 +4924,8 @@
         "Sutton"
       ],
       "last_updated": "24/08/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2921946": {
       "key": [
@@ -4466,7 +4934,8 @@
         "Middleton & ND"
       ],
       "last_updated": "07/09/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920605": {
       "key": [
@@ -4475,7 +4944,8 @@
         "Driffield Town"
       ],
       "last_updated": "07/09/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920612": {
       "key": [
@@ -4484,7 +4954,8 @@
         "Beverley Town"
       ],
       "last_updated": "15/06/2026",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "3021029": {
       "key": [
@@ -4493,7 +4964,8 @@
         "Sutton"
       ],
       "last_updated": "10/09/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "2920618": {
       "key": [
@@ -4502,7 +4974,8 @@
         "Kirkella CC"
       ],
       "last_updated": "19/09/2017",
-      "published": true
+      "published": true,
+      "dv": 2
     },
     "7461151": {
       "key": [
@@ -4831,6 +5304,1206 @@
         "Swanland"
       ],
       "last_updated": "13/09/2026",
+      "published": true,
+      "dv": 2
+    },
+    "3583249": {
+      "key": [
+        "2018-05-05",
+        "2nd",
+        "NCCE"
+      ],
+      "last_updated": "22/05/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3583255": {
+      "key": [
+        "2018-05-12",
+        "2nd",
+        "Beverley Town"
+      ],
+      "last_updated": "22/05/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3567496": {
+      "key": [
+        "2018-05-12",
+        "1st",
+        "Beverley Town"
+      ],
+      "last_updated": "03/02/2020",
+      "published": true,
+      "dv": 2
+    },
+    "3567500": {
+      "key": [
+        "2018-05-19",
+        "1st",
+        "NCCE"
+      ],
+      "last_updated": "08/10/2023",
+      "published": true,
+      "dv": 2
+    },
+    "3583266": {
+      "key": [
+        "2018-05-26",
+        "2nd",
+        "South Holderness"
+      ],
+      "last_updated": "04/06/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3567513": {
+      "key": [
+        "2018-05-28",
+        "1st",
+        "Middleton & ND"
+      ],
+      "last_updated": "04/06/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3583272": {
+      "key": [
+        "2018-06-02",
+        "2nd",
+        "Pelican CC"
+      ],
+      "last_updated": "13/01/2024",
+      "published": true,
+      "dv": 2
+    },
+    "3583273": {
+      "key": [
+        "2018-06-09",
+        "2nd",
+        "Middleton & ND"
+      ],
+      "last_updated": "13/12/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3567528": {
+      "key": [
+        "2018-06-09",
+        "1st",
+        "Middleton & ND"
+      ],
+      "last_updated": "13/12/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3583278": {
+      "key": [
+        "2018-06-16",
+        "2nd",
+        "Gilberdyke"
+      ],
+      "last_updated": "02/07/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3567541": {
+      "key": [
+        "2018-06-23",
+        "1st",
+        "Newport CC"
+      ],
+      "last_updated": "30/07/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3567546": {
+      "key": [
+        "2018-06-30",
+        "1st",
+        "Welton CC"
+      ],
+      "last_updated": "12/07/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3583289": {
+      "key": [
+        "2018-06-30",
+        "2nd",
+        "Hull Strikers CC"
+      ],
+      "last_updated": "12/07/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3583305": {
+      "key": [
+        "2018-07-21",
+        "2nd",
+        "Brandesburton CC"
+      ],
+      "last_updated": "14/08/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3567567": {
+      "key": [
+        "2018-07-28",
+        "1st",
+        "Sutton"
+      ],
+      "last_updated": "14/08/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3567574": {
+      "key": [
+        "2018-08-04",
+        "1st",
+        "Driffield Town"
+      ],
+      "last_updated": "14/08/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3567583": {
+      "key": [
+        "2018-08-11",
+        "1st",
+        "Cottingham CC"
+      ],
+      "last_updated": "31/08/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3567603": {
+      "key": [
+        "2018-09-09",
+        "1st",
+        "Driffield Town"
+      ],
+      "last_updated": "25/09/2018",
+      "published": true,
+      "dv": 2
+    },
+    "3790095": {
+      "key": [
+        "2019-05-04",
+        "1st",
+        "Hull Zingari"
+      ],
+      "last_updated": "16/06/2026",
+      "published": true,
+      "dv": 2
+    },
+    "3792089": {
+      "key": [
+        "2019-05-04",
+        "2nd",
+        "Walkington"
+      ],
+      "last_updated": "22/05/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3790106": {
+      "key": [
+        "2019-05-11",
+        "1st",
+        "Middleton & ND"
+      ],
+      "last_updated": "16/06/2026",
+      "published": true,
+      "dv": 2
+    },
+    "3792100": {
+      "key": [
+        "2019-05-25",
+        "2nd",
+        "Brandesburton CC"
+      ],
+      "last_updated": "09/06/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3790122": {
+      "key": [
+        "2019-05-27",
+        "1st",
+        "Cottingham CC"
+      ],
+      "last_updated": "09/06/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3790129": {
+      "key": [
+        "2019-06-01",
+        "1st",
+        "Welton CC"
+      ],
+      "last_updated": "09/06/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3792110": {
+      "key": [
+        "2019-06-08",
+        "2nd",
+        "Hull Strikers CC"
+      ],
+      "last_updated": "20/06/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3790145": {
+      "key": [
+        "2019-06-22",
+        "1st",
+        "Patrington CC"
+      ],
+      "last_updated": "08/01/2020",
+      "published": true,
+      "dv": 2
+    },
+    "3792130": {
+      "key": [
+        "2019-07-06",
+        "2nd",
+        "Walkington"
+      ],
+      "last_updated": "16/07/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3790163": {
+      "key": [
+        "2019-07-13",
+        "1st",
+        "Middleton & ND"
+      ],
+      "last_updated": "19/07/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3792140": {
+      "key": [
+        "2019-07-20",
+        "2nd",
+        "Middleton & ND"
+      ],
+      "last_updated": "27/07/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3790168": {
+      "key": [
+        "2019-07-20",
+        "1st",
+        "Brandesburton CC"
+      ],
+      "last_updated": "27/07/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3792150": {
+      "key": [
+        "2019-08-03",
+        "2nd",
+        "Humbleton"
+      ],
+      "last_updated": "28/08/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3790185": {
+      "key": [
+        "2019-08-03",
+        "1st",
+        "Welton CC"
+      ],
+      "last_updated": "28/08/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3790196": {
+      "key": [
+        "2019-08-17",
+        "1st",
+        "Sutton"
+      ],
+      "last_updated": "28/08/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3792160": {
+      "key": [
+        "2019-08-17",
+        "2nd",
+        "NCCE"
+      ],
+      "last_updated": "28/08/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3790203": {
+      "key": [
+        "2019-08-24",
+        "1st",
+        "Patrington CC"
+      ],
+      "last_updated": "08/01/2020",
+      "published": true,
+      "dv": 2
+    },
+    "3790205": {
+      "key": [
+        "2019-08-31",
+        "1st",
+        "Beverley Town"
+      ],
+      "last_updated": "03/10/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3792173": {
+      "key": [
+        "2019-08-31",
+        "2nd",
+        "South Holderness"
+      ],
+      "last_updated": "03/10/2019",
+      "published": true,
+      "dv": 2
+    },
+    "3790213": {
+      "key": [
+        "2019-09-07",
+        "1st",
+        "Driffield Town"
+      ],
+      "last_updated": "03/10/2019",
+      "published": true,
+      "dv": 2
+    },
+    "4448495": {
+      "key": [
+        "2020-07-18",
+        "1st",
+        "Sutton"
+      ],
+      "last_updated": "20/08/2020",
+      "published": true,
+      "dv": 2
+    },
+    "4448500": {
+      "key": [
+        "2020-07-25",
+        "1st",
+        "Welton CC"
+      ],
+      "last_updated": "05/04/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4448931": {
+      "key": [
+        "2020-07-25",
+        "2nd",
+        "Hutton Cranswick"
+      ],
+      "last_updated": "11/08/2020",
+      "published": true,
+      "dv": 2
+    },
+    "4448937": {
+      "key": [
+        "2020-08-08",
+        "2nd",
+        "Cherry Burton CC"
+      ],
+      "last_updated": "13/02/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4448509": {
+      "key": [
+        "2020-08-08",
+        "1st",
+        "NCCE"
+      ],
+      "last_updated": "13/02/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4448513": {
+      "key": [
+        "2020-08-15",
+        "1st",
+        "Beverley Town"
+      ],
+      "last_updated": "13/02/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4448941": {
+      "key": [
+        "2020-08-15",
+        "2nd",
+        "Kirkella CC"
+      ],
+      "last_updated": "13/02/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4448518": {
+      "key": [
+        "2020-08-22",
+        "1st",
+        "Hull Zingari"
+      ],
+      "last_updated": "13/02/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4448528": {
+      "key": [
+        "2020-09-05",
+        "1st",
+        "North Ferriby"
+      ],
+      "last_updated": "13/02/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4594427": {
+      "key": [
+        "2021-04-24",
+        "2nd",
+        "Skirlaugh"
+      ],
+      "last_updated": "09/05/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4592472": {
+      "key": [
+        "2021-04-24",
+        "1st",
+        "Welton CC"
+      ],
+      "last_updated": "09/05/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4594433": {
+      "key": [
+        "2021-05-01",
+        "2nd",
+        "South Holderness"
+      ],
+      "last_updated": "09/05/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4592495": {
+      "key": [
+        "2021-05-22",
+        "1st",
+        "Middleton & ND"
+      ],
+      "last_updated": "01/06/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4594446": {
+      "key": [
+        "2021-05-22",
+        "2nd",
+        "Brandesburton CC"
+      ],
+      "last_updated": "01/06/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4592497": {
+      "key": [
+        "2021-05-29",
+        "1st",
+        "Beverley Town"
+      ],
+      "last_updated": "22/06/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4592504": {
+      "key": [
+        "2021-06-05",
+        "1st",
+        "Brandesburton CC"
+      ],
+      "last_updated": "19/04/2022",
+      "published": true,
+      "dv": 2
+    },
+    "4594454": {
+      "key": [
+        "2021-06-05",
+        "2nd",
+        "Old Hymerians CC"
+      ],
+      "last_updated": "22/06/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4594459": {
+      "key": [
+        "2021-06-12",
+        "2nd",
+        "Cottingham CC"
+      ],
+      "last_updated": "22/06/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4594468": {
+      "key": [
+        "2021-06-26",
+        "2nd",
+        "Skirlaugh"
+      ],
+      "last_updated": "05/07/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4592538": {
+      "key": [
+        "2021-07-10",
+        "1st",
+        "South Holderness"
+      ],
+      "last_updated": "22/03/2022",
+      "published": true,
+      "dv": 2
+    },
+    "4592555": {
+      "key": [
+        "2021-07-31",
+        "1st",
+        "Sutton"
+      ],
+      "last_updated": "22/03/2022",
+      "published": true,
+      "dv": 2
+    },
+    "4592558": {
+      "key": [
+        "2021-08-07",
+        "1st",
+        "Middleton & ND"
+      ],
+      "last_updated": "07/09/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4594495": {
+      "key": [
+        "2021-08-07",
+        "2nd",
+        "Brandesburton CC"
+      ],
+      "last_updated": "07/09/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4594502": {
+      "key": [
+        "2021-08-14",
+        "2nd",
+        "Cherry Burton CC"
+      ],
+      "last_updated": "07/09/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4592585": {
+      "key": [
+        "2021-08-30",
+        "1st",
+        "North Ferriby"
+      ],
+      "last_updated": "07/09/2021",
+      "published": true,
+      "dv": 2
+    },
+    "4592590": {
+      "key": [
+        "2021-09-04",
+        "1st",
+        "Newport CC"
+      ],
+      "last_updated": "22/03/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5116115": {
+      "key": [
+        "2022-04-30",
+        "1st",
+        "NCCE"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5116126": {
+      "key": [
+        "2022-05-07",
+        "1st",
+        "Patrington CC"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5118854": {
+      "key": [
+        "2022-05-14",
+        "2nd",
+        "Hornsea CC"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5116127": {
+      "key": [
+        "2022-05-14",
+        "1st",
+        "Hornsea CC"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5118867": {
+      "key": [
+        "2022-05-28",
+        "2nd",
+        "Brandesburton CC"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5116144": {
+      "key": [
+        "2022-05-28",
+        "1st",
+        "Kirkella CC"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5116145": {
+      "key": [
+        "2022-06-04",
+        "1st",
+        "Beverley Town"
+      ],
+      "last_updated": "13/04/2026",
+      "published": true,
+      "dv": 2
+    },
+    "5116156": {
+      "key": [
+        "2022-06-11",
+        "1st",
+        "Newport CC"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5118881": {
+      "key": [
+        "2022-06-11",
+        "2nd",
+        "Hull Zingari"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5118887": {
+      "key": [
+        "2022-06-18",
+        "2nd",
+        "NCCE"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5118890": {
+      "key": [
+        "2022-06-25",
+        "2nd",
+        "Kirkella CC"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5116168": {
+      "key": [
+        "2022-06-25",
+        "1st",
+        "Hull Zingari"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5118898": {
+      "key": [
+        "2022-07-02",
+        "2nd",
+        "Bransholme"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5118911": {
+      "key": [
+        "2022-07-16",
+        "2nd",
+        "Old Hymerians CC"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5118914": {
+      "key": [
+        "2022-07-23",
+        "2nd",
+        "Skirlaugh"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5116210": {
+      "key": [
+        "2022-08-13",
+        "1st",
+        "Kirkella CC"
+      ],
+      "last_updated": "24/09/2025",
+      "published": true,
+      "dv": 2
+    },
+    "5116222": {
+      "key": [
+        "2022-08-27",
+        "1st",
+        "Newport CC"
+      ],
+      "last_updated": "02/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5116240": {
+      "key": [
+        "2022-09-10",
+        "1st",
+        "Hull Zingari"
+      ],
+      "last_updated": "11/09/2022",
+      "published": true,
+      "dv": 2
+    },
+    "5648587": {
+      "key": [
+        "2023-04-22",
+        "1st",
+        "Welton CC"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "5648607": {
+      "key": [
+        "2023-05-20",
+        "1st",
+        "Filey CC"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "5653923": {
+      "key": [
+        "2023-05-20",
+        "2nd",
+        "Dalton Holme"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "5648612": {
+      "key": [
+        "2023-05-27",
+        "1st",
+        "Cottingham CC"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "5648620": {
+      "key": [
+        "2023-06-03",
+        "1st",
+        "NCCE"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "5648628": {
+      "key": [
+        "2023-06-10",
+        "1st",
+        "Patrington CC"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "5648645": {
+      "key": [
+        "2023-07-01",
+        "1st",
+        "Sutton"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "5653995": {
+      "key": [
+        "2023-08-12",
+        "2nd",
+        "Cottingham CC"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "5648685": {
+      "key": [
+        "2023-08-19",
+        "1st",
+        "NCCE"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "5648693": {
+      "key": [
+        "2023-08-26",
+        "1st",
+        "Patrington CC"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "5648698": {
+      "key": [
+        "2023-08-28",
+        "1st",
+        "Newport CC"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "5654027": {
+      "key": [
+        "2023-09-09",
+        "2nd",
+        "South Holderness"
+      ],
+      "last_updated": "27/11/2023",
+      "published": true,
+      "dv": 2
+    },
+    "6249369": {
+      "key": [
+        "2024-05-25",
+        "1st",
+        "Hornsea CC"
+      ],
+      "last_updated": "02/08/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6249340": {
+      "key": [
+        "2024-05-27",
+        "1st",
+        "Brandesburton CC"
+      ],
+      "last_updated": "02/08/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6249376": {
+      "key": [
+        "2024-06-01",
+        "1st",
+        "Driffield Town"
+      ],
+      "last_updated": "02/08/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6249380": {
+      "key": [
+        "2024-06-08",
+        "1st",
+        "Cherry Burton CC"
+      ],
+      "last_updated": "02/08/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6271734": {
+      "key": [
+        "2024-06-22",
+        "2nd",
+        "Gilberdyke"
+      ],
+      "last_updated": "26/06/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6249393": {
+      "key": [
+        "2024-06-22",
+        "1st",
+        "Beverley Town"
+      ],
+      "last_updated": "22/06/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6271745": {
+      "key": [
+        "2024-07-07",
+        "2nd",
+        "Cottingham CC"
+      ],
+      "last_updated": "07/07/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6249420": {
+      "key": [
+        "2024-07-20",
+        "1st",
+        "North Ferriby"
+      ],
+      "last_updated": "21/07/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6249424": {
+      "key": [
+        "2024-07-27",
+        "1st",
+        "Swanland"
+      ],
+      "last_updated": "31/07/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6249437": {
+      "key": [
+        "2024-08-10",
+        "1st",
+        "Hornsea CC"
+      ],
+      "last_updated": "10/08/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6249441": {
+      "key": [
+        "2024-08-17",
+        "1st",
+        "Driffield Town"
+      ],
+      "last_updated": "17/08/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6249452": {
+      "key": [
+        "2024-08-31",
+        "1st",
+        "Welton CC"
+      ],
+      "last_updated": "09/09/2024",
+      "published": true,
+      "dv": 2
+    },
+    "6777345": {
+      "key": [
+        "2025-04-26",
+        "1st",
+        "Hornsea CC"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6777357": {
+      "key": [
+        "2025-05-10",
+        "1st",
+        "Cherry Burton CC"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6777368": {
+      "key": [
+        "2025-05-17",
+        "1st",
+        "NCCE"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6889433": {
+      "key": [
+        "2025-05-24",
+        "2nd",
+        "South Cave & Brantingham CC"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6777369": {
+      "key": [
+        "2025-05-24",
+        "1st",
+        "Middleton & ND"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6777375": {
+      "key": [
+        "2025-05-26",
+        "1st",
+        "Hull Zingari"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6777399": {
+      "key": [
+        "2025-06-21",
+        "1st",
+        "North Ferriby"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6777408": {
+      "key": [
+        "2025-06-28",
+        "1st",
+        "Driffield Town"
+      ],
+      "last_updated": "09/03/2026",
+      "published": true,
+      "dv": 2
+    },
+    "6777414": {
+      "key": [
+        "2025-07-05",
+        "1st",
+        "Hornsea CC"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6890030": {
+      "key": [
+        "2025-07-05",
+        "2nd",
+        "South Cave & Brantingham CC"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6777429": {
+      "key": [
+        "2025-07-26",
+        "1st",
+        "NCCE"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6777441": {
+      "key": [
+        "2025-08-09",
+        "1st",
+        "Hull Zingari"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6777447": {
+      "key": [
+        "2025-08-16",
+        "1st",
+        "Beverley Town"
+      ],
+      "last_updated": "06/10/2025",
+      "published": true,
+      "dv": 2
+    },
+    "6777454": {
+      "key": [
+        "2025-08-23",
+        "1st",
+        "Sutton"
+      ],
+      "last_updated": "06/10/2025",
       "published": true,
       "dv": 2
     }
