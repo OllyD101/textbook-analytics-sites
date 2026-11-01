@@ -301,5 +301,123 @@ def convert(md, names, club_match, team_map):
         if str(p.get("team_id")) == hid:
             points = {k: num(v) for k, v in p.items() if k != "team_id"}
 
-    return {"match": match, "batting": batting, "bowling": bowling, "fielding": fielding,
-            "keeping": keeping, "points": points}, issues
+    detail = scorecard_detail(h_inn, o_inn, base, names, bat_inn_no, bowl_inn_no, h_runs, tag, issues)
+    return dict({"match": match, "batting": batting, "bowling": bowling, "fielding": fielding,
+                 "keeping": keeping, "points": points}, **detail), issues
+
+
+
+# ---------------------------------------------------------------- the rest of the scorecard
+# Opposition batting and bowling, who dismissed each Hessle batter, the fall of wickets, and Hessle's partnerships.
+# Opposition players keep their Play-Cricket names and IDs (the IDs join them up across seasons); Hessle players go
+# through the usual name matching.
+# Stored with the site data. The fall of wickets is read to work out partnerships but not kept (it would add a lot of
+# size for nothing the dashboard shows); empty fields are left out of these rows for the same reason.
+DETAIL_SETS = ("opp_batting", "opp_bowling", "dismissals", "partnerships")
+NOT_OUT_KINDS = {"Not Out", "DNB", "Retired Not Out"}
+
+
+def _pid(v):
+    v = str(v or "").strip()
+    return v or None
+
+
+def _fow_entries(inn, tag, issues):
+    """Fall of wickets as [(wicket, runs, out_name, out_id)], whatever the field names turn out to be."""
+    out, odd = [], set()
+    for i, f in enumerate(inn.get("fow") or []):
+        if not isinstance(f, dict):
+            continue
+        runs = num(f.get("runs") if "runs" in f else f.get("score"))
+        wkt = num(next((f.get(k) for k in ("wickets", "wicket", "wkt", "wicket_number") if k in f), i + 1))
+        name = next((f.get(k) for k in ("batsman_out_name", "batsman_name", "player_name", "out_batsman_name", "batsman") if f.get(k)), None)
+        pid = next((f.get(k) for k in ("batsman_out_id", "batsman_id", "player_id", "out_batsman_id") if f.get(k)), None)
+        if runs is None:
+            odd.add(", ".join(sorted(f.keys())))
+            continue
+        out.append((int(wkt or i + 1), runs, (name or "").strip() or None, _pid(pid)))
+    for k in odd:
+        issues.append(f"{tag}: fall of wickets has fields this version doesn't read ({k}) - tell Claude so it can be added")
+    return sorted(out)
+
+
+def _partnerships(order, fow, total, base, tag, issues):
+    """Hessle partnerships from the batting order and the fall of wickets (who was out at each wicket).
+    Returns [] (with a note) if it doesn't add up to the team total."""
+    if not fow or len(order) < 2:
+        return []
+    crease, nxt, prev, rows = [order[0], order[1]], 2, 0, []
+    for wkt, runs, out_name, out_id in fow:
+        out = next((p for p in crease if (out_id and p["id"] == out_id) or (out_name and p["name"].lower() == out_name.lower())), None)
+        if out is None:
+            issues.append(f"{tag}: partnership for wicket {wkt} not worked out (couldn't tell who was out)")
+            return []
+        a, b = crease
+        rows.append(dict(base, Wicket=wkt, Runs=runs - prev, Batter1=a["name"], Batter2=b["name"], Unbroken=False))
+        prev = runs
+        crease.remove(out)
+        if nxt < len(order):
+            crease.append(order[nxt]); nxt += 1
+        else:
+            break
+    if len(crease) == 2 and total is not None and total - prev > 0:
+        rows.append(dict(base, Wicket=len(fow) + 1, Runs=total - prev, Batter1=crease[0]["name"], Batter2=crease[1]["name"], Unbroken=True))
+    if total is not None and sum(r["Runs"] for r in rows) != total:
+        issues.append(f"{tag}: partnerships add up to {sum(r['Runs'] for r in rows)}, not the total {total} - left out")
+        return []
+    return rows
+
+
+def scorecard_detail(h_inn, o_inn, base, names, bat_inn_no, bowl_inn_no, h_runs, tag, issues):
+    key = {k: base[k] for k in ("Date", "Team", "Opponent")}
+    opp_batting, opp_bowling, dismissals, fow = [], [], [], []
+    # the opposition's batting, and which Hessle player got each of them out
+    for b in o_inn.get("bat") or []:
+        kind = HOW_OUT.get(_code(b.get("how_out")))
+        runs = num(b.get("runs"))
+        if kind == "DNB" or (runs is None and kind in (None, "DNB")):
+            continue
+        bowler = names.player(b.get("bowler_name"), b.get("bowler_id")) if (b.get("bowler_name") or "").strip() else None
+        fielder = names.player(b.get("fielder_name"), b.get("fielder_id")) if (b.get("fielder_name") or "").strip() else None
+        if kind == "Ct & B" or (kind == "Caught" and _pid(b.get("fielder_id")) and _pid(b.get("fielder_id")) == _pid(b.get("bowler_id"))):
+            fielder = bowler
+        opp_batting.append(dict(key, Innings=bowl_inn_no, Pos=num(b.get("position")), Batter=(b.get("batsman_name") or "").strip(),
+                                BatterId=_pid(b.get("batsman_id")), Dismissal=kind or (b.get("how_out") or ""),
+                                Bowler=bowler if kind not in NOT_OUT_KINDS and kind != "Run Out" else None,
+                                Fielder=fielder if kind in ("Caught", "Ct & B", "Stumped", "Run Out") else None,
+                                Runs=runs, Balls=num(b.get("balls")), **{"4s": num(b.get("fours")), "6s": num(b.get("sixes"))}))
+    # the opposition's bowling
+    for w in h_inn.get("bowl") or []:
+        if not (w.get("bowler_name") or "").strip():
+            continue
+        opp_bowling.append(dict(key, Innings=bat_inn_no, Bowler=w["bowler_name"].strip(), BowlerId=_pid(w.get("bowler_id")),
+                                Overs=overs_value(w.get("overs")), Maidens=num(w.get("maidens")), Runs=num(w.get("runs")),
+                                Wickets=num(w.get("wickets")), Wides=num(w.get("wides")), **{"No Balls": num(w.get("no_balls"))}))
+    # who dismissed each Hessle batter; and the batting order for partnerships
+    order = []
+    for b in sorted(h_inn.get("bat") or [], key=lambda x: num(x.get("position")) or 99):
+        kind = HOW_OUT.get(_code(b.get("how_out")))
+        name = names.player(b.get("batsman_name"), b.get("batsman_id")) if (b.get("batsman_name") or "").strip() else None
+        if not name or kind == "DNB":
+            continue
+        order.append({"name": name, "id": _pid(b.get("batsman_id"))})
+        if kind in NOT_OUT_KINDS or kind is None or kind == "Retired":
+            continue
+        bowler = (b.get("bowler_name") or "").strip() or None
+        fielder = (b.get("fielder_name") or "").strip() or None
+        if kind == "Ct & B":
+            fielder = bowler
+        dismissals.append(dict(key, Innings=bat_inn_no, Batter=name, How=kind,
+                               Bowler=bowler if kind != "Run Out" else None, BowlerId=_pid(b.get("bowler_id")) if kind != "Run Out" else None,
+                               Fielder=fielder if kind in ("Caught", "Ct & B", "Stumped", "Run Out") else None,
+                               FielderId=_pid(b.get("fielder_id")) if kind in ("Caught", "Ct & B", "Stumped", "Run Out") else None))
+    # fall of wickets, both sides
+    h_fow, o_fow = _fow_entries(h_inn, tag, issues), _fow_entries(o_inn, tag, issues)
+    for side, inn_no, entries, ours in (("Hessle", bat_inn_no, h_fow, True), ("Opposition", bowl_inn_no, o_fow, False)):
+        for wkt, runs, out_name, out_id in entries:
+            who = (names.player(out_name, out_id) if out_name else None) if ours else out_name
+            fow.append(dict(key, Innings=inn_no, Side=side, Wicket=wkt, Runs=runs, Out=who, OutId=out_id))
+    partnerships = _partnerships(order, [(w, r, (names.player(n, i) if n else None), i) for w, r, n, i in h_fow], h_runs, key, tag, issues)
+    compact = lambda rows: [{k: v for k, v in r.items() if v is not None and v != ""} for r in rows]
+    return {"opp_batting": compact(opp_batting), "opp_bowling": compact(opp_bowling), "dismissals": compact(dismissals),
+            "partnerships": compact(partnerships), "fow": fow}

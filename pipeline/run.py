@@ -22,10 +22,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 from pc_api import FixtureClient, PlayCricketClient, PlayCricketError  # noqa: E402
-from transform import Names, convert, overs_to_balls, valid_overs, r2, norm_name  # noqa: E402
+from transform import Names, convert, overs_to_balls, valid_overs, r2, norm_name, DETAIL_SETS  # noqa: E402
 from awards import award_match_of_the_match, award_player_of_the_month, recheck_potm_for_teams, drop_placeholder_awards  # noqa: E402
 
-DATASETS = ("matches", "batting", "bowling", "fielding", "keeping")
+DATASETS = ("matches", "batting", "bowling", "fielding", "keeping") + DETAIL_SETS
+# Bumped when the automation starts keeping more of each scorecard: every match is fetched once more to fill it in
+DETAIL_VERSION = 2
 
 
 # ---------------------------------------------------------------- data file
@@ -352,13 +354,28 @@ def merge_match(new, data):
     for ds in DATASETS:
         data[ds] = [r for r in data[ds] if mkey(r) not in old_keys]
     data["matches"].append(new["match"])
-    for ds in ("batting", "bowling", "fielding", "keeping"):
-        data[ds].extend(new[ds])
+    for ds in ("batting", "bowling", "fielding", "keeping") + DETAIL_SETS:
+        data.setdefault(ds, []).extend(new.get(ds, []))
     # keep MoTM pointing at the (possibly renamed) opponent
     for r in data.get("motm", []):
         if (r["Date"], r["Team"]) == k[:2]:
             r["Opponent"] = k[2]
     return "amended" if old else "added"
+
+
+def enrich_detail(new, data):
+    """Add the full-scorecard detail (opposition batting/bowling, dismissals, fall of wickets, partnerships) for a match
+    the site already has, without touching its Hessle rows. True if anything was added or changed."""
+    k = mkey(new["match"])[:2]
+    changed = False
+    for ds in DETAIL_SETS:
+        rows = new.get(ds, [])
+        have = [r for r in data.setdefault(ds, []) if (r["Date"], r["Team"]) == k]
+        if sorted(json.dumps(r, sort_keys=True) for r in have) == sorted(json.dumps(r, sort_keys=True) for r in rows):
+            continue
+        data[ds] = [r for r in data[ds] if (r["Date"], r["Team"]) != k] + rows
+        changed = True
+    return changed
 
 
 def apply_manual(data, report):
@@ -455,6 +472,8 @@ def main():
     fwd = load_json(os.path.join(HERE, "key_map.json"))
     rev = {v: k for k, v in fwd.items()}
     data = expand(load_json(data_path), rev)
+    for ds in DATASETS:
+        data.setdefault(ds, [])   # the full-scorecard sets are new: older data files don't have them yet
     state = load_json(state_path, {"last_run": None, "matches": {}, "players": {}})
     aliases = load_json(os.path.join(HERE, "aliases.json"), {"opponents": {}, "players": {}})
 
@@ -462,7 +481,7 @@ def main():
         {r.get("Fielder") for r in data["fielding"]} | {r.get("Keeper") for r in data["keeping"]}
     names = Names({m["Opponent"] for m in data["matches"]}, existing_players, aliases, state.setdefault("players", {}))
     report = {"mode": mode, "added": [], "amended": [], "unchanged": [], "identical": [], "compared_ok": [], "compared_diff": {},
-              "skipped": [], "filtered": [], "removed": [], "would_remove": [], "kept": [], "league_history": [], "warnings": [], "errors": [], "league": {}, "bonus": []}
+              "skipped": [], "filtered": [], "removed": [], "would_remove": [], "kept": [], "league_history": [], "enriched": [], "warnings": [], "errors": [], "league": {}, "bonus": []}
     divisions = {}
     keep_site = load_keep_site()
 
@@ -502,7 +521,8 @@ def main():
             # skip a match only if Play-Cricket hasn't changed it AND it's really on the site (if data.json was
             # replaced by an older copy, the memory says "published" but the match is gone: fetch it again)
             on_site = prev and tuple(prev.get("key", [])[:2]) in site_keys
-            if mode == "publish" and prev and prev.get("last_updated") == m.get("last_updated") and prev.get("published") and on_site:
+            if (mode == "publish" and prev and prev.get("last_updated") == m.get("last_updated") and prev.get("published") and on_site
+                    and prev.get("dv") == DETAIL_VERSION):
                 report["unchanged"].append(mid)
                 continue
             try:
@@ -542,11 +562,16 @@ def main():
                 else:
                     report["compared_ok"].append(label)
             elif compare_match(rows, data) == []:
-                report["identical"].append(label)   # same as the site already has: leave it untouched
+                # same as the site already has: leave the scorecard untouched, just add any detail it doesn't have yet
+                if enrich_detail(rows, data):
+                    report["enriched"].append(label)
+                else:
+                    report["identical"].append(label)
+                state["matches"][mid] = {"key": list(k), "last_updated": m.get("last_updated"), "published": True, "dv": DETAIL_VERSION}
             else:
                 keep_site_detail(rows, data)        # balls/fours/sixes Play-Cricket doesn't have stay as they are
                 report[merge_match(rows, data)].append(label)
-                state["matches"][mid] = {"key": list(k), "last_updated": m.get("last_updated"), "published": True}
+                state["matches"][mid] = {"key": list(k), "last_updated": m.get("last_updated"), "published": True, "dv": DETAIL_VERSION}
 
     # league tables for each XI's current division
     league = load_json(league_path, {"tables": {}})
@@ -589,7 +614,7 @@ def main():
             report["errors"] += problems
             write_report(report, names)
             sys.exit("Blocking data problems - nothing was published. See the report.")
-        if report["added"] or report["amended"] or report["removed"] or n_awards or os.environ.get("FORCE_WRITE"):
+        if report["added"] or report["amended"] or report["removed"] or report["enriched"] or n_awards or os.environ.get("FORCE_WRITE"):
             write_json(data_path, shrink(data, fwd))
             write_meta(os.path.join(os.path.dirname(data_path), "data-meta.json"), data)
         if report["league"] or any(": saved" in x for x in report["league_history"]):
@@ -647,7 +672,8 @@ def write_report(report, names):
     else:
         L += [f"- Added: **{len(report['added'])}**  ", f"- Amended: **{len(report['amended'])}**  ",
               f"- Unchanged since last run: {len(report['unchanged'])}",
-              f"- Fetched but identical to the site: {len(report.get('identical', []))}", ""]
+              f"- Fetched but identical to the site: {len(report.get('identical', []))}",
+              f"- Full scorecard detail added (opposition, dismissals, partnerships): {len(report.get('enriched', []))}", ""]
         L += [f"- added {x}" for x in report["added"]] + [f"- amended {x}" for x in report["amended"]] + [""]
     if report.get("awards"):
         L += ["## Awards (Match Value)", ""] + [f"- {a}" for a in report["awards"]] + [""]

@@ -70,6 +70,12 @@ Cup games, friendlies and T20s are never fetched or published: anything whose Pl
 
 Months before 2027 kept their original winner (1st and 2nd XI only). When 3rd XI games are added to one of those months, the award passes to a player who played for the 3rd XI that month if those games lift their Match Value total above the existing winner's and it wouldn't have without them; otherwise the existing winner stays. The report lists every change as "... replaces ...". Set `potm_recheck_teams` to `[]` in `config.json` to turn this off.
 
+## Full scorecards (partnerships, dismissals, opposition players)
+
+Each Play-Cricket scorecard also gives the opposition's batting and bowling, who dismissed each Hessle batter, and the fall of wickets. The automation keeps these as `opp_batting`, `opp_bowling`, `dismissals` and `partnerships` in `docs/data.json` (partnerships are worked out from the fall of wickets and the batting order, and only kept when they add up to the team total). They feed Batting → Partnerships and How We Get Out, Bowling → Wickets & Victims, Opponents → Opposition players, and "Partners and rivals" on player profiles.
+
+The first publish after this change fetches every match in the chosen seasons once more to fill the detail in, without changing anything already on the site (the report counts these as "Full scorecard detail added"). If a scorecard's fall of wickets uses field names the automation doesn't know, the report says so: tell Claude.
+
 ## When Play-Cricket is wrong: keep_site.csv
 
 If a match on the site is right and Play-Cricket's scorecard isn't (and can't be fixed on Play-Cricket), add it to `pipeline/manual/keep_site.csv`:
@@ -123,5 +129,6 @@ python tests/test_data_meta.py                                  # 2 tests: the d
 python tests/test_pc_detail.py                                  # 4 tests: balls/fours/sixes Play-Cricket doesn't record
 python tests/test_filters_awards.py                             # 5 tests: cup/T20/friendly games left out or removed; award rules
 python tests/test_dry_run_report.py                             # 5 tests: batting order, missing overs, wicket totals, keep list, new matches
+python tests/test_scorecard_detail.py                           # 5 tests: partnerships, dismissals, opposition players
 python pipeline/check_data.py                                   # consistency checks on docs/data.json (changes nothing)
 ```
