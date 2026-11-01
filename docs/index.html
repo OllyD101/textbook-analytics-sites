@@ -804,6 +804,20 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 .gr-perfect-cell{background:rgba(200,32,47,0.12);border-color:rgba(200,32,47,0.5);} .gr-perfect-cell .gr-rar{color:#f0717b;}
 
 .nav-link-out{text-decoration:none;display:block;}
+.sd-empty{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:22px;color:var(--muted);font-size:0.9rem;line-height:1.5;}
+.sd-tools{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:14px;}
+.sd-label{display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--muted);}
+.sd-label select{min-width:200px;}
+.sd-sub{font-size:0.75rem;color:var(--muted);}
+.sd-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:16px;}
+.sd-two>.table-card,.sd-rivals{margin-bottom:16px;}
+.sd-none{color:var(--muted);font-size:0.85rem;padding:12px 4px;}
+.sd-bar{display:inline-block;height:7px;border-radius:4px;background:var(--accent2);vertical-align:middle;opacity:.8;max-width:120px;}
+.sd-three{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;padding:14px 18px 6px;}
+.sd-three h4{font-size:0.82rem;font-weight:600;margin-bottom:6px;}
+.sd-list{margin:0 0 10px;padding-left:18px;font-size:0.86rem;line-height:1.7;}
+#bat-partners-content a,#bat-dismissals-content a,#bowl-victims-content a,#opp-players-content a,.sd-rivals a{color:var(--text);text-decoration:none;border-bottom:1px dotted var(--muted);}
+#bat-partners-content a:hover,#bat-dismissals-content a:hover,#bowl-victims-content a:hover,#opp-players-content a:hover,.sd-rivals a:hover{color:var(--accent2);border-bottom-color:var(--accent2);}
 </style>
 </head>
 <body>
@@ -1074,6 +1088,8 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
     <button class="tab" onclick="showTab('batting','positions',this)">By Position</button>
     <button class="tab" onclick="showTab('batting','opponents',this)">vs Opponents</button>
     <button class="tab" onclick="showTab('batting','form',this)">Rolling Form</button>
+    <button class="tab" onclick="showTab('batting','partners',this);renderBatPartnerships()">Partnerships</button>
+    <button class="tab" onclick="showTab('batting','dismissals',this);renderBatDismissals()">How We Get Out</button>
   </div>
   <div id="batting-stats" class="sub-page active">
     <div class="table-header" style="padding:0 0 12px;flex-wrap:wrap;gap:8px">
@@ -1158,6 +1174,11 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
     </div>
   </div>
 
+  <!-- PARTNERSHIPS (full scorecards) -->
+  <div id="batting-partners" class="sub-page"><div id="bat-partners-content"></div></div>
+  <!-- HOW WE GET OUT (full scorecards) -->
+  <div id="batting-dismissals" class="sub-page"><div id="bat-dismissals-content"></div></div>
+
   <!-- ROLLING FORM -->
   <div id="batting-form" class="sub-page">
     <div style="margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -1177,6 +1198,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
     <button class="tab" onclick="showTab('bowling','winspells',this)">Match-Winning Spells</button>
     <button class="tab" onclick="showTab('bowling','partnerships',this)">Partnerships</button>
     <button class="tab" onclick="showTab('bowling','extras',this)">Wides & No Balls</button>
+    <button class="tab" onclick="showTab('bowling','victims',this);renderBowlVictims()">Wickets & Victims</button>
   </div>
   <div id="bowling-stats" class="sub-page active">
     <div class="table-header" style="padding:0 0 12px;flex-wrap:wrap;gap:8px">
@@ -1258,6 +1280,9 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
       </tr></thead><tbody></tbody></table></div>
     </div>
   </div>
+
+  <!-- WICKETS & VICTIMS (full scorecards) -->
+  <div id="bowling-victims" class="sub-page"><div id="bowl-victims-content"></div></div>
 
   <!-- WIDES & NO BALLS -->
   <div id="bowling-extras" class="sub-page">
@@ -1405,6 +1430,8 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
       <th onclick="sortTable('tblOpponents',8)">Last Date</th>
     </tr></thead><tbody></tbody></table></div>
   </div>
+  <div class="table-header" style="padding:22px 0 12px"><span class="table-title" style="font-size:0.9rem;color:var(--text)">Opposition players</span></div>
+  <div id="opp-players-content"></div>
 </div>
 
 <!-- PLAYER PROFILES -->
@@ -2294,7 +2321,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 <script>
 
 
-const _KMAP = {"k0": "% of TR", "k1": "4s", "k2": "6s", "k3": "Balls", "k4": "Bat/Field First", "k5": "Batter", "k6": "Boundary%", "k7": "Bowler", "k8": "Date", "k9": "Dismissal", "k10": "Economy", "k11": "Economy.1", "k12": "Fielder", "k13": "Home/Away", "k14": "Innings", "k15": "Keeper", "k16": "MOTM", "k17": "Maidens", "k18": "No Balls", "k19": "Opp Overs", "k20": "Opp Runs", "k21": "Opp Runs.1", "k22": "Opponent", "k23": "Overs", "k24": "Overs Batted", "k25": "Overs Bowled", "k26": "Pos", "k27": "Result", "k28": "Runs", "k29": "Runs Conceded", "k30": "Runs Scored", "k31": "SR", "k32": "Strike Rate", "k33": "Team", "k34": "Team Runs", "k35": "Toss Won/Lost", "k36": "W/L", "k37": "Wickets", "k38": "Wickets Lost", "k39": "Wickets Taken", "k40": "Wides", "k41": "months", "k42": "player", "k43": "wins"};
+const _KMAP = {"k0": "% of TR", "k1": "4s", "k2": "6s", "k3": "Balls", "k4": "Bat/Field First", "k5": "Batter", "k6": "Boundary%", "k7": "Bowler", "k8": "Date", "k9": "Dismissal", "k10": "Economy", "k11": "Economy.1", "k12": "Fielder", "k13": "Home/Away", "k14": "Innings", "k15": "Keeper", "k16": "MOTM", "k17": "Maidens", "k18": "No Balls", "k19": "Opp Overs", "k20": "Opp Runs", "k21": "Opp Runs.1", "k22": "Opponent", "k23": "Overs", "k24": "Overs Batted", "k25": "Overs Bowled", "k26": "Pos", "k27": "Result", "k28": "Runs", "k29": "Runs Conceded", "k30": "Runs Scored", "k31": "SR", "k32": "Strike Rate", "k33": "Team", "k34": "Team Runs", "k35": "Toss Won/Lost", "k36": "W/L", "k37": "Wickets", "k38": "Wickets Lost", "k39": "Wickets Taken", "k40": "Wides", "k41": "months", "k42": "player", "k43": "wins", "k44": "BatterId", "k45": "BowlerId", "k46": "FielderId", "k47": "How", "k48": "Side", "k49": "Wicket", "k50": "Out", "k51": "OutId", "k52": "Batter1", "k53": "Batter2", "k54": "Unbroken"};
 function _expand(rec) {
   const out = {};
   for (const k in rec) out[_KMAP[k] || k] = rec[k];
@@ -2616,11 +2643,11 @@ function updateLoadingMsg(msg) {
 // rebuilds the current page straight away and the rest when you next visit them.
 var PAGE_RENDERERS = {
   overview: ['renderLatestResults', 'renderOverview', 'renderOnThisDay'],
-  batting: ['renderBatStats', 'renderBatInnings', 'renderBatCharts', 'renderBatByPosition'],
-  bowling: ['renderBowlStats', 'renderBowlSpells', 'renderBowlCharts', 'renderWinSpells', 'renderBowlPartnerships', 'renderBowlExtras'],
+  batting: ['renderBatStats', 'renderBatInnings', 'renderBatCharts', 'renderBatByPosition', 'renderBatPartnerships', 'renderBatDismissals'],
+  bowling: ['renderBowlStats', 'renderBowlSpells', 'renderBowlCharts', 'renderWinSpells', 'renderBowlPartnerships', 'renderBowlExtras', 'renderBowlVictims'],
   fielding: ['renderFielding', 'renderBowlerFielderPartnerships'],
   season: ['renderSeason'],
-  opponents: ['renderOpponents'],
+  opponents: ['renderOpponents', 'renderOppPlayers'],
   form: ['renderForm'],
   matches: ['renderAllMatches', 'renderStreaks'],
   bestxi: ['renderTeamPicker', 'renderSquadDepth'],
@@ -4523,6 +4550,193 @@ function renderProfile() {
   },50);
 }
 
+
+// ============================================================
+// FULL SCORECARDS — partnerships, how our batters get out, our bowlers' wickets, opposition players
+// ============================================================
+// From the extra scorecard detail the automation keeps (opp_batting, opp_bowling, dismissals, fow, partnerships).
+// Opposition players are joined up by their Play-Cricket ID, so a spelling change doesn't split them.
+function sdRows(ds) { return getFiltered(CRICKET_DATA[ds] || []); }
+function sdOrd(n) { var t = ['th', 'st', 'nd', 'rd'], v = n % 100; return t[(v - 20) % 10] || t[v] || t[0]; }
+function sdOpenProfile(name) {   // jump to a player's profile
+  showPage('profiles', document.querySelector('.nav-btn[onclick*="\'profiles\'"]'));
+  var sel = document.getElementById('profileSelect'); if (!sel) return;
+  sel.value = name; renderProfile(); window.scrollTo(0, 0);
+}
+function sdHasDetail() { return ['partnerships', 'dismissals', 'opp_batting'].some(function(ds) { return (CRICKET_DATA[ds] || []).length; }); }
+var SD_EMPTY = '<div class="sd-empty">This needs the full scorecards from Play-Cricket. They appear here after the automation\u2019s next publish for these seasons (Actions \u2192 Update data \u2192 publish, seasons 2011-2026).</div>';
+function sdOppKey(id, name, opp) { return id ? 'id:' + id : 'n:' + (name || '?') + '|' + (opp || ''); }
+function sdPair(a, b) { return [a, b].sort().join(' & '); }
+function sdLink(name) { return NOT_PLAYERS.has(name) ? _esc(name) : '<a href="#" onclick="sdOpenProfile(' + _esc(JSON.stringify(name)) + ');return false">' + _esc(name) + '</a>'; }
+function sdWhen(r) { return _shortDate(r.Date) + ' \u00b7 ' + r.Team + ' XI v ' + _esc(r.Opponent); }
+function sdTable(id, head, rows, empty) {
+  return '<div class="table-wrap"><table id="' + id + '"><thead><tr>' + head.map(function(h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    (rows.length ? rows.join('') : '<tr><td colspan="' + head.length + '" class="sd-none">' + (empty || 'Nothing in this scope yet.') + '</td></tr>') + '</tbody></table></div>';
+}
+function sdCard(title, sub, inner) { return '<div class="table-card"><div class="table-header"><span class="table-title">' + title + '</span>' + (sub ? '<span class="sd-sub">' + sub + '</span>' : '') + '</div>' + inner + '</div>'; }
+function sdOpts(names, sel, allLabel) { return '<option value="">' + allLabel + '</option>' + names.map(function(n) { return '<option' + (n === sel ? ' selected' : '') + '>' + _esc(n) + '</option>'; }).join(''); }
+
+// ---------- Batting → Partnerships
+function renderBatPartnerships() {
+  var el = document.getElementById('bat-partners-content'); if (!el) return;
+  if (!sdHasDetail()) { el.innerHTML = SD_EMPTY; return; }
+  var q = (document.getElementById('bpSearch') || {}).value || '';
+  var ps = sdRows('partnerships').filter(function(r) { return !NOT_PLAYERS.has(r.Batter1) && !NOT_PLAYERS.has(r.Batter2); });
+  var mine = q ? ps.filter(function(r) { return (r.Batter1 + ' ' + r.Batter2).toLowerCase().indexOf(q.toLowerCase()) >= 0; }) : ps;
+  var stand = function(r) { return r.Runs + (r.Unbroken ? '*' : ''); };
+  var byW = [];
+  for (var w = 1; w <= 10; w++) {
+    var best = mine.filter(function(r) { return r.Wicket === w; }).sort(function(a, b) { return b.Runs - a.Runs; })[0];
+    if (best) byW.push('<tr><td>' + w + sdOrd(w) + '</td><td><b>' + stand(best) + '</b></td><td>' + sdLink(best.Batter1) + ' & ' + sdLink(best.Batter2) + '</td><td>' + sdWhen(best) + '</td></tr>');
+  }
+  var top = mine.slice().sort(function(a, b) { return b.Runs - a.Runs; }).slice(0, 15).map(function(r) {
+    return '<tr><td><b>' + stand(r) + '</b></td><td>' + r.Wicket + sdOrd(r.Wicket) + '</td><td>' + sdLink(r.Batter1) + ' & ' + sdLink(r.Batter2) + '</td><td>' + sdWhen(r) + '</td></tr>';
+  });
+  var pairs = {};
+  mine.forEach(function(r) {
+    var k = sdPair(r.Batter1, r.Batter2), p = pairs[k] || (pairs[k] = { k: k, n: 0, runs: 0, outs: 0, best: null, fifty: 0, hundred: 0 });
+    p.n++; p.runs += r.Runs; p.outs += r.Unbroken ? 0 : 1; if (r.Runs >= 50) p.fifty++; if (r.Runs >= 100) p.hundred++;
+    if (!p.best || r.Runs > p.best.Runs) p.best = r;
+  });
+  var pr = Object.values(pairs).filter(function(p) { return p.n >= 3; }).sort(function(a, b) { return b.runs - a.runs; }).slice(0, 20).map(function(p) {
+    var names = p.k.split(' & ');
+    return '<tr><td>' + sdLink(names[0]) + ' & ' + sdLink(names[1]) + '</td><td>' + p.n + '</td><td><b>' + p.runs + '</b></td><td>' + (p.outs ? (p.runs / p.outs).toFixed(1) : '\u2013') + '</td><td>' + p.best.Runs + (p.best.Unbroken ? '*' : '') + '</td><td>' + p.fifty + '</td><td>' + p.hundred + '</td></tr>';
+  });
+  el.innerHTML = '<div class="sd-tools"><input id="bpSearch" class="search-box" placeholder="Find a player\u2019s partnerships" value="' + _esc(q) + '" oninput="renderBatPartnerships()"></div>' +
+    '<div class="sd-two">' + sdCard('Record stand for each wicket', '* not out', sdTable('tblBpWkt', ['Wicket', 'Runs', 'Pair', 'Game'], byW)) +
+    sdCard('Highest partnerships', mine.length + ' partnerships', sdTable('tblBpTop', ['Runs', 'Wicket', 'Pair', 'Game'], top)) + '</div>' +
+    sdCard('Best pairs', 'at least 3 partnerships together · average = runs per completed stand', sdTable('tblBpPairs', ['Pair', 'Stands', 'Runs', 'Average', 'Best', '50+', '100+'], pr, 'No pair has batted together three times in this scope.'));
+  var inp = document.getElementById('bpSearch'); if (q && inp) { inp.focus(); inp.setSelectionRange(q.length, q.length); }
+}
+
+// ---------- Batting → How we get out
+function renderBatDismissals() {
+  var el = document.getElementById('bat-dismissals-content'); if (!el) return;
+  if (!sdHasDetail()) { el.innerHTML = SD_EMPTY; return; }
+  var who = (document.getElementById('bdWho') || {}).value || '';
+  var ds = sdRows('dismissals').filter(function(r) { return !NOT_PLAYERS.has(r.Batter); });
+  var batters = [...new Set(ds.map(function(r) { return r.Batter; }))].sort();
+  var mine = who ? ds.filter(function(r) { return r.Batter === who; }) : ds;
+  var bowl = {};
+  mine.filter(function(r) { return r.Bowler; }).forEach(function(r) {
+    var k = sdOppKey(r.BowlerId, r.Bowler, r.Opponent), b = bowl[k] || (bowl[k] = { name: r.Bowler, opp: r.Opponent, n: 0, victims: {}, last: r });
+    b.n++; b.victims[r.Batter] = (b.victims[r.Batter] || 0) + 1; if (r.Date > b.last.Date) { b.last = r; b.name = r.Bowler; }
+  });
+  var list = Object.values(bowl).filter(function(b) { return who ? b.n >= 2 : true; }).sort(function(a, b) { return b.n - a.n; }).slice(0, 20);
+  var rows = list.map(function(b) {
+    var vic = Object.keys(b.victims).sort(function(x, y) { return b.victims[y] - b.victims[x]; }).slice(0, 3).map(function(v) { return _esc(v) + (b.victims[v] > 1 ? ' \u00d7' + b.victims[v] : ''); }).join(', ');
+    return '<tr><td><b>' + _esc(b.name) + '</b></td><td>' + _esc(b.opp) + '</td><td><b>' + b.n + '</b></td>' + (who ? '' : '<td>' + vic + '</td>') + '<td>' + _shortDate(b.last.Date) + '</td></tr>';
+  });
+  var how = {}; mine.forEach(function(r) { how[r.How] = (how[r.How] || 0) + 1; });
+  var tot = mine.length, howRows = Object.keys(how).sort(function(a, b) { return how[b] - how[a]; }).map(function(h) {
+    return '<tr><td>' + _esc(h) + '</td><td><b>' + how[h] + '</b></td><td><span class="sd-bar" style="width:' + Math.round(100 * how[h] / tot) + '%"></span> ' + Math.round(100 * how[h] / tot) + '%</td></tr>';
+  });
+  var keeperCt = mine.filter(function(r) { return r.How === 'Stumped'; }).length;
+  el.innerHTML = '<div class="sd-tools"><label class="sd-label">Batter <select id="bdWho" onchange="renderBatDismissals()">' + sdOpts(batters, who, 'All our batters') + '</select></label></div>' +
+    '<div class="sd-two">' + sdCard(who ? _esc(who) + '\u2019s bogey bowlers' : 'Opposition bowlers with the most Hessle wickets', who ? 'bowlers who have dismissed him twice or more' : 'from our batters\u2019 dismissals',
+      sdTable('tblBdBowl', who ? ['Bowler', 'Club', 'Times', 'Last'] : ['Bowler', 'Club', 'Wickets', 'Most often', 'Last'], rows, who ? 'No bowler has dismissed him more than once.' : undefined)) +
+    sdCard(who ? 'How ' + _esc(who) + ' gets out' : 'How our batters get out', tot + ' dismissals' + (keeperCt ? ' · ' + keeperCt + ' stumped' : ''), sdTable('tblBdHow', ['How', 'Times', 'Share'], howRows)) + '</div>';
+}
+
+// ---------- Bowling → Wickets & victims
+function renderBowlVictims() {
+  var el = document.getElementById('bowl-victims-content'); if (!el) return;
+  if (!sdHasDetail()) { el.innerHTML = SD_EMPTY; return; }
+  var who = (document.getElementById('bvWho') || {}).value || '';
+  var ob = sdRows('opp_batting').filter(function(r) { return r.Bowler && !NOT_PLAYERS.has(r.Bowler) && r.Dismissal !== 'Run Out'; });
+  var bowlers = [...new Set(ob.map(function(r) { return r.Bowler; }))].sort();
+  var top = function(r) { return typeof r.Pos === 'number' && r.Pos <= 4; };
+  if (!who) {
+    var by = {};
+    ob.forEach(function(r) { var b = by[r.Bowler] || (by[r.Bowler] = { n: 0, top: 0, how: {} }); b.n++; if (top(r)) b.top++; b.how[r.Dismissal] = (b.how[r.Dismissal] || 0) + 1; });
+    var rows = Object.keys(by).filter(function(n) { return by[n].n >= 5; }).sort(function(a, b) { return by[b].top - by[a].top || by[b].n - by[a].n; }).slice(0, 25).map(function(n) {
+      var b = by[n], h = function(k) { return b.how[k] || 0; };
+      return '<tr><td>' + sdLink(n) + '</td><td><b>' + b.n + '</b></td><td><b>' + b.top + '</b></td><td>' + Math.round(100 * b.top / b.n) + '%</td><td>' + h('Bowled') + '</td><td>' + h('LBW') + '</td><td>' + (h('Caught') + h('Ct & B')) + '</td><td>' + h('Stumped') + '</td></tr>';
+    });
+    el.innerHTML = '<div class="sd-tools"><label class="sd-label">Bowler <select id="bvWho" onchange="renderBowlVictims()">' + sdOpts(bowlers, '', 'All our bowlers') + '</select></label></div>' +
+      sdCard('Our bowlers\u2019 wickets', 'top order = batting 1\u20134 · at least 5 wickets · pick a bowler to see his victims', sdTable('tblBvAll', ['Bowler', 'Wickets', 'Top-order', 'Top-order %', 'Bowled', 'LBW', 'Caught', 'Stumped'], rows));
+    return;
+  }
+  var mine = ob.filter(function(r) { return r.Bowler === who; }), vic = {};
+  mine.forEach(function(r) {
+    var k = sdOppKey(r.BatterId, r.Batter, r.Opponent), v = vic[k] || (vic[k] = { name: r.Batter, opp: r.Opponent, n: 0, top: 0, how: {}, runs: 0, last: r });
+    v.n++; v.runs += r.Runs || 0; if (top(r)) v.top++; v.how[r.Dismissal] = (v.how[r.Dismissal] || 0) + 1; if (r.Date > v.last.Date) { v.last = r; v.name = r.Batter; }
+  });
+  var list = Object.values(vic).sort(function(a, b) { return b.n - a.n || b.top - a.top; });
+  var repeat = list.filter(function(v) { return v.n >= 2; });
+  var row = function(v) { return '<tr><td><b>' + _esc(v.name) + '</b></td><td>' + _esc(v.opp) + '</td><td><b>' + v.n + '</b></td><td>' + Object.keys(v.how).map(function(h) { return _esc(h) + (v.how[h] > 1 ? ' \u00d7' + v.how[h] : ''); }).join(', ') + '</td><td>' + (v.top ? 'Yes' : '') + '</td><td>' + _shortDate(v.last.Date) + '</td></tr>'; };
+  var topN = mine.filter(top).length;
+  el.innerHTML = '<div class="sd-tools"><label class="sd-label">Bowler <select id="bvWho" onchange="renderBowlVictims()">' + sdOpts(bowlers, who, 'All our bowlers') + '</select></label>' +
+    '<span class="sd-sub">' + mine.length + ' wickets · ' + topN + ' top-order (' + (mine.length ? Math.round(100 * topN / mine.length) : 0) + '%) · ' + list.length + ' different batters</span></div>' +
+    (repeat.length ? sdCard('Repeat victims', 'batters he has dismissed more than once', sdTable('tblBvRep', ['Batter', 'Club', 'Times', 'How', 'Top order', 'Last'], repeat.slice(0, 15).map(row))) : '') +
+    sdCard('Every wicket', 'most recent first within each batter', sdTable('tblBvAllVic', ['Batter', 'Club', 'Times', 'How', 'Top order', 'Last'], list.slice(0, 60).map(row)));
+}
+
+// ---------- Opponents → Opposition players
+function renderOppPlayers() {
+  var el = document.getElementById('opp-players-content'); if (!el) return;
+  if (!sdHasDetail()) { el.innerHTML = SD_EMPTY; return; }
+  var ob = sdRows('opp_batting'), ow = sdRows('opp_bowling');
+  var last = {}; ob.concat(ow).forEach(function(r) { if (!last[r.Opponent] || r.Date > last[r.Opponent]) last[r.Opponent] = r.Date; });
+  var opps = Object.keys(last).sort(function(a, b) { return last[b].localeCompare(last[a]); });
+  var sel = document.getElementById('opWho'), opp = sel && sel.value && opps.indexOf(sel.value) >= 0 ? sel.value : opps[0];
+  var bat = {}, bwl = {};
+  ob.filter(function(r) { return r.Opponent === opp; }).forEach(function(r) {
+    var k = sdOppKey(r.BatterId, r.Batter, r.Opponent), b = bat[k] || (bat[k] = { name: r.Batter, inns: 0, runs: 0, outs: 0, hs: 0, hsNo: false, fifty: 0, last: r.Date });
+    b.inns++; b.runs += r.Runs || 0; if (!/not out|retired/i.test(r.Dismissal || '')) b.outs++; if ((r.Runs || 0) > b.hs) { b.hs = r.Runs || 0; b.hsNo = /not out/i.test(r.Dismissal || ''); }
+    if ((r.Runs || 0) >= 50) b.fifty++; if (r.Date > b.last) { b.last = r.Date; b.name = r.Batter; }
+  });
+  ow.filter(function(r) { return r.Opponent === opp; }).forEach(function(r) {
+    var k = sdOppKey(r.BowlerId, r.Bowler, r.Opponent), b = bwl[k] || (bwl[k] = { name: r.Bowler, n: 0, balls: 0, runs: 0, w: 0, best: null, last: r.Date });
+    b.n++; b.balls += oversToBalls(r.Overs || 0); b.runs += r.Runs || 0; b.w += r.Wickets || 0;
+    if (!b.best || (r.Wickets || 0) > b.best.Wickets || ((r.Wickets || 0) === b.best.Wickets && (r.Runs || 0) < b.best.Runs)) b.best = r;
+    if (r.Date > b.last) { b.last = r.Date; b.name = r.Bowler; }
+  });
+  var batRows = Object.values(bat).sort(function(a, b) { return b.runs - a.runs; }).slice(0, 12).map(function(b) {
+    return '<tr><td><b>' + _esc(b.name) + '</b></td><td>' + b.inns + '</td><td><b>' + b.runs + '</b></td><td>' + (b.outs ? (b.runs / b.outs).toFixed(1) : '\u2013') + '</td><td>' + b.hs + (b.hsNo ? '*' : '') + '</td><td>' + b.fifty + '</td><td>' + b.last.slice(0, 4) + '</td></tr>';
+  });
+  var bowlRows = Object.values(bwl).sort(function(a, b) { return b.w - a.w || a.runs - b.runs; }).slice(0, 12).map(function(b) {
+    return '<tr><td><b>' + _esc(b.name) + '</b></td><td>' + b.n + '</td><td><b>' + b.w + '</b></td><td>' + (b.w ? (b.runs / b.w).toFixed(1) : '\u2013') + '</td><td>' + (b.balls ? (b.runs / (b.balls / 6)).toFixed(2) : '\u2013') + '</td><td>' + (b.best ? b.best.Wickets + '/' + b.best.Runs : '') + '</td><td>' + b.last.slice(0, 4) + '</td></tr>';
+  });
+  var hs = ob.filter(function(r) { return typeof r.Runs === 'number'; }).sort(function(a, b) { return b.Runs - a.Runs; }).slice(0, 10).map(function(r) {
+    return '<tr><td><b>' + r.Runs + (/not out/i.test(r.Dismissal || '') ? '*' : '') + '</b></td><td>' + _esc(r.Batter) + '</td><td>' + sdWhen(r) + '</td></tr>';
+  });
+  var bb = ow.filter(function(r) { return (r.Wickets || 0) > 0; }).sort(function(a, b) { return b.Wickets - a.Wickets || a.Runs - b.Runs; }).slice(0, 10).map(function(r) {
+    return '<tr><td><b>' + r.Wickets + '/' + r.Runs + '</b></td><td>' + _esc(r.Bowler) + '</td><td>' + sdWhen(r) + '</td></tr>';
+  });
+  el.innerHTML = '<div class="sd-tools"><label class="sd-label">Opponent <select id="opWho" onchange="renderOppPlayers()">' + opps.map(function(o) { return '<option' + (o === opp ? ' selected' : '') + '>' + _esc(o) + '</option>'; }).join('') + '</select></label></div>' +
+    '<div class="sd-two">' + sdCard(_esc(opp) + '\u2019s batters against us', 'most runs', sdTable('tblOpBat', ['Batter', 'Inns', 'Runs', 'Avg', 'HS', '50s', 'Last'], batRows)) +
+    sdCard(_esc(opp) + '\u2019s bowlers against us', 'most wickets', sdTable('tblOpBowl', ['Bowler', 'Games', 'Wkts', 'Avg', 'Econ', 'Best', 'Last'], bowlRows)) + '</div>' +
+    '<div class="sd-two">' + sdCard('Highest scores against Hessle', 'all opponents', sdTable('tblOpHs', ['Runs', 'Batter', 'Game'], hs)) +
+    sdCard('Best bowling against Hessle', 'all opponents', sdTable('tblOpBb', ['Figures', 'Bowler', 'Game'], bb)) + '</div>';
+}
+
+// ---------- Player profile: partners and rivals
+function addProfileRivals(player) {
+  var host = document.getElementById('profile-content'); if (!host || !player || !sdHasDetail()) return;
+  var old = document.getElementById('profile-rivals'); if (old) old.remove();
+  var ps = (CRICKET_DATA.partnerships || []).filter(function(r) { return r.Batter1 === player || r.Batter2 === player; });
+  var part = {}; ps.forEach(function(r) { var o = r.Batter1 === player ? r.Batter2 : r.Batter1; if (NOT_PLAYERS.has(o)) return; var p = part[o] || (part[o] = { n: 0, runs: 0 }); p.n++; p.runs += r.Runs; });
+  var bog = {}; (CRICKET_DATA.dismissals || []).filter(function(r) { return r.Batter === player && r.Bowler; }).forEach(function(r) { var k = sdOppKey(r.BowlerId, r.Bowler, r.Opponent), b = bog[k] || (bog[k] = { name: r.Bowler, opp: r.Opponent, n: 0 }); b.n++; });
+  var vic = {}; (CRICKET_DATA.opp_batting || []).filter(function(r) { return r.Bowler === player && r.Dismissal !== 'Run Out'; }).forEach(function(r) { var k = sdOppKey(r.BatterId, r.Batter, r.Opponent), v = vic[k] || (vic[k] = { name: r.Batter, opp: r.Opponent, n: 0 }); v.n++; });
+  var li = function(arr, fmt) { return arr.length ? '<ol class="sd-list">' + arr.map(fmt).join('') + '</ol>' : '<p class="sd-none">None yet</p>'; };
+  var tp = Object.keys(part).sort(function(a, b) { return part[b].runs - part[a].runs; }).slice(0, 3);
+  var tb = Object.values(bog).filter(function(b) { return b.n >= 2; }).sort(function(a, b) { return b.n - a.n; }).slice(0, 3);
+  var tv = Object.values(vic).filter(function(v) { return v.n >= 2; }).sort(function(a, b) { return b.n - a.n; }).slice(0, 3);
+  if (!tp.length && !tb.length && !tv.length) return;
+  var box = document.createElement('div'); box.id = 'profile-rivals'; box.className = 'table-card sd-rivals';
+  box.innerHTML = '<div class="table-header"><span class="table-title">Partners and rivals</span><span class="sd-sub">from full scorecards</span></div><div class="sd-three">' +
+    '<div><h4>Best partners</h4>' + li(tp, function(o) { return '<li>' + sdLink(o) + ' <span class="sd-sub">' + part[o].runs + ' runs in ' + part[o].n + ' stands</span></li>'; }) + '</div>' +
+    '<div><h4>Bogey bowlers</h4>' + li(tb, function(b) { return '<li><b>' + _esc(b.name) + '</b> <span class="sd-sub">' + _esc(b.opp) + ' \u00b7 out ' + b.n + ' times</span></li>'; }) + '</div>' +
+    '<div><h4>Favourite victims</h4>' + li(tv, function(v) { return '<li><b>' + _esc(v.name) + '</b> <span class="sd-sub">' + _esc(v.opp) + ' \u00b7 ' + v.n + ' times</span></li>'; }) + '</div></div>';
+  host.appendChild(box);
+}
+var _renderProfileBase = renderProfile;
+renderProfile = function() {
+  _renderProfileBase.apply(this, arguments);
+  var t = _profileToken, player = (document.getElementById('profileSelect') || {}).value;
+  setTimeout(function() { if (t === _profileToken) addProfileRivals(player); }, 150);
+};
 
 // ============================================================
 // FORM GUIDE
