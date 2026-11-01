@@ -29,6 +29,7 @@ def sandbox():
     for d in ("docs", "pipeline", "tests"):
         shutil.copytree(os.path.join(REPO, d), os.path.join(tmp, d), ignore=shutil.ignore_patterns("state.json", "last_report.md", "__pycache__"))
     shutil.copy(BASELINE, os.path.join(tmp, "docs", "data.json"))
+    json.dump({"tables": {}}, open(os.path.join(tmp, "docs", "league.json"), "w"))   # tests start with no league tables
     return tmp
 
 

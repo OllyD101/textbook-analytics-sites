@@ -29,7 +29,14 @@ def load_md(tmp, mid):
 
 
 def save_md(tmp, mid, obj):
+    """Save an edited scorecard and bump its last-updated date, as Play-Cricket does when a scorecard changes."""
     json.dump(obj, open(fx_path(tmp, f"match_{mid}.json"), "w"))
+    for season in [f[8:12] for f in os.listdir(fx_path(tmp)) if f.startswith("matches_")]:
+        lp = fx_path(tmp, f"matches_{season}.json"); lst = json.load(open(lp))
+        for m in lst["matches"]:
+            if str(m["id"]) == str(mid):
+                m["last_updated"] = (m.get("last_updated") or "") + "+"
+        json.dump(lst, open(lp, "w"))
 
 
 def hessle_bat(md, site_names):

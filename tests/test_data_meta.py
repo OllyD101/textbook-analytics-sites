@@ -28,6 +28,8 @@ def test_stamp_moves_only_when_data_changes():
     tmp = sandbox(); before = meta(tmp)
     run(tmp, "dry_run", "2027-05-01T18:00:00Z")
     assert meta(tmp) == before, "a dry run must not touch the stamp"
+    run(tmp, "publish", "2027-05-01T18:20:00Z")   # the first publish may add full-scorecard detail
+    before = meta(tmp)
     run(tmp, "publish", "2027-05-01T18:30:00Z")
     first = meta(tmp)          # nothing new on Play-Cricket: data unchanged, stamp unchanged
     assert first == before, (first, before)
