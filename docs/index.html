@@ -811,6 +811,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 .sd-sub{font-size:0.75rem;color:var(--muted);}
 .sd-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:16px;}
 .sd-two>.table-card,.sd-rivals{margin-bottom:16px;}
+.sd-rivals{margin-top:16px;}
 .sd-none{color:var(--muted);font-size:0.85rem;padding:12px 4px;}
 .sd-bar{display:inline-block;height:7px;border-radius:4px;background:var(--accent2);vertical-align:middle;opacity:.8;max-width:120px;}
 .sd-three{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;padding:14px 18px 6px;}
@@ -818,6 +819,68 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 .sd-list{margin:0 0 10px;padding-left:18px;font-size:0.86rem;line-height:1.7;}
 #bat-partners-content a,#bat-dismissals-content a,#bowl-victims-content a,#opp-players-content a,.sd-rivals a{color:var(--text);text-decoration:none;border-bottom:1px dotted var(--muted);}
 #bat-partners-content a:hover,#bat-dismissals-content a:hover,#bowl-victims-content a:hover,#opp-players-content a:hover,.sd-rivals a:hover{color:var(--accent2);border-bottom-color:var(--accent2);}
+.sd-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:16px;}
+.sd-tile{background:linear-gradient(160deg,var(--surface2),var(--surface));border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.sd-tile-v{font-size:1.7rem;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--text);}
+.sd-tile-l{font-size:0.82rem;font-weight:600;color:var(--accent2);margin-top:4px;}
+.sd-tile-c{font-size:0.78rem;color:var(--muted);margin-top:4px;line-height:1.45;}
+.sd-chip{background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:16px;padding:5px 12px;font:inherit;font-size:0.78rem;cursor:pointer;}
+.sd-chip.on{background:color-mix(in srgb,var(--accent) 20%,var(--surface2));border-color:var(--accent);color:var(--text);}
+.sd-chip:focus-visible,.sd-click:focus-visible{outline:2px solid var(--accent2);outline-offset:2px;}
+.sd-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+.sd-panel-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.sd-panel-h h3{font-size:0.95rem;font-weight:700;}
+.sd-two-wide{grid-template-columns:minmax(0,1.6fr) minmax(260px,1fr);}
+.sd-row{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(90px,38%);gap:10px;align-items:center;padding:7px 4px;border-top:1px solid color-mix(in srgb,var(--border) 60%,transparent);border-radius:6px;}
+.sd-row:first-of-type{border-top:0;}
+.sd-row:not(:has(.sd-badge)){grid-template-columns:minmax(0,1fr) minmax(90px,38%);}
+.sd-click{cursor:pointer;} .sd-row.sd-click:hover,.sd-rec:hover{background:var(--surface2);}
+.sd-badge{font-size:0.72rem;font-weight:700;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:2px 6px;min-width:34px;text-align:center;}
+.sd-row-t{font-size:0.88rem;line-height:1.3;display:block;}
+.sd-row-s{font-size:0.74rem;color:var(--muted);display:block;margin-top:2px;}
+.sd-amp{color:var(--muted);}
+.sd-track{position:relative;height:24px;background:var(--surface2);border-radius:6px;overflow:hidden;}
+.sd-fill{position:absolute;top:0;bottom:0;left:0;border-radius:6px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent2) 30%,transparent),color-mix(in srgb,var(--accent2) 65%,transparent));}
+.sd-fill.warm{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 30%,transparent),color-mix(in srgb,var(--accent) 70%,transparent));}
+.sd-fill.rest{background:color-mix(in srgb,var(--muted) 28%,transparent);border-radius:0 6px 6px 0;}
+.sd-stack .sd-fill:first-child{border-radius:6px 0 0 6px;}
+.sd-track b{position:relative;z-index:1;font-size:0.8rem;line-height:24px;padding-left:8px;font-variant-numeric:tabular-nums;}
+.sd-dot{display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--accent2);vertical-align:0;margin:0 3px 0 6px;} .sd-dot.rest{background:var(--muted);opacity:.5;}
+.sd-pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;}
+.sd-pair{position:relative;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.sd-pair-rank{position:absolute;top:10px;right:12px;font-weight:700;color:var(--muted);font-size:0.8rem;}
+.sd-pair-names{font-size:0.9rem;font-weight:600;padding-right:22px;margin-bottom:10px;}
+.sd-pair-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.sd-pair-stats b{display:block;font-size:1.05rem;font-variant-numeric:tabular-nums;}
+.sd-pair-stats span{font-size:0.7rem;color:var(--muted);}
+.sd-pair-foot{font-size:0.74rem;color:var(--muted);margin-top:8px;}
+.sd-foes{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;}
+.sd-foe{display:flex;gap:12px;align-items:flex-start;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;}
+.sd-foe.hot{border-color:color-mix(in srgb,var(--accent) 60%,var(--border));}
+.sd-foe-n{font-size:1.45rem;font-weight:700;line-height:1;min-width:42px;text-align:center;font-variant-numeric:tabular-nums;}
+.sd-foe-n small{display:block;font-size:0.65rem;font-weight:500;color:var(--muted);margin-top:3px;}
+.sd-foe-main{min-width:0;}
+.sd-foe-name{font-weight:600;font-size:0.9rem;}
+.sd-tag{display:inline-block;white-space:nowrap;font-size:0.65rem;font-weight:700;color:var(--accent2);border:1px solid var(--accent2);border-radius:8px;padding:0 6px;margin-left:4px;vertical-align:1px;}
+.sd-chips-s{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.sd-chips-s span{font-size:0.7rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1px 7px;color:var(--muted);}
+.sd-chips-s .sd-click:hover{color:var(--accent2);border-color:var(--accent2);}
+.sd-ring-wrap{display:flex;gap:20px;align-items:center;flex-wrap:wrap;padding:6px 2px;}
+.sd-ring{width:150px;height:150px;border-radius:50%;position:relative;flex-shrink:0;}
+.sd-ring span{position:absolute;inset:24px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.6rem;font-weight:700;}
+.sd-ring span small{font-size:0.72rem;font-weight:500;color:var(--muted);}
+.sd-key{list-style:none;margin:0;padding:0;flex:1;min-width:150px;}
+.sd-key li{display:grid;grid-template-columns:14px 1fr auto 40px;gap:8px;align-items:center;font-size:0.85rem;padding:4px 0;}
+.sd-key i{width:12px;height:12px;border-radius:3px;} .sd-key b{font-variant-numeric:tabular-nums;} .sd-key span{color:var(--muted);text-align:right;font-size:0.78rem;}
+.sd-rec{display:flex;gap:14px;align-items:center;padding:8px 6px;border-top:1px solid color-mix(in srgb,var(--border) 60%,transparent);border-radius:6px;}
+.sd-rec:first-of-type{border-top:0;}
+.sd-rec>b{font-size:1.15rem;min-width:58px;font-variant-numeric:tabular-nums;}
+.sd-rv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;}
+.sd-rv-col h4{font-size:0.85rem;font-weight:700;margin-bottom:8px;}
+.sd-rv{display:flex;gap:12px;align-items:center;padding:7px 0;border-top:1px solid color-mix(in srgb,var(--border) 60%,transparent);}
+.sd-rv:first-of-type{border-top:0;}
+.sd-rv-n{min-width:46px;font-weight:700;font-size:1.05rem;color:var(--accent2);font-variant-numeric:tabular-nums;}
+@media(max-width:700px){.sd-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}.sd-tile{padding:10px 12px;}.sd-tile-c{font-size:0.72rem;}.sd-two-wide{grid-template-columns:1fr;}.sd-row{grid-template-columns:auto minmax(0,1fr);}.sd-row .sd-track{grid-column:1/-1;}.sd-row:not(:has(.sd-badge)) .sd-track{grid-column:1/-1;}.sd-tile-v{font-size:1.4rem;}.sd-ring{width:120px;height:120px;}.sd-ring span{inset:20px;font-size:1.3rem;}}
 </style>
 </head>
 <body>
@@ -4576,36 +4639,76 @@ function sdTable(id, head, rows, empty) {
 function sdCard(title, sub, inner) { return '<div class="table-card"><div class="table-header"><span class="table-title">' + title + '</span>' + (sub ? '<span class="sd-sub">' + sub + '</span>' : '') + '</div>' + inner + '</div>'; }
 function sdOpts(names, sel, allLabel) { return '<option value="">' + allLabel + '</option>' + names.map(function(n) { return '<option' + (n === sel ? ' selected' : '') + '>' + _esc(n) + '</option>'; }).join(''); }
 
+// ---------- shared pieces for the scorecard views
+var SD_HOW_COL = { 'Caught': 'var(--accent2)', 'Ct & B': 'var(--blue)', 'Bowled': 'var(--accent)', 'LBW': 'var(--green)', 'Stumped': 'var(--gold)', 'Run Out': '#b58cf0', 'Hit Wicket': '#e3b341' };
+var SD = { current: { partners: false, dismissals: false, victims: false }, topOnly: false };
+function sdCurrent() {   // players who appeared in the most recent season on record
+  if (SD._cur) return SD._cur;
+  var y = CRICKET_DATA.matches.reduce(function(a, m) { return m.Date.slice(0, 4) > a ? m.Date.slice(0, 4) : a; }, '');
+  SD._cur = new Set(); SD._curYear = y;
+  CRICKET_DATA.batting.concat(CRICKET_DATA.bowling).forEach(function(r) { if (r.Date.slice(0, 4) === y) SD._cur.add(r.Batter || r.Bowler); });
+  return SD._cur;
+}
+function sdTiles(list) {   // headline tiles: [value, label, context]
+  return '<div class="sd-tiles">' + list.filter(Boolean).map(function(t) { return '<div class="sd-tile"><div class="sd-tile-v">' + t[0] + '</div><div class="sd-tile-l">' + t[1] + '</div>' + (t[2] ? '<div class="sd-tile-c">' + t[2] + '</div>' : '') + '</div>'; }).join('') + '</div>';
+}
+function sdChip(view, label, on, fn) { return '<button type="button" class="sd-chip' + (on ? ' on' : '') + '" aria-pressed="' + (on ? 'true' : 'false') + '" onclick="' + fn + '">' + label + '</button>'; }
+function sdBarRow(opts) {   // a row with a bar; opts: badge, title, sub, value, max, label, game (row opens its scorecard)
+  var w = opts.max > 0 ? Math.max(3, Math.round(100 * opts.value / opts.max)) : 0;
+  var click = opts.game ? ' role="button" tabindex="0" title="Open the scorecard" onclick="openMatchDetail(\'' + opts.game.Date + '\',' + _esc(JSON.stringify(opts.game.Opponent)) + ',\'' + opts.game.Team + '\')" onkeydown="if(event.key===\'Enter\')this.click()"' : '';
+  return '<div class="sd-row' + (opts.game ? ' sd-click' : '') + '"' + click + '>' + (opts.badge !== undefined ? '<span class="sd-badge">' + opts.badge + '</span>' : '') +
+    '<div class="sd-row-main"><div class="sd-row-t">' + opts.title + '</div>' + (opts.sub ? '<div class="sd-row-s">' + opts.sub + '</div>' : '') + '</div>' +
+    '<div class="sd-track"><span class="sd-fill' + (opts.cls ? ' ' + opts.cls : '') + '" style="width:' + w + '%"></span><b>' + opts.label + '</b></div></div>';
+}
+function sdPanel(title, sub, inner, extra) { return '<section class="sd-panel' + (extra ? ' ' + extra : '') + '"><div class="sd-panel-h"><h3>' + title + '</h3>' + (sub ? '<span class="sd-sub">' + sub + '</span>' : '') + '</div>' + inner + '</section>'; }
+function sdRing(counts, total) {   // a ring chart of how dismissals came, with its key
+  var keys = Object.keys(counts).sort(function(a, b) { return counts[b] - counts[a]; }), acc = 0;
+  var stops = keys.map(function(k) { var from = acc; acc += 100 * counts[k] / total; return (SD_HOW_COL[k] || 'var(--purple)') + ' ' + from.toFixed(2) + '% ' + acc.toFixed(2) + '%'; });
+  return '<div class="sd-ring-wrap"><div class="sd-ring" style="background:conic-gradient(' + stops.join(',') + ')" role="img" aria-label="' + keys.map(function(k) { return k + ' ' + Math.round(100 * counts[k] / total) + '%'; }).join(', ') + '"><span>' + total + '<small>out</small></span></div>' +
+    '<ul class="sd-key">' + keys.map(function(k) { return '<li><i style="background:' + (SD_HOW_COL[k] || 'var(--purple)') + '"></i>' + _esc(k) + '<b>' + counts[k] + '</b><span>' + Math.round(100 * counts[k] / total) + '%</span></li>'; }).join('') + '</ul></div>';
+}
+function sdGame(r) { return _shortDate(r.Date) + ' \u00b7 ' + r.Team + ' XI v ' + _esc(r.Opponent); }
+function sdNamesLink(a, b) { return sdLink(a) + ' <span class="sd-amp">&amp;</span> ' + sdLink(b); }
+
 // ---------- Batting → Partnerships
 function renderBatPartnerships() {
   var el = document.getElementById('bat-partners-content'); if (!el) return;
   if (!sdHasDetail()) { el.innerHTML = SD_EMPTY; return; }
-  var q = (document.getElementById('bpSearch') || {}).value || '';
+  var q = (document.getElementById('bpSearch') || {}).value || '', cur = sdCurrent(), onlyCur = SD.current.partners;
   var ps = sdRows('partnerships').filter(function(r) { return !NOT_PLAYERS.has(r.Batter1) && !NOT_PLAYERS.has(r.Batter2); });
-  var mine = q ? ps.filter(function(r) { return (r.Batter1 + ' ' + r.Batter2).toLowerCase().indexOf(q.toLowerCase()) >= 0; }) : ps;
+  if (onlyCur) ps = ps.filter(function(r) { return cur.has(r.Batter1) && cur.has(r.Batter2); });
+  if (q) ps = ps.filter(function(r) { return (r.Batter1 + ' ' + r.Batter2).toLowerCase().indexOf(q.toLowerCase()) >= 0; });
   var stand = function(r) { return r.Runs + (r.Unbroken ? '*' : ''); };
-  var byW = [];
-  for (var w = 1; w <= 10; w++) {
-    var best = mine.filter(function(r) { return r.Wicket === w; }).sort(function(a, b) { return b.Runs - a.Runs; })[0];
-    if (best) byW.push('<tr><td>' + w + sdOrd(w) + '</td><td><b>' + stand(best) + '</b></td><td>' + sdLink(best.Batter1) + ' & ' + sdLink(best.Batter2) + '</td><td>' + sdWhen(best) + '</td></tr>');
-  }
-  var top = mine.slice().sort(function(a, b) { return b.Runs - a.Runs; }).slice(0, 15).map(function(r) {
-    return '<tr><td><b>' + stand(r) + '</b></td><td>' + r.Wicket + sdOrd(r.Wicket) + '</td><td>' + sdLink(r.Batter1) + ' & ' + sdLink(r.Batter2) + '</td><td>' + sdWhen(r) + '</td></tr>';
-  });
   var pairs = {};
-  mine.forEach(function(r) {
+  ps.forEach(function(r) {
     var k = sdPair(r.Batter1, r.Batter2), p = pairs[k] || (pairs[k] = { k: k, n: 0, runs: 0, outs: 0, best: null, fifty: 0, hundred: 0 });
     p.n++; p.runs += r.Runs; p.outs += r.Unbroken ? 0 : 1; if (r.Runs >= 50) p.fifty++; if (r.Runs >= 100) p.hundred++;
     if (!p.best || r.Runs > p.best.Runs) p.best = r;
   });
-  var pr = Object.values(pairs).filter(function(p) { return p.n >= 3; }).sort(function(a, b) { return b.runs - a.runs; }).slice(0, 20).map(function(p) {
-    var names = p.k.split(' & ');
-    return '<tr><td>' + sdLink(names[0]) + ' & ' + sdLink(names[1]) + '</td><td>' + p.n + '</td><td><b>' + p.runs + '</b></td><td>' + (p.outs ? (p.runs / p.outs).toFixed(1) : '\u2013') + '</td><td>' + p.best.Runs + (p.best.Unbroken ? '*' : '') + '</td><td>' + p.fifty + '</td><td>' + p.hundred + '</td></tr>';
-  });
-  el.innerHTML = '<div class="sd-tools"><input id="bpSearch" class="search-box" placeholder="Find a player\u2019s partnerships" value="' + _esc(q) + '" oninput="renderBatPartnerships()"></div>' +
-    '<div class="sd-two">' + sdCard('Record stand for each wicket', '* not out', sdTable('tblBpWkt', ['Wicket', 'Runs', 'Pair', 'Game'], byW)) +
-    sdCard('Highest partnerships', mine.length + ' partnerships', sdTable('tblBpTop', ['Runs', 'Wicket', 'Pair', 'Game'], top)) + '</div>' +
-    sdCard('Best pairs', 'at least 3 partnerships together · average = runs per completed stand', sdTable('tblBpPairs', ['Pair', 'Stands', 'Runs', 'Average', 'Best', '50+', '100+'], pr, 'No pair has batted together three times in this scope.'));
+  var plist = Object.values(pairs), best = ps.slice().sort(function(a, b) { return b.Runs - a.Runs; });
+  var topPair = plist.slice().sort(function(a, b) { return b.runs - a.runs; })[0];
+  var hundreds = ps.filter(function(r) { return r.Runs >= 100; }).length, fifties = ps.filter(function(r) { return r.Runs >= 50; }).length;
+  var tiles = sdTiles([
+    best[0] && [stand(best[0]), 'Record partnership', sdNamesLink(best[0].Batter1, best[0].Batter2) + '<br>' + sdGame(best[0])],
+    topPair && [topPair.runs, 'Most runs together', sdNamesLink.apply(null, topPair.k.split(' & ')) + ' \u00b7 ' + topPair.n + ' stands'],
+    [fifties, '50+ partnerships', hundreds + ' of them 100+'],
+    [ps.length, 'Partnerships', ps.length ? 'average ' + (ps.reduce(function(a, r) { return a + r.Runs; }, 0) / ps.length).toFixed(1) + ' runs' : '']
+  ]);
+  var ladder = [], maxW = 0;
+  for (var w = 1; w <= 10; w++) { var bw = ps.filter(function(r) { return r.Wicket === w; }).sort(function(a, b) { return b.Runs - a.Runs; })[0]; if (bw) { ladder.push(bw); maxW = Math.max(maxW, bw.Runs); } }
+  var ladderHtml = ladder.map(function(r) { return sdBarRow({ badge: r.Wicket + sdOrd(r.Wicket), title: sdNamesLink(r.Batter1, r.Batter2), sub: sdGame(r), value: r.Runs, max: maxW, label: stand(r), game: r }); }).join('');
+  var topHtml = best.slice(0, 12).map(function(r) { return sdBarRow({ badge: r.Wicket + sdOrd(r.Wicket), title: sdNamesLink(r.Batter1, r.Batter2), sub: sdGame(r), value: r.Runs, max: best[0].Runs, label: stand(r), game: r, cls: 'warm' }); }).join('');
+  var pairCards = plist.filter(function(p) { return p.n >= 3; }).sort(function(a, b) { return b.runs - a.runs; }).slice(0, 12).map(function(p, i) {
+    var nm = p.k.split(' & '), avg = p.outs ? p.runs / p.outs : p.runs;
+    return '<div class="sd-pair"><div class="sd-pair-rank">' + (i + 1) + '</div><div class="sd-pair-names">' + sdNamesLink(nm[0], nm[1]) + '</div>' +
+      '<div class="sd-pair-stats"><div><b>' + p.runs + '</b><span>runs</span></div><div><b>' + p.n + '</b><span>stands</span></div><div><b>' + avg.toFixed(1) + '</b><span>average</span></div><div><b>' + p.best.Runs + (p.best.Unbroken ? '*' : '') + '</b><span>best</span></div></div>' +
+      '<div class="sd-pair-foot">' + (p.hundred ? p.hundred + '\u00d7 100+ \u00b7 ' : '') + p.fifty + '\u00d7 50+</div></div>';
+  }).join('');
+  el.innerHTML = '<div class="sd-tools"><input id="bpSearch" class="search-box" placeholder="Find a player\u2019s partnerships" value="' + _esc(q) + '" oninput="renderBatPartnerships()">' +
+    sdChip('partners', 'Current players only', onlyCur, 'SD.current.partners=!SD.current.partners;renderBatPartnerships()') + '<span class="sd-sub">Tap a partnership to open its scorecard · * not out</span></div>' + tiles +
+    (ps.length ? '<div class="sd-two">' + sdPanel('Record stand for each wicket', '', ladderHtml) + sdPanel('Highest partnerships', 'top 12', topHtml) + '</div>' +
+      sdPanel('Best pairs', 'at least 3 partnerships together · average = runs per completed stand', pairCards ? '<div class="sd-pairs">' + pairCards + '</div>' : '<p class="sd-none">No pair has batted together three times here.</p>')
+      : '<p class="sd-none">No partnerships match.</p>');
   var inp = document.getElementById('bpSearch'); if (q && inp) { inp.focus(); inp.setSelectionRange(q.length, q.length); }
 }
 
@@ -4613,63 +4716,96 @@ function renderBatPartnerships() {
 function renderBatDismissals() {
   var el = document.getElementById('bat-dismissals-content'); if (!el) return;
   if (!sdHasDetail()) { el.innerHTML = SD_EMPTY; return; }
-  var who = (document.getElementById('bdWho') || {}).value || '';
-  var ds = sdRows('dismissals').filter(function(r) { return !NOT_PLAYERS.has(r.Batter); });
-  var batters = [...new Set(ds.map(function(r) { return r.Batter; }))].sort();
-  var mine = who ? ds.filter(function(r) { return r.Batter === who; }) : ds;
+  var who = (document.getElementById('bdWho') || {}).value || '', cur = sdCurrent(), onlyCur = SD.current.dismissals;
+  var all = sdRows('dismissals').filter(function(r) { return !NOT_PLAYERS.has(r.Batter); });
+  var pool = onlyCur ? all.filter(function(r) { return cur.has(r.Batter); }) : all;
+  var batters = [...new Set(pool.map(function(r) { return r.Batter; }))].sort();
+  if (who && batters.indexOf(who) < 0) who = '';
+  var mine = who ? pool.filter(function(r) { return r.Batter === who; }) : pool;
   var bowl = {};
   mine.filter(function(r) { return r.Bowler; }).forEach(function(r) {
     var k = sdOppKey(r.BowlerId, r.Bowler, r.Opponent), b = bowl[k] || (bowl[k] = { name: r.Bowler, opp: r.Opponent, n: 0, victims: {}, last: r });
     b.n++; b.victims[r.Batter] = (b.victims[r.Batter] || 0) + 1; if (r.Date > b.last.Date) { b.last = r; b.name = r.Bowler; }
   });
-  var list = Object.values(bowl).filter(function(b) { return who ? b.n >= 2 : true; }).sort(function(a, b) { return b.n - a.n; }).slice(0, 20);
-  var rows = list.map(function(b) {
-    var vic = Object.keys(b.victims).sort(function(x, y) { return b.victims[y] - b.victims[x]; }).slice(0, 3).map(function(v) { return _esc(v) + (b.victims[v] > 1 ? ' \u00d7' + b.victims[v] : ''); }).join(', ');
-    return '<tr><td><b>' + _esc(b.name) + '</b></td><td>' + _esc(b.opp) + '</td><td><b>' + b.n + '</b></td>' + (who ? '' : '<td>' + vic + '</td>') + '<td>' + _shortDate(b.last.Date) + '</td></tr>';
-  });
+  var blist = Object.values(bowl).sort(function(a, b) { return b.n - a.n; });
   var how = {}; mine.forEach(function(r) { how[r.How] = (how[r.How] || 0) + 1; });
-  var tot = mine.length, howRows = Object.keys(how).sort(function(a, b) { return how[b] - how[a]; }).map(function(h) {
-    return '<tr><td>' + _esc(h) + '</td><td><b>' + how[h] + '</b></td><td><span class="sd-bar" style="width:' + Math.round(100 * how[h] / tot) + '%"></span> ' + Math.round(100 * how[h] / tot) + '%</td></tr>';
-  });
-  var keeperCt = mine.filter(function(r) { return r.How === 'Stumped'; }).length;
-  el.innerHTML = '<div class="sd-tools"><label class="sd-label">Batter <select id="bdWho" onchange="renderBatDismissals()">' + sdOpts(batters, who, 'All our batters') + '</select></label></div>' +
-    '<div class="sd-two">' + sdCard(who ? _esc(who) + '\u2019s bogey bowlers' : 'Opposition bowlers with the most Hessle wickets', who ? 'bowlers who have dismissed him twice or more' : 'from our batters\u2019 dismissals',
-      sdTable('tblBdBowl', who ? ['Bowler', 'Club', 'Times', 'Last'] : ['Bowler', 'Club', 'Wickets', 'Most often', 'Last'], rows, who ? 'No bowler has dismissed him more than once.' : undefined)) +
-    sdCard(who ? 'How ' + _esc(who) + ' gets out' : 'How our batters get out', tot + ' dismissals' + (keeperCt ? ' · ' + keeperCt + ' stumped' : ''), sdTable('tblBdHow', ['How', 'Times', 'Share'], howRows)) + '</div>';
+  var tot = mine.length, top = blist[0], clubs = {};
+  mine.filter(function(r) { return r.Bowler; }).forEach(function(r) { clubs[r.Opponent] = (clubs[r.Opponent] || 0) + 1; });
+  var topClub = Object.keys(clubs).sort(function(a, b) { return clubs[b] - clubs[a]; })[0];
+  var main = Object.keys(how).sort(function(a, b) { return how[b] - how[a]; })[0];
+  var tiles = sdTiles([
+    [tot, who ? 'Times ' + _esc(who.split(' ')[0]) + ' has been out' : 'Dismissals', who ? '' : batters.length + ' batters'],
+    main && [Math.round(100 * how[main] / tot) + '%', _esc(main), 'the most common way ' + (who ? 'he' : 'we') + ' get' + (who ? 's' : '') + ' out'],
+    top && [top.n, 'Most by one bowler', '<b>' + _esc(top.name) + '</b> \u00b7 ' + _esc(top.opp)],
+    topClub && [clubs[topClub], 'Most by one club', _esc(topClub)]
+  ]);
+  var show = blist.filter(function(b) { return who ? b.n >= 2 : true; }).slice(0, who ? 12 : 16);
+  var cards = show.map(function(b) {
+    var vic = Object.keys(b.victims).sort(function(x, y) { return b.victims[y] - b.victims[x]; });
+    return '<div class="sd-foe"><div class="sd-foe-n">' + b.n + '<small>' + (who ? 'times' : 'wickets') + '</small></div><div class="sd-foe-main"><div class="sd-foe-name">' + _esc(b.name) + '</div><div class="sd-sub">' + _esc(b.opp) + ' \u00b7 last ' + _shortDate(b.last.Date) + '</div>' +
+      (who ? '' : '<div class="sd-chips-s">' + vic.slice(0, 4).map(function(v) { return '<span>' + _esc(v) + (b.victims[v] > 1 ? ' \u00d7' + b.victims[v] : '') + '</span>'; }).join('') + (vic.length > 4 ? '<span>+' + (vic.length - 4) + '</span>' : '') + '</div>') + '</div></div>';
+  }).join('');
+  el.innerHTML = '<div class="sd-tools"><label class="sd-label">Batter <select id="bdWho" onchange="renderBatDismissals()">' + sdOpts(batters, who, 'All our batters') + '</select></label>' +
+    sdChip('dismissals', 'Current players only', onlyCur, 'SD.current.dismissals=!SD.current.dismissals;renderBatDismissals()') + '</div>' + tiles +
+    (tot ? '<div class="sd-two">' + sdPanel(who ? _esc(who) + '\u2019s bogey bowlers' : 'Who gets us out', who ? 'bowlers who have dismissed him twice or more' : 'opposition bowlers with the most Hessle wickets',
+        cards ? '<div class="sd-foes">' + cards + '</div>' : '<p class="sd-none">No bowler has dismissed him more than once.</p>') +
+      sdPanel(who ? 'How ' + _esc(who) + ' gets out' : 'How we get out', '', sdRing(how, tot)) + '</div>' : '<p class="sd-none">No dismissals here.</p>');
 }
 
 // ---------- Bowling → Wickets & victims
 function renderBowlVictims() {
   var el = document.getElementById('bowl-victims-content'); if (!el) return;
   if (!sdHasDetail()) { el.innerHTML = SD_EMPTY; return; }
-  var who = (document.getElementById('bvWho') || {}).value || '';
+  var who = (document.getElementById('bvWho') || {}).value || '', cur = sdCurrent(), onlyCur = SD.current.victims, topOnly = SD.topOnly;
   var ob = sdRows('opp_batting').filter(function(r) { return r.Bowler && !NOT_PLAYERS.has(r.Bowler) && r.Dismissal !== 'Run Out'; });
-  var bowlers = [...new Set(ob.map(function(r) { return r.Bowler; }))].sort();
+  if (onlyCur) ob = ob.filter(function(r) { return cur.has(r.Bowler); });
   var top = function(r) { return typeof r.Pos === 'number' && r.Pos <= 4; };
+  var bowlers = [...new Set(ob.map(function(r) { return r.Bowler; }))].sort();
+  if (who && bowlers.indexOf(who) < 0) who = '';
+  var chips = sdChip('victims', 'Current players only', onlyCur, 'SD.current.victims=!SD.current.victims;renderBowlVictims()') + sdChip('victims', 'Top order only', topOnly, 'SD.topOnly=!SD.topOnly;renderBowlVictims()');
+  var picker = '<label class="sd-label">Bowler <select id="bvWho" onchange="renderBowlVictims()">' + sdOpts(bowlers, who, 'All our bowlers') + '</select></label>';
+  if (topOnly) ob = ob.filter(top);
   if (!who) {
     var by = {};
     ob.forEach(function(r) { var b = by[r.Bowler] || (by[r.Bowler] = { n: 0, top: 0, how: {} }); b.n++; if (top(r)) b.top++; b.how[r.Dismissal] = (b.how[r.Dismissal] || 0) + 1; });
-    var rows = Object.keys(by).filter(function(n) { return by[n].n >= 5; }).sort(function(a, b) { return by[b].top - by[a].top || by[b].n - by[a].n; }).slice(0, 25).map(function(n) {
-      var b = by[n], h = function(k) { return b.how[k] || 0; };
-      return '<tr><td>' + sdLink(n) + '</td><td><b>' + b.n + '</b></td><td><b>' + b.top + '</b></td><td>' + Math.round(100 * b.top / b.n) + '%</td><td>' + h('Bowled') + '</td><td>' + h('LBW') + '</td><td>' + (h('Caught') + h('Ct & B')) + '</td><td>' + h('Stumped') + '</td></tr>';
-    });
-    el.innerHTML = '<div class="sd-tools"><label class="sd-label">Bowler <select id="bvWho" onchange="renderBowlVictims()">' + sdOpts(bowlers, '', 'All our bowlers') + '</select></label></div>' +
-      sdCard('Our bowlers\u2019 wickets', 'top order = batting 1\u20134 · at least 5 wickets · pick a bowler to see his victims', sdTable('tblBvAll', ['Bowler', 'Wickets', 'Top-order', 'Top-order %', 'Bowled', 'LBW', 'Caught', 'Stumped'], rows));
+    var names = Object.keys(by).filter(function(n) { return by[n].n >= 5; }).sort(function(a, b) { return by[b].n - by[a].n; });
+    var max = names.length ? by[names[0]].n : 1, mostTop = names.slice().sort(function(a, b) { return by[b].top - by[a].top; })[0];
+    var share = names.filter(function(n) { return by[n].n >= 15; }).sort(function(a, b) { return by[b].top / by[b].n - by[a].top / by[a].n; })[0];
+    var rows = names.slice(0, 20).map(function(n) {
+      var b = by[n], w1 = Math.max(2, Math.round(100 * b.top / max)), w2 = Math.round(100 * (b.n - b.top) / max);
+      return '<div class="sd-row"><div class="sd-row-main"><div class="sd-row-t">' + sdLink(n) + '</div><div class="sd-row-s">' + b.top + ' top order \u00b7 ' + (b.how.Bowled || 0) + ' bowled \u00b7 ' + (b.how.LBW || 0) + ' lbw \u00b7 ' + ((b.how.Caught || 0) + (b.how['Ct & B'] || 0)) + ' caught</div></div>' +
+        '<div class="sd-track sd-stack"><span class="sd-fill" style="width:' + w1 + '%"></span><span class="sd-fill rest" style="left:' + w1 + '%;width:' + w2 + '%"></span><b>' + b.n + '</b></div></div>';
+    }).join('');
+    el.innerHTML = '<div class="sd-tools">' + picker + chips + '</div>' + sdTiles([
+        names[0] && [by[names[0]].n, topOnly ? 'Most top-order wickets' : 'Most wickets', sdLink(names[0]) + (topOnly ? ' \u00b7 batting 1\u20134' : '')],
+        !topOnly && mostTop && [by[mostTop].top, 'Most top-order wickets', sdLink(mostTop) + ' \u00b7 batting 1\u20134'],
+        !topOnly && share && [Math.round(100 * by[share].top / by[share].n) + '%', 'Highest top-order share', sdLink(share) + ' \u00b7 at least 15 wickets'],
+        [ob.length, topOnly ? 'Top-order wickets' : 'Wickets', names.length + ' bowlers with 5+']
+      ]) + sdPanel('Our bowlers\u2019 wickets', '<i class="sd-dot"></i> top order (1\u20134) <i class="sd-dot rest"></i> the rest · pick a bowler for his victims', rows || '<p class="sd-none">No bowler with 5+ wickets here.</p>');
     return;
   }
-  var mine = ob.filter(function(r) { return r.Bowler === who; }), vic = {};
+  var mine = ob.filter(function(r) { return r.Bowler === who; }), vic = {}, how = {};
   mine.forEach(function(r) {
-    var k = sdOppKey(r.BatterId, r.Batter, r.Opponent), v = vic[k] || (vic[k] = { name: r.Batter, opp: r.Opponent, n: 0, top: 0, how: {}, runs: 0, last: r });
-    v.n++; v.runs += r.Runs || 0; if (top(r)) v.top++; v.how[r.Dismissal] = (v.how[r.Dismissal] || 0) + 1; if (r.Date > v.last.Date) { v.last = r; v.name = r.Batter; }
+    how[r.Dismissal] = (how[r.Dismissal] || 0) + 1;
+    var k = sdOppKey(r.BatterId, r.Batter, r.Opponent), v = vic[k] || (vic[k] = { name: r.Batter, opp: r.Opponent, n: 0, top: 0, how: {}, games: [], last: r });
+    v.n++; if (top(r)) v.top++; v.how[r.Dismissal] = (v.how[r.Dismissal] || 0) + 1; v.games.push(r); if (r.Date > v.last.Date) { v.last = r; v.name = r.Batter; }
   });
-  var list = Object.values(vic).sort(function(a, b) { return b.n - a.n || b.top - a.top; });
-  var repeat = list.filter(function(v) { return v.n >= 2; });
-  var row = function(v) { return '<tr><td><b>' + _esc(v.name) + '</b></td><td>' + _esc(v.opp) + '</td><td><b>' + v.n + '</b></td><td>' + Object.keys(v.how).map(function(h) { return _esc(h) + (v.how[h] > 1 ? ' \u00d7' + v.how[h] : ''); }).join(', ') + '</td><td>' + (v.top ? 'Yes' : '') + '</td><td>' + _shortDate(v.last.Date) + '</td></tr>'; };
-  var topN = mine.filter(top).length;
-  el.innerHTML = '<div class="sd-tools"><label class="sd-label">Bowler <select id="bvWho" onchange="renderBowlVictims()">' + sdOpts(bowlers, who, 'All our bowlers') + '</select></label>' +
-    '<span class="sd-sub">' + mine.length + ' wickets · ' + topN + ' top-order (' + (mine.length ? Math.round(100 * topN / mine.length) : 0) + '%) · ' + list.length + ' different batters</span></div>' +
-    (repeat.length ? sdCard('Repeat victims', 'batters he has dismissed more than once', sdTable('tblBvRep', ['Batter', 'Club', 'Times', 'How', 'Top order', 'Last'], repeat.slice(0, 15).map(row))) : '') +
-    sdCard('Every wicket', 'most recent first within each batter', sdTable('tblBvAllVic', ['Batter', 'Club', 'Times', 'How', 'Top order', 'Last'], list.slice(0, 60).map(row)));
+  var list = Object.values(vic).sort(function(a, b) { return b.n - a.n || b.top - a.top || b.last.Date.localeCompare(a.last.Date); });
+  var topN = mine.filter(top).length, rep = list.filter(function(v) { return v.n >= 2; });
+  var clubs = {}; mine.forEach(function(r) { clubs[r.Opponent] = (clubs[r.Opponent] || 0) + 1; });
+  var fav = Object.keys(clubs).sort(function(a, b) { return clubs[b] - clubs[a]; })[0];
+  var tile = function(v) {
+    return '<div class="sd-foe' + (v.n >= 2 ? ' hot' : '') + '"><div class="sd-foe-n">' + v.n + '<small>' + (v.n === 1 ? 'time' : 'times') + '</small></div><div class="sd-foe-main"><div class="sd-foe-name">' + _esc(v.name) + (v.top ? ' <span class="sd-tag">top order</span>' : '') + '</div>' +
+      '<div class="sd-sub">' + _esc(v.opp) + ' \u00b7 ' + Object.keys(v.how).map(function(h) { return _esc(h).toLowerCase() + (v.how[h] > 1 ? ' \u00d7' + v.how[h] : ''); }).join(', ') + '</div>' +
+      '<div class="sd-chips-s">' + v.games.slice(-4).map(function(g) { return '<span class="sd-click" role="button" tabindex="0" title="Open the scorecard" onclick="openMatchDetail(\'' + g.Date + '\',' + _esc(JSON.stringify(g.Opponent)) + ',\'' + g.Team + '\')">' + _shortDate(g.Date) + '</span>'; }).join('') + '</div></div></div>';
+  };
+  el.innerHTML = '<div class="sd-tools">' + picker + chips + '</div>' + sdTiles([
+      [mine.length, 'Wickets', list.length + ' different batters'],
+      [topN, 'Top-order wickets', mine.length ? Math.round(100 * topN / mine.length) + '% of his wickets' : ''],
+      [rep.length, 'Repeat victims', 'dismissed more than once'],
+      fav && [clubs[fav], 'Favourite opponent', _esc(fav)]
+    ]) + '<div class="sd-two sd-two-wide">' + sdPanel('Victims', 'repeat victims first · tap a date for the scorecard', list.length ? '<div class="sd-foes">' + list.slice(0, 40).map(tile).join('') + '</div>' : '<p class="sd-none">No wickets here.</p>') +
+    sdPanel('How his wickets came', '', mine.length ? sdRing(how, mine.length) : '') + '</div>';
 }
 
 // ---------- Opponents → Opposition players
@@ -4682,33 +4818,36 @@ function renderOppPlayers() {
   var sel = document.getElementById('opWho'), opp = sel && sel.value && opps.indexOf(sel.value) >= 0 ? sel.value : opps[0];
   var bat = {}, bwl = {};
   ob.filter(function(r) { return r.Opponent === opp; }).forEach(function(r) {
-    var k = sdOppKey(r.BatterId, r.Batter, r.Opponent), b = bat[k] || (bat[k] = { name: r.Batter, inns: 0, runs: 0, outs: 0, hs: 0, hsNo: false, fifty: 0, last: r.Date });
-    b.inns++; b.runs += r.Runs || 0; if (!/not out|retired/i.test(r.Dismissal || '')) b.outs++; if ((r.Runs || 0) > b.hs) { b.hs = r.Runs || 0; b.hsNo = /not out/i.test(r.Dismissal || ''); }
+    var k = sdOppKey(r.BatterId, r.Batter, r.Opponent), b = bat[k] || (bat[k] = { name: r.Batter, inns: 0, runs: 0, outs: 0, hs: null, fifty: 0, last: r.Date });
+    b.inns++; b.runs += r.Runs || 0; if (!/not out|retired/i.test(r.Dismissal || '')) b.outs++; if (!b.hs || (r.Runs || 0) > (b.hs.Runs || 0)) b.hs = r;
     if ((r.Runs || 0) >= 50) b.fifty++; if (r.Date > b.last) { b.last = r.Date; b.name = r.Batter; }
   });
   ow.filter(function(r) { return r.Opponent === opp; }).forEach(function(r) {
     var k = sdOppKey(r.BowlerId, r.Bowler, r.Opponent), b = bwl[k] || (bwl[k] = { name: r.Bowler, n: 0, balls: 0, runs: 0, w: 0, best: null, last: r.Date });
     b.n++; b.balls += oversToBalls(r.Overs || 0); b.runs += r.Runs || 0; b.w += r.Wickets || 0;
-    if (!b.best || (r.Wickets || 0) > b.best.Wickets || ((r.Wickets || 0) === b.best.Wickets && (r.Runs || 0) < b.best.Runs)) b.best = r;
+    if (!b.best || (r.Wickets || 0) > (b.best.Wickets || 0) || ((r.Wickets || 0) === (b.best.Wickets || 0) && (r.Runs || 0) < (b.best.Runs || 0))) b.best = r;
     if (r.Date > b.last) { b.last = r.Date; b.name = r.Bowler; }
   });
-  var batRows = Object.values(bat).sort(function(a, b) { return b.runs - a.runs; }).slice(0, 12).map(function(b) {
-    return '<tr><td><b>' + _esc(b.name) + '</b></td><td>' + b.inns + '</td><td><b>' + b.runs + '</b></td><td>' + (b.outs ? (b.runs / b.outs).toFixed(1) : '\u2013') + '</td><td>' + b.hs + (b.hsNo ? '*' : '') + '</td><td>' + b.fifty + '</td><td>' + b.last.slice(0, 4) + '</td></tr>';
-  });
-  var bowlRows = Object.values(bwl).sort(function(a, b) { return b.w - a.w || a.runs - b.runs; }).slice(0, 12).map(function(b) {
-    return '<tr><td><b>' + _esc(b.name) + '</b></td><td>' + b.n + '</td><td><b>' + b.w + '</b></td><td>' + (b.w ? (b.runs / b.w).toFixed(1) : '\u2013') + '</td><td>' + (b.balls ? (b.runs / (b.balls / 6)).toFixed(2) : '\u2013') + '</td><td>' + (b.best ? b.best.Wickets + '/' + b.best.Runs : '') + '</td><td>' + b.last.slice(0, 4) + '</td></tr>';
-  });
-  var hs = ob.filter(function(r) { return typeof r.Runs === 'number'; }).sort(function(a, b) { return b.Runs - a.Runs; }).slice(0, 10).map(function(r) {
-    return '<tr><td><b>' + r.Runs + (/not out/i.test(r.Dismissal || '') ? '*' : '') + '</b></td><td>' + _esc(r.Batter) + '</td><td>' + sdWhen(r) + '</td></tr>';
-  });
-  var bb = ow.filter(function(r) { return (r.Wickets || 0) > 0; }).sort(function(a, b) { return b.Wickets - a.Wickets || a.Runs - b.Runs; }).slice(0, 10).map(function(r) {
-    return '<tr><td><b>' + r.Wickets + '/' + r.Runs + '</b></td><td>' + _esc(r.Bowler) + '</td><td>' + sdWhen(r) + '</td></tr>';
-  });
+  var bl = Object.values(bat).sort(function(a, b) { return b.runs - a.runs; }), wl = Object.values(bwl).sort(function(a, b) { return b.w - a.w || a.runs - b.runs; });
+  var mxB = bl.length ? bl[0].runs : 1, mxW = wl.length ? wl[0].w : 1;
+  var nNo = function(r) { return (r.Runs || 0) + (/not out/i.test(r.Dismissal || '') ? '*' : ''); };
+  var batRows = bl.slice(0, 10).map(function(b) { return sdBarRow({ title: '<b>' + _esc(b.name) + '</b>', sub: b.inns + ' inns \u00b7 avg ' + (b.outs ? (b.runs / b.outs).toFixed(1) : '\u2013') + ' \u00b7 best ' + nNo(b.hs) + (b.fifty ? ' \u00b7 ' + b.fifty + '\u00d7 50' : '') + ' \u00b7 last ' + b.last.slice(0, 4), value: b.runs, max: mxB, label: b.runs, cls: 'warm' }); }).join('');
+  var bowlRows = wl.slice(0, 10).map(function(b) { return sdBarRow({ title: '<b>' + _esc(b.name) + '</b>', sub: b.n + ' games \u00b7 avg ' + (b.w ? (b.runs / b.w).toFixed(1) : '\u2013') + ' \u00b7 econ ' + (b.balls ? (b.runs / (b.balls / 6)).toFixed(2) : '\u2013') + ' \u00b7 best ' + (b.best ? (b.best.Wickets || 0) + '/' + (b.best.Runs || 0) : '') + ' \u00b7 last ' + b.last.slice(0, 4), value: b.w, max: mxW, label: b.w, cls: 'warm' }); }).join('');
+  var hs = ob.filter(function(r) { return typeof r.Runs === 'number'; }).sort(function(a, b) { return b.Runs - a.Runs; }).slice(0, 8);
+  var bb = ow.filter(function(r) { return (r.Wickets || 0) > 0; }).sort(function(a, b) { return b.Wickets - a.Wickets || (a.Runs || 0) - (b.Runs || 0); }).slice(0, 8);
+  var recRow = function(fig, name, r) { return '<div class="sd-rec sd-click" role="button" tabindex="0" title="Open the scorecard" onclick="openMatchDetail(\'' + r.Date + '\',' + _esc(JSON.stringify(r.Opponent)) + ',\'' + r.Team + '\')"><b>' + fig + '</b><span><span class="sd-row-t">' + _esc(name) + '</span><span class="sd-row-s">' + sdGame(r) + '</span></span></div>'; };
+  var gamesV = new Set(ob.filter(function(r) { return r.Opponent === opp; }).map(function(r) { return r.Date + r.Team; })).size;
   el.innerHTML = '<div class="sd-tools"><label class="sd-label">Opponent <select id="opWho" onchange="renderOppPlayers()">' + opps.map(function(o) { return '<option' + (o === opp ? ' selected' : '') + '>' + _esc(o) + '</option>'; }).join('') + '</select></label></div>' +
-    '<div class="sd-two">' + sdCard(_esc(opp) + '\u2019s batters against us', 'most runs', sdTable('tblOpBat', ['Batter', 'Inns', 'Runs', 'Avg', 'HS', '50s', 'Last'], batRows)) +
-    sdCard(_esc(opp) + '\u2019s bowlers against us', 'most wickets', sdTable('tblOpBowl', ['Bowler', 'Games', 'Wkts', 'Avg', 'Econ', 'Best', 'Last'], bowlRows)) + '</div>' +
-    '<div class="sd-two">' + sdCard('Highest scores against Hessle', 'all opponents', sdTable('tblOpHs', ['Runs', 'Batter', 'Game'], hs)) +
-    sdCard('Best bowling against Hessle', 'all opponents', sdTable('tblOpBb', ['Figures', 'Bowler', 'Game'], bb)) + '</div>';
+    sdTiles([
+      bl[0] && [bl[0].runs, 'Most runs against us', '<b>' + _esc(bl[0].name) + '</b> \u00b7 ' + bl[0].inns + ' innings'],
+      wl[0] && [wl[0].w, 'Most wickets against us', '<b>' + _esc(wl[0].name) + '</b> \u00b7 ' + wl[0].n + ' games'],
+      bl.length && [bl.reduce(function(a, b) { return a + b.fifty; }, 0), 'Fifties against us', 'by ' + _esc(opp) + ' players'],
+      [gamesV, 'Games with full scorecards', 'against ' + _esc(opp)]
+    ]) +
+    '<div class="sd-two">' + sdPanel(_esc(opp) + '\u2019s danger batters', 'most runs against Hessle', batRows || '<p class="sd-none">No batting recorded.</p>') +
+    sdPanel(_esc(opp) + '\u2019s danger bowlers', 'most wickets against Hessle', bowlRows || '<p class="sd-none">No bowling recorded.</p>') + '</div>' +
+    '<div class="sd-two">' + sdPanel('Highest scores against Hessle', 'any club · tap for the scorecard', hs.map(function(r) { return recRow(nNo(r), r.Batter, r); }).join('')) +
+    sdPanel('Best bowling against Hessle', 'any club · tap for the scorecard', bb.map(function(r) { return recRow((r.Wickets || 0) + '/' + (r.Runs || 0), r.Bowler, r); }).join('')) + '</div>';
 }
 
 // ---------- Player profile: partners and rivals
@@ -4716,19 +4855,20 @@ function addProfileRivals(player) {
   var host = document.getElementById('profile-content'); if (!host || !player || !sdHasDetail()) return;
   var old = document.getElementById('profile-rivals'); if (old) old.remove();
   var ps = (CRICKET_DATA.partnerships || []).filter(function(r) { return r.Batter1 === player || r.Batter2 === player; });
-  var part = {}; ps.forEach(function(r) { var o = r.Batter1 === player ? r.Batter2 : r.Batter1; if (NOT_PLAYERS.has(o)) return; var p = part[o] || (part[o] = { n: 0, runs: 0 }); p.n++; p.runs += r.Runs; });
+  var part = {}; ps.forEach(function(r) { var o = r.Batter1 === player ? r.Batter2 : r.Batter1; if (NOT_PLAYERS.has(o)) return; var p = part[o] || (part[o] = { n: 0, runs: 0, best: 0 }); p.n++; p.runs += r.Runs; p.best = Math.max(p.best, r.Runs); });
   var bog = {}; (CRICKET_DATA.dismissals || []).filter(function(r) { return r.Batter === player && r.Bowler; }).forEach(function(r) { var k = sdOppKey(r.BowlerId, r.Bowler, r.Opponent), b = bog[k] || (bog[k] = { name: r.Bowler, opp: r.Opponent, n: 0 }); b.n++; });
   var vic = {}; (CRICKET_DATA.opp_batting || []).filter(function(r) { return r.Bowler === player && r.Dismissal !== 'Run Out'; }).forEach(function(r) { var k = sdOppKey(r.BatterId, r.Batter, r.Opponent), v = vic[k] || (vic[k] = { name: r.Batter, opp: r.Opponent, n: 0 }); v.n++; });
-  var li = function(arr, fmt) { return arr.length ? '<ol class="sd-list">' + arr.map(fmt).join('') + '</ol>' : '<p class="sd-none">None yet</p>'; };
   var tp = Object.keys(part).sort(function(a, b) { return part[b].runs - part[a].runs; }).slice(0, 3);
   var tb = Object.values(bog).filter(function(b) { return b.n >= 2; }).sort(function(a, b) { return b.n - a.n; }).slice(0, 3);
   var tv = Object.values(vic).filter(function(v) { return v.n >= 2; }).sort(function(a, b) { return b.n - a.n; }).slice(0, 3);
   if (!tp.length && !tb.length && !tv.length) return;
-  var box = document.createElement('div'); box.id = 'profile-rivals'; box.className = 'table-card sd-rivals';
-  box.innerHTML = '<div class="table-header"><span class="table-title">Partners and rivals</span><span class="sd-sub">from full scorecards</span></div><div class="sd-three">' +
-    '<div><h4>Best partners</h4>' + li(tp, function(o) { return '<li>' + sdLink(o) + ' <span class="sd-sub">' + part[o].runs + ' runs in ' + part[o].n + ' stands</span></li>'; }) + '</div>' +
-    '<div><h4>Bogey bowlers</h4>' + li(tb, function(b) { return '<li><b>' + _esc(b.name) + '</b> <span class="sd-sub">' + _esc(b.opp) + ' \u00b7 out ' + b.n + ' times</span></li>'; }) + '</div>' +
-    '<div><h4>Favourite victims</h4>' + li(tv, function(v) { return '<li><b>' + _esc(v.name) + '</b> <span class="sd-sub">' + _esc(v.opp) + ' \u00b7 ' + v.n + ' times</span></li>'; }) + '</div></div>';
+  var col = function(title, icon, items) { return '<div class="sd-rv-col"><h4><span aria-hidden="true">' + icon + '</span> ' + title + '</h4>' + (items.length ? items.join('') : '<p class="sd-none">None yet</p>') + '</div>'; };
+  var item = function(n, main, sub) { return '<div class="sd-rv"><span class="sd-rv-n">' + n + '</span><span><span class="sd-row-t">' + main + '</span><span class="sd-row-s">' + sub + '</span></span></div>'; };
+  var box = document.createElement('div'); box.id = 'profile-rivals'; box.className = 'sd-panel sd-rivals';
+  box.innerHTML = '<div class="sd-panel-h"><h3>Partners and rivals</h3><span class="sd-sub">from full scorecards</span></div><div class="sd-rv-grid">' +
+    col('Best partners', '\ud83e\udd1d', tp.map(function(o) { return item(part[o].runs, sdLink(o), part[o].n + ' stands \u00b7 best ' + part[o].best); })) +
+    col('Bogey bowlers', '\ud83d\ude2c', tb.map(function(b) { return item(b.n + '\u00d7', '<b>' + _esc(b.name) + '</b>', _esc(b.opp)); })) +
+    col('Favourite victims', '\ud83c\udfaf', tv.map(function(v) { return item(v.n + '\u00d7', '<b>' + _esc(v.name) + '</b>', _esc(v.opp)); })) + '</div>';
   host.appendChild(box);
 }
 var _renderProfileBase = renderProfile;
