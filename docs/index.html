@@ -479,7 +479,7 @@ button[onclick*="shareMilestoneCard"]:hover,button[onclick*="shareSeasonAward"]:
 /* Chart titles you can read at a glance, with a tag and coloured strip showing what each chart is about */
 .chart-title{font-size:0.95rem !important;font-weight:700;color:var(--text) !important;text-transform:none !important;letter-spacing:0 !important;
   display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;line-height:1.3;}
-.chart-chip{flex-shrink:0;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;padding:3px 8px;border-radius:999px;}
+.chart-chip{display:none !important;flex-shrink:0;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;padding:3px 8px;border-radius:999px;}
 .chart-card[data-chart-role], .profile-chart-card[data-chart-role]{border-top-width:3px;}
 [data-chart-role="batting"]{border-top-color:#d63a46 !important;} [data-chart-role="batting"] .chart-chip{background:rgba(214,58,70,0.18);color:#f08a92;}
 [data-chart-role="bowling"]{border-top-color:#3d7fe0 !important;} [data-chart-role="bowling"] .chart-chip{background:rgba(61,127,224,0.18);color:#8db8f2;}
@@ -881,6 +881,49 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 .sd-rv:first-of-type{border-top:0;}
 .sd-rv-n{min-width:46px;font-weight:700;font-size:1.05rem;color:var(--accent2);font-variant-numeric:tabular-nums;}
 @media(max-width:700px){.sd-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}.sd-tile{padding:10px 12px;}.sd-tile-c{font-size:0.72rem;}.sd-two-wide{grid-template-columns:1fr;}.sd-row{grid-template-columns:auto minmax(0,1fr);}.sd-row .sd-track{grid-column:1/-1;}.sd-row:not(:has(.sd-badge)) .sd-track{grid-column:1/-1;}.sd-tile-v{font-size:1.4rem;}.sd-ring{width:120px;height:120px;}.sd-ring span{inset:20px;font-size:1.3rem;}}
+.sd-cmp{font-size:0.72rem;font-weight:700;padding:0 5px;border-radius:5px;white-space:nowrap;color:var(--muted);background:var(--surface2);}
+.sd-cmp.up{color:var(--green);background:color-mix(in srgb,var(--green) 13%,transparent);} .sd-cmp.down{color:var(--red);background:color-mix(in srgb,var(--red) 13%,transparent);}
+.sd-h2h{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:0.74rem;color:var(--muted);margin-top:5px;} .sd-h2h b{color:var(--text);}
+.sd-note{font-size:0.74rem;color:var(--muted);margin:8px 0 0;}
+.sd-wk-head,.sd-wk{display:grid;grid-template-columns:44px minmax(0,1fr) 92px minmax(120px,0.9fr);gap:10px;align-items:center;}
+.sd-wk-head{font-size:0.7rem;color:var(--muted);padding:0 0 4px;} .sd-wk{padding:6px 0;border-top:1px solid color-mix(in srgb,var(--border) 60%,transparent);}
+.sd-tick{position:absolute;top:3px;bottom:3px;width:3px;margin-left:-1px;background:var(--text);border-radius:2px;opacity:.85;}
+.sd-wk-r{font-size:0.8rem;font-variant-numeric:tabular-nums;} .sd-wk-rec{font-size:0.78rem;color:var(--muted);} .sd-wk-rec b{color:var(--text);}
+.sd-mini{width:100%;font-size:0.8rem;margin-top:10px;} .sd-mini th{font-size:0.7rem;} .sd-mini td,.sd-mini th{padding:5px 6px;}
+.sd-sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:-1px;}
+a.sd-opp{color:var(--text);text-decoration:none;border-bottom:1px dotted var(--accent2);} a.sd-opp:hover{color:var(--accent2);}
+.sd-oc{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.6);display:none;align-items:flex-start;justify-content:center;padding:5vh 14px;overflow-y:auto;}
+.sd-oc-box{background:var(--bg);border:1px solid var(--border);border-radius:14px;max-width:860px;width:100%;padding:18px 20px;box-shadow:0 20px 50px rgba(0,0,0,.5);}
+.sd-oc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;} .sd-oc-head h2{font-size:1.35rem;font-weight:700;}
+.sd-oc-x{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:1rem;}
+.sd-oc-table td,.sd-oc-table th{text-align:right;} .sd-oc-table td:first-child,.sd-oc-table th:first-child{text-align:left;}
+@media(max-width:700px){.sd-wk-head,.sd-wk{grid-template-columns:38px minmax(0,1fr) 80px;}.sd-wk-rec,.sd-wk-head span:last-child{display:none;}}
+
+/* ---- one page header for every page (title, one line on what's there) */
+.pg-head{margin:2px 0 18px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.pg-head h1{font-family:'DM Sans',sans-serif;font-size:1.65rem;font-weight:700;letter-spacing:-0.3px;line-height:1.2;color:var(--text);margin:0;}
+.pg-head p{color:var(--muted);font-size:0.9rem;line-height:1.5;margin:4px 0 0;max-width:75ch;}
+#page-season .season-title{font-family:'DM Sans',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:0;}
+@media(max-width:768px){.pg-head{margin-bottom:14px;padding-bottom:10px;}.pg-head h1{font-size:1.35rem;}.pg-head p{font-size:0.84rem;}}
+.pg-scope{font-size:0.75rem;color:var(--muted);margin:-8px 0 16px;}
+#bat-tiles .sd-tile-v,#bowl-tiles .sd-tile-v,#field-tiles .sd-tile-v{font-variant-numeric:tabular-nums;}
+#bat-tiles a,#bowl-tiles a,#field-tiles a{color:var(--text);text-decoration:none;border-bottom:1px dotted var(--muted);}
+#bat-tiles a:hover,#bowl-tiles a:hover,#field-tiles a:hover{color:var(--accent2);}
+
+/* ---- cleaner tables: readable headings, clearer stripes, headings that stay visible, top-three markers */
+thead th{text-transform:none;letter-spacing:0;font-size:0.78rem;font-weight:600;padding:10px 14px;}
+td{padding:9px 14px;}
+tbody tr:nth-child(even):not([style*="background"]){background:rgba(255,255,255,0.035);}
+tbody tr:hover,tbody tr:nth-child(even):hover{background:var(--surface2);}
+@media(min-width:769px){
+  .table-wrap:has(> table > tbody > tr:nth-child(26)){max-height:78vh;overflow:auto;}
+  .table-wrap thead th{position:sticky;top:0;z-index:2;box-shadow:inset 0 -1px 0 var(--border);}
+}
+#tblBatStats tbody tr:nth-child(-n+3) td:first-child::before,#tblBowlStats tbody tr:nth-child(-n+3) td:first-child::before,#tblFielding tbody tr:nth-child(-n+3) td:first-child::before,#tblKeeping tbody tr:nth-child(-n+3) td:first-child::before,#tblMotmLeaderboard tbody tr:nth-child(-n+3) td:first-child::before,#tblPotmLeaderboard tbody tr:nth-child(-n+3) td:first-child::before,#tblSeasonLeaderboard tbody tr:nth-child(-n+3) td:first-child::before,#tblWar tbody tr:nth-child(-n+3) td:first-child::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:1px;}
+#tblBatStats tbody tr:nth-child(1) td:first-child::before,#tblBowlStats tbody tr:nth-child(1) td:first-child::before,#tblFielding tbody tr:nth-child(1) td:first-child::before,#tblKeeping tbody tr:nth-child(1) td:first-child::before,#tblMotmLeaderboard tbody tr:nth-child(1) td:first-child::before,#tblPotmLeaderboard tbody tr:nth-child(1) td:first-child::before,#tblSeasonLeaderboard tbody tr:nth-child(1) td:first-child::before,#tblWar tbody tr:nth-child(1) td:first-child::before{background:#e3b341;box-shadow:0 0 0 2px rgba(227,179,65,0.25);}
+#tblBatStats tbody tr:nth-child(2) td:first-child::before,#tblBowlStats tbody tr:nth-child(2) td:first-child::before,#tblFielding tbody tr:nth-child(2) td:first-child::before,#tblKeeping tbody tr:nth-child(2) td:first-child::before,#tblMotmLeaderboard tbody tr:nth-child(2) td:first-child::before,#tblPotmLeaderboard tbody tr:nth-child(2) td:first-child::before,#tblSeasonLeaderboard tbody tr:nth-child(2) td:first-child::before,#tblWar tbody tr:nth-child(2) td:first-child::before{background:#c0c6cf;box-shadow:0 0 0 2px rgba(192,198,207,0.22);}
+#tblBatStats tbody tr:nth-child(3) td:first-child::before,#tblBowlStats tbody tr:nth-child(3) td:first-child::before,#tblFielding tbody tr:nth-child(3) td:first-child::before,#tblKeeping tbody tr:nth-child(3) td:first-child::before,#tblMotmLeaderboard tbody tr:nth-child(3) td:first-child::before,#tblPotmLeaderboard tbody tr:nth-child(3) td:first-child::before,#tblSeasonLeaderboard tbody tr:nth-child(3) td:first-child::before,#tblWar tbody tr:nth-child(3) td:first-child::before{background:#c98a5b;box-shadow:0 0 0 2px rgba(201,138,91,0.22);}
+@media(max-width:768px){thead th{font-size:0.74rem;padding:8px 10px;}td{padding:8px 10px;}}
 </style>
 </head>
 <body>
@@ -903,32 +946,35 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
   </button>
   <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
     <button class="nav-btn active" onclick="showPage('overview',this)">Overview</button>
-    <button class="nav-btn" onclick="showPage('batting',this)">Batting</button>
-    <button class="nav-btn" onclick="showPage('bowling',this)">Bowling</button>
-    <button class="nav-btn" onclick="showPage('profiles',this)">Players</button>
-    <button class="nav-btn" onclick="showPage('matches',this)">Matches</button>
-    <div class="nav-dropdown" id="navDropdown-stats">
-      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('stats')" aria-expanded="false" aria-haspopup="true">Stats <span class="nav-dropdown-caret">▾</span></button>
+    <div class="nav-dropdown" id="navDropdown-team">
+      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('team')" aria-expanded="false" aria-haspopup="true">Team <span class="nav-dropdown-caret">▾</span></button>
       <div class="nav-dropdown-menu">
-        <button class="nav-btn" onclick="showPage('fielding',this)">Fielding</button>
-        <button class="nav-btn" onclick="showPage('compare',this)">Compare</button>
+        <button class="nav-btn" onclick="showPage('matches',this)">Matches</button>
         <button class="nav-btn" onclick="showPage('season',this)">Season</button>
         <button class="nav-btn" onclick="showPage('opponents',this)">Opponents</button>
-        <button class="nav-btn" onclick="showPage('form',this)">Form</button>
-        <button class="nav-btn" onclick="showPage('chasing',this)">Chase/Defend</button>
-        <button class="nav-btn" onclick="showPage('statquery',this)">Stat Query</button>
-        <button class="nav-btn" onclick="showPage('warleaderboard',this)">WAR Leaderboard</button>
+        <button class="nav-btn" onclick="showPage('chasing',this)">Chase &amp; Defend</button>
+        <button class="nav-btn" onclick="showPage('league',this)">League Table</button>
       </div>
     </div>
-    <div class="nav-dropdown" id="navDropdown-awards">
-      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('awards')" aria-expanded="false" aria-haspopup="true">Awards <span class="nav-dropdown-caret">▾</span></button>
+    <div class="nav-dropdown" id="navDropdown-players">
+      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('players')" aria-expanded="false" aria-haspopup="true">Players <span class="nav-dropdown-caret">▾</span></button>
       <div class="nav-dropdown-menu">
-        <button class="nav-btn" onclick="showPage('awards',this)">Awards</button>
-        <button class="nav-btn" onclick="showPage('records',this)">Records</button>
+        <button class="nav-btn" onclick="showPage('profiles',this)">Player Profiles</button>
+        <button class="nav-btn" onclick="showPage('compare',this)">Compare Players</button>
+        <button class="nav-btn" onclick="showPage('form',this)">Form</button>
         <button class="nav-btn" onclick="showPage('bestxi',this)">Team Picker</button>
+      </div>
+    </div>
+    <button class="nav-btn" onclick="showPage('batting',this)">Batting</button>
+    <button class="nav-btn" onclick="showPage('bowling',this)">Bowling</button>
+    <button class="nav-btn" onclick="showPage('fielding',this)">Fielding</button>
+    <div class="nav-dropdown" id="navDropdown-records">
+      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('records')" aria-expanded="false" aria-haspopup="true">Records <span class="nav-dropdown-caret">▾</span></button>
+      <div class="nav-dropdown-menu">
+        <button class="nav-btn" onclick="showPage('records',this)">Club Records</button>
+        <button class="nav-btn" onclick="showPage('awards',this)">Awards</button>
         <button class="nav-btn" onclick="showPage('seasonawards',this)">Season Awards</button>
-        <button class="nav-btn" onclick="showPage('methodology',this)">About &amp; Methodology</button>
-        <button class="nav-btn" onclick="showPage('dataquality',this)">Data Quality</button>
+        <button class="nav-btn" onclick="showPage('warleaderboard',this)">WAR Leaderboard</button>
       </div>
     </div>
     <div class="nav-dropdown" id="navDropdown-games">
@@ -940,10 +986,12 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
         <a class="nav-btn nav-link-out" href="fantasy.html">Fantasy Cricket</a>
       </div>
     </div>
-    <div class="nav-dropdown" id="navDropdown-league">
-      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('league')" aria-expanded="false" aria-haspopup="true">League <span class="nav-dropdown-caret">▾</span></button>
+    <div class="nav-dropdown" id="navDropdown-more">
+      <button class="nav-dropdown-btn" onclick="toggleNavDropdown('more')" aria-expanded="false" aria-haspopup="true">More <span class="nav-dropdown-caret">▾</span></button>
       <div class="nav-dropdown-menu">
-        <button class="nav-btn" onclick="showPage('league',this)">Table</button>
+        <button class="nav-btn" onclick="showPage('statquery',this)">Stat Query</button>
+        <button class="nav-btn" onclick="showPage('methodology',this)">About &amp; Methodology</button>
+        <button class="nav-btn" onclick="showPage('dataquality',this)">Data Quality</button>
       </div>
     </div>
   </nav>
@@ -971,30 +1019,33 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
     <button class="mobile-nav-item active" onclick="showPage('overview',this);closeMobileNav()">📊 Overview</button>
     <button class="mobile-nav-item" onclick="showPage('batting',this);closeMobileNav()">🏏 Batting</button>
     <button class="mobile-nav-item" onclick="showPage('bowling',this);closeMobileNav()">⚾ Bowling</button>
-    <button class="mobile-nav-item" onclick="showPage('profiles',this);closeMobileNav()">👤 Players</button>
-    <button class="mobile-nav-item" onclick="showPage('matches',this);closeMobileNav()">📋 Matches</button>
-    <div class="mobile-nav-section" id="mobileNavSection-stats">
-      <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('stats')" aria-expanded="false">Stats <span class="mobile-nav-section-caret">▾</span></button>
+    <button class="mobile-nav-item" onclick="showPage('fielding',this);closeMobileNav()">🧤 Fielding</button>
+    <div class="mobile-nav-section" id="mobileNavSection-team">
+      <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('team')" aria-expanded="false">Team <span class="mobile-nav-section-caret">▾</span></button>
       <div class="mobile-nav-section-items">
-        <button class="mobile-nav-item" onclick="showPage('fielding',this);closeMobileNav()">🧤 Fielding</button>
-        <button class="mobile-nav-item" onclick="showPage('compare',this);closeMobileNav()">⚖️ Compare</button>
+        <button class="mobile-nav-item" onclick="showPage('matches',this);closeMobileNav()">📋 Matches</button>
         <button class="mobile-nav-item" onclick="showPage('season',this);closeMobileNav()">📅 Season</button>
         <button class="mobile-nav-item" onclick="showPage('opponents',this);closeMobileNav()">🏟️ Opponents</button>
-        <button class="mobile-nav-item" onclick="showPage('form',this);closeMobileNav()">📈 Form</button>
-        <button class="mobile-nav-item" onclick="showPage('chasing',this);closeMobileNav()">🎯 Chase/Defend</button>
-        <button class="mobile-nav-item" onclick="showPage('statquery',this);closeMobileNav()">🔎 Stat Query</button>
-        <button class="mobile-nav-item" onclick="showPage('warleaderboard',this);closeMobileNav()">⚡ WAR Leaderboard</button>
+        <button class="mobile-nav-item" onclick="showPage('chasing',this);closeMobileNav()">🎯 Chase &amp; Defend</button>
+        <button class="mobile-nav-item" onclick="showPage('league',this);closeMobileNav()">🏆 League Table</button>
       </div>
     </div>
-    <div class="mobile-nav-section" id="mobileNavSection-awards">
-      <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('awards')" aria-expanded="false">Awards <span class="mobile-nav-section-caret">▾</span></button>
+    <div class="mobile-nav-section" id="mobileNavSection-players">
+      <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('players')" aria-expanded="false">Players <span class="mobile-nav-section-caret">▾</span></button>
       <div class="mobile-nav-section-items">
+        <button class="mobile-nav-item" onclick="showPage('profiles',this);closeMobileNav()">👤 Player Profiles</button>
+        <button class="mobile-nav-item" onclick="showPage('compare',this);closeMobileNav()">⚖️ Compare Players</button>
+        <button class="mobile-nav-item" onclick="showPage('form',this);closeMobileNav()">📈 Form</button>
+        <button class="mobile-nav-item" onclick="showPage('bestxi',this);closeMobileNav()">📝 Team Picker</button>
+      </div>
+    </div>
+    <div class="mobile-nav-section" id="mobileNavSection-records">
+      <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('records')" aria-expanded="false">Records <span class="mobile-nav-section-caret">▾</span></button>
+      <div class="mobile-nav-section-items">
+        <button class="mobile-nav-item" onclick="showPage('records',this);closeMobileNav()">📜 Club Records</button>
         <button class="mobile-nav-item" onclick="showPage('awards',this);closeMobileNav()">🏅 Awards</button>
-        <button class="mobile-nav-item" onclick="showPage('records',this);closeMobileNav()">📜 Records</button>
-        <button class="mobile-nav-item" onclick="showPage('bestxi',this);closeMobileNav()">📋 Team Picker</button>
         <button class="mobile-nav-item" onclick="showPage('seasonawards',this);closeMobileNav()">🏆 Season Awards</button>
-        <button class="mobile-nav-item" onclick="showPage('methodology',this);closeMobileNav()">ℹ️ About &amp; Methodology</button>
-        <button class="mobile-nav-item" onclick="showPage('dataquality',this);closeMobileNav()">🩺 Data Quality</button>
+        <button class="mobile-nav-item" onclick="showPage('warleaderboard',this);closeMobileNav()">⚡ WAR Leaderboard</button>
       </div>
     </div>
     <div class="mobile-nav-section" id="mobileNavSection-games">
@@ -1006,10 +1057,12 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
         <a class="mobile-nav-item" href="fantasy.html" style="text-decoration:none;display:block">🏆 Fantasy Cricket</a>
       </div>
     </div>
-    <div class="mobile-nav-section" id="mobileNavSection-league">
-      <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('league')">League <span class="mobile-nav-section-caret">▾</span></button>
+    <div class="mobile-nav-section" id="mobileNavSection-more">
+      <button class="mobile-nav-section-header" onclick="toggleMobileNavSection('more')" aria-expanded="false">More <span class="mobile-nav-section-caret">▾</span></button>
       <div class="mobile-nav-section-items">
-        <button class="mobile-nav-item" onclick="showPage('league',this);closeMobileNav()">🏆 Table</button>
+        <button class="mobile-nav-item" onclick="showPage('statquery',this);closeMobileNav()">🔎 Stat Query</button>
+        <button class="mobile-nav-item" onclick="showPage('methodology',this);closeMobileNav()">ℹ️ About &amp; Methodology</button>
+        <button class="mobile-nav-item" onclick="showPage('dataquality',this);closeMobileNav()">🩺 Data Quality</button>
       </div>
     </div>
   </div>
@@ -1038,6 +1091,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- OVERVIEW -->
 <div id="page-overview" class="page active">
+  <header class="pg-head"><h1>Overview</h1><p>The club at a glance: the latest results, the record season by season, and how we win and lose.</p></header>
   <div class="tabs">
     <button class="tab active" onclick="showTab('overview','summary',this)">Summary</button>
     <button class="tab" onclick="showTab('overview','batfirst',this)">Bat First vs Second</button>
@@ -1144,6 +1198,8 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- BATTING -->
 <div id="page-batting" class="page">
+  <header class="pg-head"><h1>Batting</h1><p>Every batter’s record: runs, averages, strike rates, partnerships and how we get out.</p></header>
+  <div id="bat-tiles"></div>
   <div class="tabs">
     <button class="tab active" onclick="showTab('batting','stats',this)">Player Stats</button>
     <button class="tab" onclick="showTab('batting','innings',this)">Innings Log</button>
@@ -1254,6 +1310,8 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- BOWLING -->
 <div id="page-bowling" class="page">
+  <header class="pg-head"><h1>Bowling</h1><p>Every bowler’s record: wickets, economy, match-winning spells and who they dismiss.</p></header>
+  <div id="bowl-tiles"></div>
   <div class="tabs">
     <button class="tab active" onclick="showTab('bowling','stats',this)">Player Stats</button>
     <button class="tab" onclick="showTab('bowling','spells',this)">Spell Log</button>
@@ -1300,7 +1358,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
       <div class="chart-card"><div class="chart-title">Top Wicket Takers</div><div class="chart-wrap"><canvas id="chartBowlWkts"></canvas></div></div>
       <div class="chart-card"><div class="chart-title">Best Bowling Averages (min 10 wkts)</div><div class="chart-wrap"><canvas id="chartBowlAvg"></canvas></div></div>
       <div class="chart-card"><div class="chart-title">Best Economy Rates (min 20 overs)</div><div class="chart-wrap"><canvas id="chartBowlEcon"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">Wickets per Season</div><div class="chart-wrap"><canvas id="chartBowlSeason"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Dismissal Types</div><div class="chart-wrap"><canvas id="chartBowlDismissals"></canvas></div></div>
     </div>
   </div>
 
@@ -1371,6 +1429,8 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- FIELDING -->
 <div id="page-fielding" class="page">
+  <header class="pg-head"><h1>Fielding</h1><p>Catches, run-outs and wicketkeeping, for the team and for every player.</p></header>
+  <div id="field-tiles"></div>
   <div class="kpi-row" id="fielding-kpis"></div>
   <div class="charts-grid">
     <div class="chart-card"><div class="chart-title">Top Fielders (Catches + Run Outs)</div><div class="chart-wrap"><canvas id="chartFielders"></canvas></div></div>
@@ -1402,6 +1462,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- COMPARE -->
 <div id="page-compare" class="page">
+  <header class="pg-head"><h1>Compare Players</h1><p>Two players side by side across their whole records.</p></header>
   <!-- Player selectors -->
   <div class="cmp-top">
     <div class="player-select-card cmp-player-card">
@@ -1424,6 +1485,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- SEASON -->
 <div id="page-season" class="page">
+  <header class="pg-head"><h1>Season</h1><p>One season in detail: every result, runs scored and conceded, and the wins as they built up.</p></header>
   <div class="season-header">
     <div class="season-title" id="season-label">2025 Season</div>
     <select id="seasonYear" onchange="renderSeason()" style="font-size:1rem;padding:8px 14px;"><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option><option value="2022">2022</option></select>
@@ -1444,6 +1506,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- OPPONENTS -->
 <div id="page-opponents" class="page">
+  <header class="pg-head"><h1>Opponents</h1><p>Our record against every club we’ve played, and their players’ records against us.</p></header>
   <div class="table-header" style="padding:0 0 16px">
     <span class="table-title" style="font-size:0.9rem;color:var(--text)">Opponent Analysis</span>
     <input class="search-box" placeholder="Search opponent..." oninput="filterOppSearch(this.value)">
@@ -1499,6 +1562,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- PLAYER PROFILES -->
 <div id="page-profiles" class="page">
+  <header class="pg-head"><h1>Player Profiles</h1><p>Pick a player for their full record: career, seasons, best performances, partners and rivals.</p></header>
   <div style="margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
     <label style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;">Select Player</label>
     <select id="profileSelect" onchange="renderProfile()" style="font-size:0.95rem;padding:8px 16px;min-width:220px;">
@@ -1510,6 +1574,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- FORM GUIDE -->
 <div id="page-form" class="page">
+  <header class="pg-head"><h1>Form</h1><p>Recent form: the team’s last results and every current player’s last five games.</p></header>
   <div class="kpi-row" id="form-kpis"></div>
   <div class="charts-grid">
     <div class="chart-card"><div class="chart-title">Team Last 5 — Runs Scored vs Conceded</div><div class="chart-wrap"><canvas id="chartFormRuns"></canvas></div></div>
@@ -1547,6 +1612,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- MATCHES (detail) -->
 <div id="page-matches" class="page">
+  <header class="pg-head"><h1>Matches</h1><p>Every game, with winning and losing streaks and a full scorecard for each.</p></header>
   <!-- Streaks banner -->
   <div id="streaks-banner" style="margin-bottom:16px"></div>
   <div id="match-detail-panel" class="match-detail">
@@ -1598,6 +1664,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- CHASING -->
 <div id="page-chasing" class="page">
+  <header class="pg-head"><h1>Chase &amp; Defend</h1><p>How we do chasing and defending totals, by target size and by the score we post.</p></header>
   <div class="tabs">
     <button class="tab active" onclick="showTab('chasing','bands',this)">Chasing by Band</button>
     <button class="tab" onclick="showTab('chasing','best',this)">Best Chases</button>
@@ -1739,10 +1806,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 <!-- DATA ENTRY -->
 <div id="page-bestxi" class="page">
-  <div class="tp-head">
-    <h2 class="tp-title">Team Picker</h2>
-    <p class="tp-sub">Tick who's available and get a balanced side: a keeper, five bowling options, and the strongest batting order from recent form.</p>
-  </div>
+  <header class="pg-head"><h1>Team Picker</h1><p>Tick who’s available and get a balanced side: a keeper, five bowling options and the strongest batting order.</p></header>
   <div class="tp-grid">
     <section class="tp-card" aria-labelledby="tpAvailTitle">
       <div class="tp-card-head">
@@ -1793,11 +1857,12 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 
 <div id="page-seasonawards" class="page">
+  <header class="pg-head"><h1>Season Awards</h1><p>The Team of the Season and each season’s individual awards. Share any award as an image.</p></header>
   <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px;flex-wrap:wrap;">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:1px;">Team of the Season &amp; Season Awards</div>
+    <span class="filter-label">Season</span>
     <select id="saYear" onchange="renderSeasonAwards()" style="font-size:1rem;padding:8px 14px;"></select>
   </div>
-  <div style="font-size:0.82rem;color:var(--muted);margin-bottom:20px">The whole club's season — 1st and 2nd XI combined. A balanced XI by role, not just the top 11 scorers. Share any award as an image.</div>
+  <div style="font-size:0.82rem;color:var(--muted);margin-bottom:20px">The whole club’s season, every XI combined. A balanced XI by role, not just the top eleven scorers.</div>
 
   <div class="sa-layout">
   <div class="sa-col">
@@ -1903,7 +1968,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 </div>
 
 <div id="page-methodology" class="page">
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:1px;margin-bottom:4px;">About &amp; Methodology</div>
+  <header class="pg-head"><h1>About &amp; Methodology</h1><p>Where the data comes from, and how every figure, award and rating is worked out.</p></header>
   <div id="meth-updated" style="font-size:0.82rem;color:var(--muted);margin-bottom:24px"></div>
 
   <div class="table-card" style="margin-bottom:16px"><div style="padding:16px 20px">
@@ -2000,13 +2065,9 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 
 <div id="page-dataquality" class="page">
+  <header class="pg-head"><h1>Data Quality</h1><p>Automated checks on the data: duplicate rows, name mismatches, impossible figures and gaps in the awards.</p></header>
   <div style="display:flex;align-items:center;gap:16px;margin-bottom:4px;flex-wrap:wrap;">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:1px;">Data Quality</div>
     <button onclick="renderDataQuality()" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:0.8rem">Re-run checks</button>
-  </div>
-  <div style="font-size:0.82rem;color:var(--muted);margin-bottom:20px">
-    Automated versions of the checks normally done by hand on every data update &mdash; duplicate rows, name inconsistencies,
-    impossible dates, invalid overs, and gaps in MOTM coverage. Green means nothing found; anything else lists the exact records involved.
   </div>
   <div id="dq-summary" style="margin-bottom:16px"></div>
   <div id="dq-results" style="display:flex;flex-direction:column;gap:12px"></div>
@@ -2014,6 +2075,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 
 <div id="page-awards" class="page">
+  <header class="pg-head"><h1>Awards</h1><p>Man of the Match and Player of the Month, season by season.</p></header>
 
   <!-- SUMMARY KPIS -->
   <div class="kpi-row" id="awards-kpis"></div>
@@ -2162,11 +2224,14 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 
 </div>
 <div id="page-records" class="page">
-  <div class="rec-head" style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:1px;margin-bottom:4px">Club Records</div>
-  <div style="font-size:0.82rem;color:var(--muted);margin-bottom:20px">All-time bests, records set recently, and every fifty, hundred and five-wicket haul.</div>
+  <header class="pg-head"><h1>Club Records</h1><p>All-time bests, records set recently, record partnerships and every fifty, hundred and five-wicket haul.</p></header>
   <div class="section-header">All-time records</div>
   <div class="lb-hint">Select any record to see the top 10.</div>
   <div class="kpi-row" id="records-grid"></div>
+  <div id="partnership-records" style="display:none">
+    <div class="section-header">Record partnership for each wicket</div>
+    <div class="table-card"><div class="table-wrap"><table id="tblPartnershipRecords"><thead><tr><th>Wicket</th><th>Runs</th><th>Partnership</th><th>Game</th></tr></thead><tbody></tbody></table></div></div>
+  </div>
 
   <div id="recent-records-section" style="display:none">
     <div class="section-header">Recently broken</div>
@@ -2193,10 +2258,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 </div>
 
 <div id="page-statquery" class="page">
-  <div class="section-header">Stat query</div>
-  <div style="padding:0 0 12px;font-size:0.82rem;color:var(--muted)">
-    Build a custom query across every batting, bowling and fielding record — a Cricinfo Statsguru-style tool for the club's own data.
-  </div>
+  <header class="pg-head"><h1>Stat Query</h1><p>Build your own query across every batting, bowling and fielding record, Statsguru-style.</p></header>
   <div class="table-card">
     <div class="table-header"><div class="table-title">Query Builder</div></div>
     <div style="padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end">
@@ -2305,9 +2367,7 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 </div>
 
 <div id="page-warleaderboard" class="page">
-  <div style="display:flex;align-items:center;gap:16px;margin-bottom:4px;flex-wrap:wrap;">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:1px;">WAR Leaderboard</div>
-  </div>
+  <header class="pg-head"><h1>WAR Leaderboard</h1><p>Wins Above Replacement: how many extra wins each player has been worth to the club.</p></header>
   <div style="font-size:0.82rem;color:var(--muted);margin-bottom:16px;line-height:1.5">
     A cricket adaptation of baseball's Wins Above Replacement &mdash; combining batting runs above a replacement-level baseline, bowling runs saved,
     and fielding value (including wicketkeeping), converted into an estimate of wins added using a runs-per-win constant derived from this
@@ -2342,8 +2402,8 @@ button.gr-cell:hover{border-color:var(--muted);background:#252c38;}
 </div>
 
 <div id="page-league" class="page">
-  <div id="league-xi-picker" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:20px;text-align:center;padding:40px 20px">
-    <div style="font-size:0.8rem;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase">League Standing</div>
+  <header class="pg-head"><h1>League Table</h1><p>Current and past league tables for each XI.</p></header>
+  <div id="league-xi-picker" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:45vh;gap:20px;text-align:center;padding:30px 20px">
     <div style="font-size:1.6rem;font-weight:800;color:var(--text)">Which XI would you like to view?</div>
     <div id="league-xi-buttons" style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:8px">
       <button class="btn-primary" onclick="selectLeagueXI('1st')" style="font-size:1rem;padding:14px 36px">1st XI</button>
@@ -2706,9 +2766,9 @@ function updateLoadingMsg(msg) {
 // rebuilds the current page straight away and the rest when you next visit them.
 var PAGE_RENDERERS = {
   overview: ['renderLatestResults', 'renderOverview', 'renderOnThisDay'],
-  batting: ['renderBatStats', 'renderBatInnings', 'renderBatCharts', 'renderBatByPosition', 'renderBatPartnerships', 'renderBatDismissals'],
-  bowling: ['renderBowlStats', 'renderBowlSpells', 'renderBowlCharts', 'renderWinSpells', 'renderBowlPartnerships', 'renderBowlExtras', 'renderBowlVictims'],
-  fielding: ['renderFielding', 'renderBowlerFielderPartnerships'],
+  batting: ['renderBatTiles', 'renderBatStats', 'renderBatInnings', 'renderBatCharts', 'renderBatByPosition', 'renderBatPartnerships', 'renderBatDismissals'],
+  bowling: ['renderBowlTiles', 'renderBowlStats', 'renderBowlSpells', 'renderBowlCharts', 'renderWinSpells', 'renderBowlPartnerships', 'renderBowlExtras', 'renderBowlVictims'],
+  fielding: ['renderFieldTiles', 'renderFielding', 'renderBowlerFielderPartnerships'],
   season: ['renderSeason'],
   opponents: ['renderOpponents', 'renderOppPlayers'],
   form: ['renderForm'],
@@ -2721,7 +2781,7 @@ var PAGE_RENDERERS = {
   chasing: ['renderChasing', 'renderDefending'],
   awards: ['renderAwards'],
   league: ['renderLeague'],
-  records: ['renderRecords', 'renderRecentRecords', 'renderMilestoneTimeline']
+  records: ['renderRecords', 'renderPartnershipRecords', 'renderRecentRecords', 'renderMilestoneTimeline']
 };
 // Charts on a page's hidden tabs: built just after the page appears, so what you see first isn't held up
 var PAGE_DEFERRED = { overview: ['renderBatFirst', 'renderHomeAway', 'renderNRR', 'renderCloseGames'] };
@@ -2756,6 +2816,9 @@ function renderAll() {
 // Pages that don't use the Year/Team filters (they have their own selectors, or none) — the filter bar hides there
 var FILTERLESS_PAGES = ['bestxi', 'dataquality', 'hessledle', 'higherlower', 'grid', 'league', 'methodology', 'season', 'seasonawards', 'statquery', 'warleaderboard'];
 function showPage(name, btn) {
+  // opened from a link elsewhere (no menu button passed): highlight the page's own menu item
+  if (!btn || !(btn.classList.contains('nav-btn') || btn.classList.contains('mobile-nav-item')))
+    btn = document.querySelector('#mainNav .nav-btn[onclick^="showPage(\'' + name + '\'"]') || btn;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   if (_pageStale[name]) renderPage(name);
@@ -2848,12 +2911,12 @@ var _globalSearchSelected = -1;
 function _buildGlobalSearchIndex() {
   var pages = [
     { label: 'Overview', page: 'overview' }, { label: 'Batting', page: 'batting' },
-    { label: 'Bowling', page: 'bowling' }, { label: 'Players', page: 'profiles' },
+    { label: 'Bowling', page: 'bowling' }, { label: 'Player Profiles', page: 'profiles' },
     { label: 'Matches', page: 'matches' }, { label: 'Fielding', page: 'fielding' },
-    { label: 'Compare', page: 'compare' }, { label: 'Season', page: 'season' },
+    { label: 'Compare Players', page: 'compare' }, { label: 'Season', page: 'season' },
     { label: 'Opponents', page: 'opponents' }, { label: 'Form', page: 'form' },
-    { label: 'Chase/Defend', page: 'chasing' }, { label: 'Stat Query', page: 'statquery' },
-    { label: 'Awards', page: 'awards' }, { label: 'Records', page: 'records' },
+    { label: 'Chase & Defend', page: 'chasing' }, { label: 'Stat Query', page: 'statquery' },
+    { label: 'Awards', page: 'awards' }, { label: 'Club Records', page: 'records' },
     { label: 'Team Picker', page: 'bestxi' }, { label: 'Season Awards', page: 'seasonawards' },
     { label: 'League Table', page: 'league' },
     { label: 'About & Methodology', page: 'methodology' },
@@ -3193,8 +3256,33 @@ function clubChartStyle(canvas, config) {
   if (tt.padding == null) tt.padding = 10; if (tt.cornerRadius == null) tt.cornerRadius = 6; if (tt.boxPadding == null) tt.boxPadding = 4;
 }
 
+// ---- a dashed reference line on a chart (club average, average score...): options.plugins.refLine = {value, label}
+var REF_LINE_PLUGIN = { id: 'refLine', afterDatasetsDraw: function(chart, args, o) {
+  if (!o || o.value === null || o.value === undefined || isNaN(o.value)) return;
+  var horiz = chart.options.indexAxis === 'y', sc = horiz ? chart.scales.x : chart.scales.y; if (!sc) return;
+  var pos = sc.getPixelForValue(o.value), a = chart.chartArea, ctx = chart.ctx;
+  if (pos < (horiz ? a.left : a.top) - 1 || pos > (horiz ? a.right : a.bottom) + 1) return;
+  ctx.save(); ctx.strokeStyle = 'rgba(230,237,243,0.6)'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]); ctx.beginPath();
+  if (horiz) { ctx.moveTo(pos, a.top); ctx.lineTo(pos, a.bottom); } else { ctx.moveTo(a.left, pos); ctx.lineTo(a.right, pos); }
+  ctx.stroke(); ctx.setLineDash([]);
+  ctx.font = '600 11px "DM Sans", sans-serif'; ctx.fillStyle = 'rgba(230,237,243,0.9)';
+  var t = o.label || '', w = ctx.measureText(t).width;
+  var box = function(x, y) { ctx.fillStyle = 'rgba(13,17,23,0.85)'; ctx.fillRect(x - 4, y - 11, w + 8, 15); ctx.fillStyle = 'rgba(230,237,243,0.95)'; ctx.fillText(t, x, y); };
+  if (horiz) { var x = pos + 8 + w > a.right ? pos - 8 - w : pos + 8; box(x, a.top + 11); }
+  else { box(a.right - 8 - w, pos - 6); }
+  ctx.restore();
+} };
+function withRefLine(opts, value, label) {
+  opts.plugins = Object.assign({}, opts.plugins, { refLine: { value: value, label: label } });
+  if (value !== null && value !== undefined && !isNaN(value)) {   // make sure the axis reaches the line
+    var ax = opts.indexAxis === 'y' ? 'x' : 'y';
+    opts.scales = Object.assign({}, opts.scales); opts.scales[ax] = Object.assign({}, opts.scales[ax], { suggestedMax: value * 1.12 });
+  }
+  return opts;
+}
 function makeChart(id, config) {
   if(typeof Chart==='undefined') return; // CDN failed — keep tables/KPIs alive
+  if (!makeChart._ref) { try { Chart.register(REF_LINE_PLUGIN); } catch (e) {} makeChart._ref = true; }
   const c = document.getElementById(id);
   if(chartInstances[id]) {
     // If the canvas was removed/recreated since this chart was made (e.g. profile
@@ -3574,7 +3662,7 @@ function renderOverview() {
   makeChart('chartWL',{type:'bar',data:{labels:yrs,datasets:[{label:'Wins',data:yrs.map(y=>byYear[y].W),backgroundColor:'#3fb950'},{label:'Losses',data:yrs.map(y=>byYear[y].L),backgroundColor:'#f85149'},{label:'Draws',data:yrs.map(y=>byYear[y].D),backgroundColor:'#8b949e'}]},options:{...chartOpts(),scales:{x:{stacked:true,ticks:{color:'#8b949e'},grid:{color:'#21262d'}},y:{stacked:true,ticks:{color:'#8b949e'},grid:{color:'#21262d'}}}}});
 
   const last15=[...m].sort((a,b)=>a.Date<b.Date?1:-1).slice(0,15).reverse();
-  makeChart('chartRunsComp',{type:'bar',data:{labels:last15.map(r=>r.Opponent.slice(0,10)),datasets:[{label:'Scored',data:last15.map(r=>r['Runs Scored']),backgroundColor:'#c5202fbb'},{label:'Conceded',data:last15.map(r=>r['Runs Conceded']),backgroundColor:'#58a6ff66'}]},options:{...chartOpts(),scales:{x:{ticks:{color:'#8b949e',maxRotation:45},grid:{color:'#21262d'}},y:{ticks:{color:'#8b949e'},grid:{color:'#21262d'}}}}});
+  makeChart('chartRunsComp',{type:'bar',data:{labels:last15.map(r=>r.Opponent.slice(0,10)),datasets:[{label:'Scored',data:last15.map(r=>r['Runs Scored']),backgroundColor:'#c5202fbb'},{label:'Conceded',data:last15.map(r=>r['Runs Conceded']),backgroundColor:'#58a6ff66'}]},options:{...withRefLine(chartOpts(),avgRS,'Avg score '+avgRS),scales:{x:{ticks:{color:'#8b949e',maxRotation:45},grid:{color:'#21262d'}},y:{ticks:{color:'#8b949e'},grid:{color:'#21262d'}}}}});
 
   const homeW=m.filter(r=>r['Home/Away']==='Home'&&r.Result==='W').length,homeT=m.filter(r=>r['Home/Away']==='Home').length;
   const awayW=m.filter(r=>r['Home/Away']==='Away'&&r.Result==='W').length,awayT=m.filter(r=>r['Home/Away']==='Away').length;
@@ -3640,13 +3728,16 @@ function renderBatCharts() {
   const top10runs=[...stats].sort((a,b)=>b.runs-a.runs).slice(0,10);
   makeChart('chartBatRuns',{type:'bar',data:{labels:chartNames(top10runs.map(p=>p.name)),datasets:[{label:'Runs',data:top10runs.map(p=>p.runs),backgroundColor:LEADER_COLORS}]},options:hBarOpts()});
   const qual=stats.filter(s=>s.inn>=10&&s.avg!=='-'&&s.avg!=='NO');
-  makeChart('chartBatAvg',{type:'bar',data:{labels:chartNames(qual.sort((a,b)=>b.avg-a.avg).slice(0,10).map(p=>p.name)),datasets:[{label:'Average',data:qual.slice(0,10).map(p=>parseFloat(p.avg)),backgroundColor:'#58a6ff'}]},options:hBarOpts()});
+  const clubRuns=stats.reduce((a,v)=>a+v.runs,0), clubOuts=stats.reduce((a,v)=>a+(v.inn-v.notOuts),0);
+  const clubSrRuns=stats.reduce((a,v)=>a+v.srRuns,0), clubBalls=stats.reduce((a,v)=>a+v.balls,0);
+  const clubAvg=clubOuts?clubRuns/clubOuts:null, clubSR=clubBalls?clubSrRuns/clubBalls*100:null;
+  makeChart('chartBatAvg',{type:'bar',data:{labels:chartNames(qual.sort((a,b)=>b.avg-a.avg).slice(0,10).map(p=>p.name)),datasets:[{label:'Average',data:qual.slice(0,10).map(p=>parseFloat(p.avg)),backgroundColor:'#58a6ff'}]},options:withRefLine(hBarOpts(),clubAvg,clubAvg?'Club '+clubAvg.toFixed(1):'')});
   const dism={};
   rows.forEach(r=>{const d=(r.Dismissal||'').trim();dism[d]=(dism[d]||0)+1;});
   delete dism[''];
   makeChart('chartDismissals',{type:'doughnut',data:{labels:Object.keys(dism),datasets:[{data:Object.values(dism),backgroundColor:COLORS,borderColor:'#161b22',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8b949e',font:{size:11}}}}}});
   const topSR=qual.sort((a,b)=>b.sr-a.sr).slice(0,10);
-  makeChart('chartBatSR',{type:'bar',data:{labels:chartNames(topSR.map(p=>p.name)),datasets:[{label:'SR',data:topSR.map(p=>parseFloat(p.sr)),backgroundColor:'#f0a500'}]},options:hBarOpts()});
+  makeChart('chartBatSR',{type:'bar',data:{labels:chartNames(topSR.map(p=>p.name)),datasets:[{label:'SR',data:topSR.map(p=>parseFloat(p.sr)),backgroundColor:'#f0a500'}]},options:withRefLine(hBarOpts(),clubSR,clubSR?'Club '+clubSR.toFixed(1):'')});
 }
 
 // ============================================================
@@ -3681,13 +3772,16 @@ function renderBowlCharts() {
   const top10w=[...stats].sort((a,b)=>b.wickets-a.wickets).slice(0,10);
   makeChart('chartBowlWkts',{type:'bar',data:{labels:chartNames(top10w.map(p=>p.name)),datasets:[{label:'Wickets',data:top10w.map(p=>p.wickets),backgroundColor:LEADER_COLORS}]},options:hBarOpts()});
   const qualAvg=stats.filter(s=>s.wickets>=10&&s.avg!=='-').sort((a,b)=>a.avg-b.avg).slice(0,10);
-  makeChart('chartBowlAvg',{type:'bar',data:{labels:chartNames(qualAvg.map(p=>p.name)),datasets:[{label:'Average',data:qualAvg.map(p=>parseFloat(p.avg)),backgroundColor:'#58a6ff'}]},options:hBarOpts()});
+  const cRuns=stats.reduce((a,v)=>a+v.runs,0), cW=stats.reduce((a,v)=>a+v.wickets,0), cB=stats.reduce((a,v)=>a+v.ballsBowled,0);
+  const clubBowlAvg=cW?cRuns/cW:null, clubEcon=cB?cRuns/(cB/6):null;
+  makeChart('chartBowlAvg',{type:'bar',data:{labels:chartNames(qualAvg.map(p=>p.name)),datasets:[{label:'Average',data:qualAvg.map(p=>parseFloat(p.avg)),backgroundColor:'#58a6ff'}]},options:withRefLine(hBarOpts(),clubBowlAvg,clubBowlAvg?'Club '+clubBowlAvg.toFixed(1):'')});
   const qualEcon=stats.filter(s=>s.overs>=20&&s.econ!=='-').sort((a,b)=>a.econ-b.econ).slice(0,10);
-  makeChart('chartBowlEcon',{type:'bar',data:{labels:chartNames(qualEcon.map(p=>p.name)),datasets:[{label:'Economy',data:qualEcon.map(p=>parseFloat(p.econ)),backgroundColor:'#3fb950'}]},options:hBarOpts()});
-  const bySeason={};
-  CRICKET_DATA.bowling.forEach(r=>{const y=r.Date.slice(0,4);if(!bySeason[y])bySeason[y]=0;bySeason[y]+=(r.Wickets||0);});
-  const syrs=Object.keys(bySeason).sort();
-  makeChart('chartBowlSeason',{type:'bar',data:{labels:syrs,datasets:[{label:'Wickets',data:syrs.map(y=>bySeason[y]),backgroundColor:'#c5202f'}]},options:chartOpts({plugins:{legend:{display:false}}})});
+  makeChart('chartBowlEcon',{type:'bar',data:{labels:chartNames(qualEcon.map(p=>p.name)),datasets:[{label:'Economy',data:qualEcon.map(p=>parseFloat(p.econ)),backgroundColor:'#3fb950'}]},options:withRefLine(hBarOpts(),clubEcon,clubEcon?'Club '+clubEcon.toFixed(2):'')});
+  // how our wickets came: every opposition batter out (from the full scorecards), the same style as Batting's chart
+  const outs={};
+  getFiltered(CRICKET_DATA.opp_batting||[]).forEach(r=>{const d=(r.Dismissal||'').trim();if(!d||/not out|retired|^dnb$|absent/i.test(d))return;outs[d]=(outs[d]||0)+1;});
+  const dk=Object.keys(outs).sort((a,b)=>outs[b]-outs[a]);
+  makeChart('chartBowlDismissals',{type:'doughnut',data:{labels:dk,datasets:[{data:dk.map(k=>outs[k]),backgroundColor:COLORS,borderColor:'#161b22',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8b949e',font:{size:11}}}}}});
 }
 
 // ============================================================
@@ -4622,6 +4716,7 @@ function renderProfile() {
 function sdRows(ds) { return getFiltered(CRICKET_DATA[ds] || []); }
 function sdOrd(n) { var t = ['th', 'st', 'nd', 'rd'], v = n % 100; return t[(v - 20) % 10] || t[v] || t[0]; }
 function sdOpenProfile(name) {   // jump to a player's profile
+  if (typeof sdOppCardClose === 'function') sdOppCardClose();
   showPage('profiles', document.querySelector('.nav-btn[onclick*="\'profiles\'"]'));
   var sel = document.getElementById('profileSelect'); if (!sel) return;
   sel.value = name; renderProfile(); window.scrollTo(0, 0);
@@ -4638,6 +4733,58 @@ function sdTable(id, head, rows, empty) {
 }
 function sdCard(title, sub, inner) { return '<div class="table-card"><div class="table-header"><span class="table-title">' + title + '</span>' + (sub ? '<span class="sd-sub">' + sub + '</span>' : '') + '</div>' + inner + '</div>'; }
 function sdOpts(names, sel, allLabel) { return '<option value="">' + allLabel + '</option>' + names.map(function(n) { return '<option' + (n === sel ? ' selected' : '') + '>' + _esc(n) + '</option>'; }).join(''); }
+
+// ---- highlight tiles at the top of Batting, Bowling and Fielding (follow the Years and Team filters)
+function pageTileScope() { return [yearFilterLabel() || 'all years', teamFilterLabel() || 'all XIs'].join(' \u00b7 '); }
+function renderBatTiles() {
+  var el = document.getElementById('bat-tiles'); if (!el) return;
+  var st = computeBatStats(getFiltered(CRICKET_DATA.batting)).filter(function(v) { return v.inn > 0; });
+  if (!st.length) { el.innerHTML = ''; return; }
+  var by = function(f) { return st.slice().sort(f)[0]; };
+  var minInn = st.some(function(v) { return v.inn >= 10; }) ? 10 : 3;
+  var runs = by(function(a, b) { return b.runs - a.runs; });
+  var avgPool = st.filter(function(v) { return v.inn >= minInn && !isNaN(parseFloat(v.avg)); });
+  var avg = avgPool.sort(function(a, b) { return parseFloat(b.avg) - parseFloat(a.avg); })[0];
+  var srPool = st.filter(function(v) { return v.srInn >= minInn && v.balls > 0; });
+  var sr = srPool.sort(function(a, b) { return parseFloat(b.sr) - parseFloat(a.sr); })[0];
+  var six = by(function(a, b) { return b.sixes - a.sixes; });
+  el.innerHTML = sdTiles([
+    [runs.runs, 'Most runs', sdLink(runs.name) + ' \u00b7 ' + runs.inn + ' innings \u00b7 avg ' + runs.avg],
+    avg && [avg.avg, 'Best average', sdLink(avg.name) + ' \u00b7 ' + avg.runs + ' runs \u00b7 ' + minInn + '+ innings'],
+    sr && [sr.sr, 'Fastest scorer (strike rate)', sdLink(sr.name) + ' \u00b7 ' + minInn + '+ innings with balls recorded'],
+    six && six.sixes && [six.sixes, 'Most sixes', sdLink(six.name) + ' \u00b7 ' + six.fours + ' fours']
+  ]) + '<p class="pg-scope">Leaders for ' + pageTileScope() + '</p>';
+}
+function renderBowlTiles() {
+  var el = document.getElementById('bowl-tiles'); if (!el) return;
+  var rows = getFiltered(CRICKET_DATA.bowling), st = computeBowlStats(rows).filter(function(v) { return v.ballsBowled > 0; });
+  if (!st.length) { el.innerHTML = ''; return; }
+  var wk = st.slice().sort(function(a, b) { return b.wickets - a.wickets; })[0];
+  var minW = st.some(function(v) { return v.wickets >= 15; }) ? 15 : 5, minB = st.some(function(v) { return v.ballsBowled >= 180; }) ? 180 : 36;
+  var avg = st.filter(function(v) { return v.wickets >= minW; }).sort(function(a, b) { return parseFloat(a.avg) - parseFloat(b.avg); })[0];
+  var eco = st.filter(function(v) { return v.ballsBowled >= minB; }).sort(function(a, b) { return parseFloat(a.econ) - parseFloat(b.econ); })[0];
+  var bf = rows.filter(function(r) { return (r.Wickets || 0) > 0; }).sort(function(a, b) { return b.Wickets - a.Wickets || (a.Runs || 0) - (b.Runs || 0); })[0];
+  el.innerHTML = sdTiles([
+    [wk.wickets, 'Most wickets', sdLink(wk.name) + ' \u00b7 avg ' + wk.avg + ' \u00b7 econ ' + wk.econ],
+    avg && [avg.avg, 'Best average', sdLink(avg.name) + ' \u00b7 ' + avg.wickets + ' wickets \u00b7 ' + minW + '+ wickets'],
+    eco && [eco.econ, 'Best economy', sdLink(eco.name) + ' \u00b7 ' + eco.overs + ' overs \u00b7 ' + (minB / 6) + '+ overs'],
+    bf && [bf.Wickets + '/' + (bf.Runs || 0), 'Best figures', sdLink(bf.Bowler) + ' \u00b7 v ' + _esc(bf.Opponent) + ', ' + _shortDate(bf.Date)]
+  ]) + '<p class="pg-scope">Leaders for ' + pageTileScope() + '</p>';
+}
+function renderFieldTiles() {
+  var el = document.getElementById('field-tiles'); if (!el) return;
+  var count = function(rows, col, pred) { var t = {}; rows.forEach(function(r) { if (r[col] && pred(r)) t[r[col]] = (t[r[col]] || 0) + 1; }); var k = Object.keys(t).sort(function(a, b) { return t[b] - t[a]; })[0]; return k ? [k, t[k]] : null; };
+  var f = getFiltered(CRICKET_DATA.fielding), k = getFiltered(CRICKET_DATA.keeping);
+  var low = function(r) { return (r.Dismissal || '').toLowerCase(); };
+  var ct = count(f, 'Fielder', function(r) { return low(r) === 'caught'; }), ro = count(f, 'Fielder', function(r) { return low(r) === 'run out'; });
+  var kp = count(k, 'Keeper', function() { return true; }), stp = count(k, 'Keeper', function(r) { return low(r) === 'stumping'; });
+  el.innerHTML = sdTiles([
+    ct && [ct[1], 'Most catches', sdLink(ct[0]) + ' \u00b7 in the field'],
+    ro && [ro[1], 'Most run-outs', sdLink(ro[0])],
+    kp && [kp[1], 'Most wicketkeeping dismissals', sdLink(kp[0])],
+    stp && [stp[1], 'Most stumpings', sdLink(stp[0])]
+  ]) + '<p class="pg-scope">Leaders for ' + pageTileScope() + ' \u00b7 team totals below</p>';
+}
 
 // ---------- shared pieces for the scorecard views
 var SD_HOW_COL = { 'Caught': 'var(--accent2)', 'Ct & B': 'var(--blue)', 'Bowled': 'var(--accent)', 'LBW': 'var(--green)', 'Stumped': 'var(--gold)', 'Run Out': '#b58cf0', 'Hit Wicket': '#e3b341' };
@@ -4670,185 +4817,299 @@ function sdRing(counts, total) {   // a ring chart of how dismissals came, with 
 function sdGame(r) { return _shortDate(r.Date) + ' \u00b7 ' + r.Team + ' XI v ' + _esc(r.Opponent); }
 function sdNamesLink(a, b) { return sdLink(a) + ' <span class="sd-amp">&amp;</span> ' + sdLink(b); }
 
+// ---------- indexes for head-to-heads and context (rebuilt when the filters change)
+function sdIndex() {
+  var key = rsKeySafe();
+  if (SD._ix && SD._ixKey === key) return SD._ix;
+  var gk = function(r) { return r.Date + '|' + r.Team; };
+  var ix = { ourBat: {}, ourBowl: {}, oppBowl: {}, oppBat: {}, oppBowlRows: {}, oppBatRows: {}, oppName: {}, oppClub: {} };
+  getFiltered(CRICKET_DATA.batting).forEach(function(r) { if (r.Dismissal !== 'DNB') { (ix.ourBat[r.Batter] = ix.ourBat[r.Batter] || {})[gk(r)] = r; } });
+  getFiltered(CRICKET_DATA.bowling).forEach(function(r) { (ix.ourBowl[r.Bowler] = ix.ourBowl[r.Bowler] || {})[gk(r)] = r; });
+  sdRows('opp_bowling').forEach(function(r) { var k = sdOppKey(r.BowlerId, r.Bowler, r.Opponent); (ix.oppBowl[k] = ix.oppBowl[k] || {})[gk(r)] = r; (ix.oppBowlRows[k] = ix.oppBowlRows[k] || []).push(r); ix.oppName[k] = r.Bowler; ix.oppClub[k] = r.Opponent; });
+  sdRows('opp_batting').forEach(function(r) { var k = sdOppKey(r.BatterId, r.Batter, r.Opponent); (ix.oppBat[k] = ix.oppBat[k] || {})[gk(r)] = r; (ix.oppBatRows[k] = ix.oppBatRows[k] || []).push(r); if (!ix.oppName[k]) ix.oppName[k] = r.Batter; ix.oppClub[k] = r.Opponent; });
+  var ys = [...new Set(CRICKET_DATA.matches.map(function(m) { return m.Date.slice(0, 4); }))].sort();
+  ix.recent = new Set(ys.slice(-2));
+  SD._ix = ix; SD._ixKey = key; return ix;
+}
+function rsKeySafe() { return (typeof selYears !== 'undefined' ? [...selYears].sort().join(',') : '') + '|' + (typeof selTeams !== 'undefined' ? [...selTeams].sort().join(',') : ''); }
+function sdIsRecent(r) { return sdIndex().recent.has(r.Date.slice(0, 4)); }
+function sdRecentLabel() { return [...sdIndex().recent].join(' & '); }
+function sdCmp(v, base, better, dp, unit) {   // "+3.2 vs club" style comparison, coloured by whether it's better
+  if (v === null || base === null || isNaN(v) || isNaN(base)) return '';
+  var d = v - base, tiny = Math.abs(d) < 0.5 * Math.pow(10, -(dp || 0)), good = better > 0 ? d > 0 : d < 0;
+  var cls = tiny || !better ? '' : good ? 'up' : 'down';   // better = 0: neither direction is good or bad
+  return '<span class="sd-cmp ' + cls + '">' + (tiny ? '\u00b1' : d > 0 ? '+' : '\u2212') + (tiny ? (0).toFixed(dp || 0) : Math.abs(d).toFixed(dp || 0)) + (unit || '') + '</span>';
+}
+function sdOppName(k, fallback) { return '<a href="#" class="sd-opp" onclick="sdOppCard(' + _esc(JSON.stringify(k)) + ');return false">' + _esc(fallback || sdIndex().oppName[k] || '?') + '</a>'; }
+function sdAvg(runs, outs) { return outs ? runs / outs : null; }
+function sdF(v, dp) { return v === null || v === undefined || isNaN(v) ? '\u2013' : (+v).toFixed(dp === undefined ? 1 : dp); }
+
 // ---------- Batting → Partnerships
 function renderBatPartnerships() {
   var el = document.getElementById('bat-partners-content'); if (!el) return;
   if (!sdHasDetail()) { el.innerHTML = SD_EMPTY; return; }
   var q = (document.getElementById('bpSearch') || {}).value || '', cur = sdCurrent(), onlyCur = SD.current.partners;
-  var ps = sdRows('partnerships').filter(function(r) { return !NOT_PLAYERS.has(r.Batter1) && !NOT_PLAYERS.has(r.Batter2); });
-  if (onlyCur) ps = ps.filter(function(r) { return cur.has(r.Batter1) && cur.has(r.Batter2); });
+  var all = sdRows('partnerships').filter(function(r) { return !NOT_PLAYERS.has(r.Batter1) && !NOT_PLAYERS.has(r.Batter2); });
+  var ps = onlyCur ? all.filter(function(r) { return cur.has(r.Batter1) && cur.has(r.Batter2); }) : all;
   if (q) ps = ps.filter(function(r) { return (r.Batter1 + ' ' + r.Batter2).toLowerCase().indexOf(q.toLowerCase()) >= 0; });
+  var avgOf = function(rows) { var done = rows.filter(function(r) { return !r.Unbroken; }).length; return done ? rows.reduce(function(a, r) { return a + r.Runs; }, 0) / done : null; };
+  var clubAvg = avgOf(all), recentAvg = avgOf(all.filter(sdIsRecent));
   var stand = function(r) { return r.Runs + (r.Unbroken ? '*' : ''); };
   var pairs = {};
   ps.forEach(function(r) {
-    var k = sdPair(r.Batter1, r.Batter2), p = pairs[k] || (pairs[k] = { k: k, n: 0, runs: 0, outs: 0, best: null, fifty: 0, hundred: 0 });
-    p.n++; p.runs += r.Runs; p.outs += r.Unbroken ? 0 : 1; if (r.Runs >= 50) p.fifty++; if (r.Runs >= 100) p.hundred++;
+    var k = sdPair(r.Batter1, r.Batter2), p = pairs[k] || (pairs[k] = { k: k, rows: [], n: 0, runs: 0, outs: 0, best: null, fifty: 0, hundred: 0, wkts: {} });
+    p.rows.push(r); p.n++; p.runs += r.Runs; p.outs += r.Unbroken ? 0 : 1; if (r.Runs >= 50) p.fifty++; if (r.Runs >= 100) p.hundred++; p.wkts[r.Wicket] = (p.wkts[r.Wicket] || 0) + 1;
     if (!p.best || r.Runs > p.best.Runs) p.best = r;
   });
   var plist = Object.values(pairs), best = ps.slice().sort(function(a, b) { return b.Runs - a.Runs; });
   var topPair = plist.slice().sort(function(a, b) { return b.runs - a.runs; })[0];
-  var hundreds = ps.filter(function(r) { return r.Runs >= 100; }).length, fifties = ps.filter(function(r) { return r.Runs >= 50; }).length;
+  // by wicket: record, average all-time and recently, against the club as a whole
+  var byW = [];
+  for (var w = 1; w <= 10; w++) {
+    var rw = ps.filter(function(r) { return r.Wicket === w; }); if (!rw.length) continue;
+    var aw = all.filter(function(r) { return r.Wicket === w; });
+    byW.push({ w: w, n: rw.length, rec: rw.slice().sort(function(a, b) { return b.Runs - a.Runs; })[0], avg: avgOf(rw), recent: avgOf(aw.filter(sdIsRecent)), allAvg: avgOf(aw), fifty: rw.filter(function(r) { return r.Runs >= 50; }).length });
+  }
+  var weakest = byW.filter(function(x) { return x.w <= 6 && x.n >= 10; }).sort(function(a, b) { return (a.avg || 0) - (b.avg || 0); })[0];
   var tiles = sdTiles([
     best[0] && [stand(best[0]), 'Record partnership', sdNamesLink(best[0].Batter1, best[0].Batter2) + '<br>' + sdGame(best[0])],
     topPair && [topPair.runs, 'Most runs together', sdNamesLink.apply(null, topPair.k.split(' & ')) + ' \u00b7 ' + topPair.n + ' stands'],
-    [fifties, '50+ partnerships', hundreds + ' of them 100+'],
-    [ps.length, 'Partnerships', ps.length ? 'average ' + (ps.reduce(function(a, r) { return a + r.Runs; }, 0) / ps.length).toFixed(1) + ' runs' : '']
+    [sdF(avgOf(ps)), 'Average stand', (q || onlyCur ? 'club ' + sdF(clubAvg) + ' \u00b7 ' : '') + sdRecentLabel() + ': ' + sdF(recentAvg) + ' ' + sdCmp(recentAvg, clubAvg, 1, 1)],
+    weakest && [weakest.w + sdOrd(weakest.w) + ' wicket', 'Weakest stand, wickets 1\u20136', 'averages ' + sdF(weakest.avg) + ' \u00b7 ' + sdRecentLabel() + ': ' + sdF(weakest.recent)]
   ]);
-  var ladder = [], maxW = 0;
-  for (var w = 1; w <= 10; w++) { var bw = ps.filter(function(r) { return r.Wicket === w; }).sort(function(a, b) { return b.Runs - a.Runs; })[0]; if (bw) { ladder.push(bw); maxW = Math.max(maxW, bw.Runs); } }
-  var ladderHtml = ladder.map(function(r) { return sdBarRow({ badge: r.Wicket + sdOrd(r.Wicket), title: sdNamesLink(r.Batter1, r.Batter2), sub: sdGame(r), value: r.Runs, max: maxW, label: stand(r), game: r }); }).join('');
-  var topHtml = best.slice(0, 12).map(function(r) { return sdBarRow({ badge: r.Wicket + sdOrd(r.Wicket), title: sdNamesLink(r.Batter1, r.Batter2), sub: sdGame(r), value: r.Runs, max: best[0].Runs, label: stand(r), game: r, cls: 'warm' }); }).join('');
+  var maxR = Math.max.apply(null, byW.map(function(x) { return x.rec.Runs; }).concat([1])), maxA = Math.max.apply(null, byW.map(function(x) { return Math.max(x.avg || 0, x.recent || 0); }).concat([1]));
+  var wkHtml = '<div class="sd-wk-head"><span></span><span>Average stand</span><span>' + sdRecentLabel() + '</span><span>Record</span></div>' + byW.map(function(x) {
+    return '<div class="sd-wk"><span class="sd-badge">' + x.w + sdOrd(x.w) + '</span>' +
+      '<div class="sd-track"><span class="sd-fill" style="width:' + Math.round(100 * (x.avg || 0) / maxA) + '%"></span><b>' + sdF(x.avg) + '</b><i class="sd-tick" style="left:' + Math.round(100 * (x.recent || 0) / maxA) + '%" title="' + sdRecentLabel() + ' average"></i></div>' +
+      '<span class="sd-wk-r">' + sdF(x.recent) + ' ' + sdCmp(x.recent, x.allAvg, 1, 1) + '</span>' +
+      '<span class="sd-wk-rec sd-click" role="button" tabindex="0" title="' + _esc(x.rec.Batter1 + ' & ' + x.rec.Batter2 + ', ' + x.rec.Date) + '" onclick="openMatchDetail(\'' + x.rec.Date + '\',' + _esc(JSON.stringify(x.rec.Opponent)) + ',\'' + x.rec.Team + '\')"><b>' + stand(x.rec) + '</b> ' + _esc(x.rec.Batter1.split(' ').pop()) + ' & ' + _esc(x.rec.Batter2.split(' ').pop()) + '</span></div>';
+  }).join('') + '<p class="sd-note">Bars are the average stand for each wicket (runs per completed partnership); the white mark is the ' + sdRecentLabel() + ' average. Tap a record for its scorecard.</p>';
+  var topHtml = best.slice(0, 10).map(function(r) { return sdBarRow({ badge: r.Wicket + sdOrd(r.Wicket), title: sdNamesLink(r.Batter1, r.Batter2), sub: sdGame(r), value: r.Runs, max: best[0].Runs, label: stand(r), game: r, cls: 'warm' }); }).join('');
   var pairCards = plist.filter(function(p) { return p.n >= 3; }).sort(function(a, b) { return b.runs - a.runs; }).slice(0, 12).map(function(p, i) {
-    var nm = p.k.split(' & '), avg = p.outs ? p.runs / p.outs : p.runs;
+    var nm = p.k.split(' & '), avg = sdAvg(p.runs, p.outs);
+    // what the club usually manages for the same wickets, so a pair that bats at 1 isn't judged against tail-end stands
+    var expect = 0, n = 0; p.rows.forEach(function(r) { var x = byW.find(function(y) { return y.w === r.Wicket; }); if (x && x.allAvg !== null) { expect += x.allAvg; n++; } });
+    var exp = n ? expect / n : null, recent = p.rows.filter(sdIsRecent);
     return '<div class="sd-pair"><div class="sd-pair-rank">' + (i + 1) + '</div><div class="sd-pair-names">' + sdNamesLink(nm[0], nm[1]) + '</div>' +
-      '<div class="sd-pair-stats"><div><b>' + p.runs + '</b><span>runs</span></div><div><b>' + p.n + '</b><span>stands</span></div><div><b>' + avg.toFixed(1) + '</b><span>average</span></div><div><b>' + p.best.Runs + (p.best.Unbroken ? '*' : '') + '</b><span>best</span></div></div>' +
-      '<div class="sd-pair-foot">' + (p.hundred ? p.hundred + '\u00d7 100+ \u00b7 ' : '') + p.fifty + '\u00d7 50+</div></div>';
+      '<div class="sd-pair-stats"><div><b>' + p.runs + '</b><span>runs</span></div><div><b>' + p.n + '</b><span>stands</span></div><div><b>' + sdF(avg) + '</b><span>average</span></div><div><b>' + p.best.Runs + (p.best.Unbroken ? '*' : '') + '</b><span>best</span></div></div>' +
+      '<div class="sd-pair-foot">' + (exp !== null && avg !== null ? sdCmp(avg, exp, 1, 1) + ' vs the club\u2019s average for the same wickets (' + sdF(exp) + ')' : '') +
+      '<br>' + (p.hundred ? p.hundred + '\u00d7 100+ \u00b7 ' : '') + p.fifty + '\u00d7 50+' + (recent.length ? ' \u00b7 ' + recent.length + ' stands in ' + sdRecentLabel() : '') + '</div></div>';
   }).join('');
   el.innerHTML = '<div class="sd-tools"><input id="bpSearch" class="search-box" placeholder="Find a player\u2019s partnerships" value="' + _esc(q) + '" oninput="renderBatPartnerships()">' +
-    sdChip('partners', 'Current players only', onlyCur, 'SD.current.partners=!SD.current.partners;renderBatPartnerships()') + '<span class="sd-sub">Tap a partnership to open its scorecard · * not out</span></div>' + tiles +
-    (ps.length ? '<div class="sd-two">' + sdPanel('Record stand for each wicket', '', ladderHtml) + sdPanel('Highest partnerships', 'top 12', topHtml) + '</div>' +
-      sdPanel('Best pairs', 'at least 3 partnerships together · average = runs per completed stand', pairCards ? '<div class="sd-pairs">' + pairCards + '</div>' : '<p class="sd-none">No pair has batted together three times here.</p>')
+    sdChip('partners', 'Current players only', onlyCur, 'SD.current.partners=!SD.current.partners;renderBatPartnerships()') + '<span class="sd-sub">* not out</span></div>' + tiles +
+    (ps.length ? '<div class="sd-two">' + sdPanel('By wicket', 'average stand, recent seasons and the record', wkHtml) + sdPanel('Highest partnerships', 'tap for the scorecard', topHtml) + '</div>' +
+      sdPanel('Best pairs', 'at least 3 partnerships together \u00b7 compared with what the club usually scores for the same wickets', pairCards ? '<div class="sd-pairs">' + pairCards + '</div>' : '<p class="sd-none">No pair has batted together three times here.</p>')
       : '<p class="sd-none">No partnerships match.</p>');
   var inp = document.getElementById('bpSearch'); if (q && inp) { inp.focus(); inp.setSelectionRange(q.length, q.length); }
 }
 
-// ---------- Batting → How we get out
+// ---------- Batting → How we get out (with head-to-heads)
 function renderBatDismissals() {
   var el = document.getElementById('bat-dismissals-content'); if (!el) return;
   if (!sdHasDetail()) { el.innerHTML = SD_EMPTY; return; }
-  var who = (document.getElementById('bdWho') || {}).value || '', cur = sdCurrent(), onlyCur = SD.current.dismissals;
+  var ix = sdIndex(), who = (document.getElementById('bdWho') || {}).value || '', cur = sdCurrent(), onlyCur = SD.current.dismissals;
   var all = sdRows('dismissals').filter(function(r) { return !NOT_PLAYERS.has(r.Batter); });
   var pool = onlyCur ? all.filter(function(r) { return cur.has(r.Batter); }) : all;
   var batters = [...new Set(pool.map(function(r) { return r.Batter; }))].sort();
   if (who && batters.indexOf(who) < 0) who = '';
   var mine = who ? pool.filter(function(r) { return r.Batter === who; }) : pool;
-  var bowl = {};
+  var mix = function(rows) { var h = {}; rows.forEach(function(r) { h[r.How] = (h[r.How] || 0) + 1; }); return h; };
+  var how = mix(mine), clubHow = mix(all), recentHow = mix(mine.filter(sdIsRecent));
+  var tot = mine.length, clubTot = all.length, recTot = mine.filter(sdIsRecent).length;
+  // head-to-head for each opposition bowler: games he bowled when this batter (or any of ours) batted, and wickets
+  var foes = {};
   mine.filter(function(r) { return r.Bowler; }).forEach(function(r) {
-    var k = sdOppKey(r.BowlerId, r.Bowler, r.Opponent), b = bowl[k] || (bowl[k] = { name: r.Bowler, opp: r.Opponent, n: 0, victims: {}, last: r });
-    b.n++; b.victims[r.Batter] = (b.victims[r.Batter] || 0) + 1; if (r.Date > b.last.Date) { b.last = r; b.name = r.Bowler; }
+    var k = sdOppKey(r.BowlerId, r.Bowler, r.Opponent), f = foes[k] || (foes[k] = { k: k, outs: 0, victims: {}, last: r });
+    f.outs++; f.victims[r.Batter] = (f.victims[r.Batter] || 0) + 1; if (r.Date > f.last.Date) f.last = r;
   });
-  var blist = Object.values(bowl).sort(function(a, b) { return b.n - a.n; });
-  var how = {}; mine.forEach(function(r) { how[r.How] = (how[r.How] || 0) + 1; });
-  var tot = mine.length, top = blist[0], clubs = {};
-  mine.filter(function(r) { return r.Bowler; }).forEach(function(r) { clubs[r.Opponent] = (clubs[r.Opponent] || 0) + 1; });
-  var topClub = Object.keys(clubs).sort(function(a, b) { return clubs[b] - clubs[a]; })[0];
+  Object.values(foes).forEach(function(f) {
+    var games = Object.keys(ix.oppBowl[f.k] || {});
+    if (who) {
+      var faced = games.filter(function(g) { return ix.ourBat[who] && ix.ourBat[who][g]; });
+      f.games = faced.length;
+      var runs = faced.reduce(function(a, g) { return a + (typeof ix.ourBat[who][g].Runs === 'number' ? ix.ourBat[who][g].Runs : 0); }, 0);
+      f.avgIn = faced.length ? runs / faced.length : null;
+    } else { f.games = games.length; }
+    f.rate = f.games ? f.outs / f.games : null;
+  });
+  var myInns = who ? Object.values(ix.ourBat[who] || {}) : [];
+  var myRpi = myInns.length ? myInns.reduce(function(a, r) { return a + (typeof r.Runs === 'number' ? r.Runs : 0); }, 0) / myInns.length : null;
+  var flist = Object.values(foes).sort(function(a, b) { return b.outs - a.outs || (b.rate || 0) - (a.rate || 0); });
+  var tough = Object.values(foes).filter(function(f) { return f.games >= (who ? 2 : 4) && f.outs >= 2; }).sort(function(a, b) { return b.rate - a.rate || b.outs - a.outs; }).slice(0, 8);
   var main = Object.keys(how).sort(function(a, b) { return how[b] - how[a]; })[0];
+  var pct = function(h, k, t) { return t ? 100 * (h[k] || 0) / t : null; };
   var tiles = sdTiles([
-    [tot, who ? 'Times ' + _esc(who.split(' ')[0]) + ' has been out' : 'Dismissals', who ? '' : batters.length + ' batters'],
-    main && [Math.round(100 * how[main] / tot) + '%', _esc(main), 'the most common way ' + (who ? 'he' : 'we') + ' get' + (who ? 's' : '') + ' out'],
-    top && [top.n, 'Most by one bowler', '<b>' + _esc(top.name) + '</b> \u00b7 ' + _esc(top.opp)],
-    topClub && [clubs[topClub], 'Most by one club', _esc(topClub)]
+    [tot, who ? 'Times ' + _esc(who.split(' ')[0]) + ' has been out' : 'Dismissals', who ? (myRpi !== null ? myInns.length + ' innings \u00b7 ' + sdF(myRpi) + ' runs per innings' : '') : batters.length + ' batters'],
+    main && [Math.round(pct(how, main, tot)) + '%', _esc(main), who ? 'club ' + Math.round(pct(clubHow, main, clubTot)) + '% ' + sdCmp(pct(how, main, tot), pct(clubHow, main, clubTot), 0, 0, ' pts') : sdRecentLabel() + ': ' + Math.round(pct(recentHow, main, recTot) || 0) + '%'],
+    flist[0] && [flist[0].outs, 'Most by one bowler', '<b>' + sdOppName(flist[0].k) + '</b> \u00b7 ' + _esc(ix.oppClub[flist[0].k] || '') + (flist[0].games ? ' \u00b7 in ' + flist[0].games + ' games' : '')],
+    tough[0] && [sdF(tough[0].rate, 2), 'Wickets per game: toughest matchup', sdOppName(tough[0].k) + ' \u00b7 ' + tough[0].outs + ' wickets in ' + tough[0].games + ' games' + (who ? ' bowling at him' : '')]
   ]);
-  var show = blist.filter(function(b) { return who ? b.n >= 2 : true; }).slice(0, who ? 12 : 16);
-  var cards = show.map(function(b) {
-    var vic = Object.keys(b.victims).sort(function(x, y) { return b.victims[y] - b.victims[x]; });
-    return '<div class="sd-foe"><div class="sd-foe-n">' + b.n + '<small>' + (who ? 'times' : 'wickets') + '</small></div><div class="sd-foe-main"><div class="sd-foe-name">' + _esc(b.name) + '</div><div class="sd-sub">' + _esc(b.opp) + ' \u00b7 last ' + _shortDate(b.last.Date) + '</div>' +
-      (who ? '' : '<div class="sd-chips-s">' + vic.slice(0, 4).map(function(v) { return '<span>' + _esc(v) + (b.victims[v] > 1 ? ' \u00d7' + b.victims[v] : '') + '</span>'; }).join('') + (vic.length > 4 ? '<span>+' + (vic.length - 4) + '</span>' : '') + '</div>') + '</div></div>';
-  }).join('');
+  var card = function(f) {
+    var vic = Object.keys(f.victims).sort(function(x, y) { return f.victims[y] - f.victims[x]; });
+    var h2h = f.games ? '<div class="sd-h2h"><span><b>' + f.games + '</b> games</span><span><b>' + f.outs + '</b> ' + (who ? 'out' : 'wickets') + '</span><span><b>' + sdF(f.rate, 2) + '</b> per game</span>' +
+      (who && f.avgIn !== null ? '<span>avg <b>' + sdF(f.avgIn) + '</b> in them ' + sdCmp(f.avgIn, myRpi, 1, 1) + '</span>' : '') + '</div>' : '';
+    return '<div class="sd-foe' + (f.rate >= 0.5 && f.games >= 2 ? ' hot' : '') + '"><div class="sd-foe-n">' + f.outs + '<small>' + (who ? 'times' : 'wickets') + '</small></div><div class="sd-foe-main"><div class="sd-foe-name">' + sdOppName(f.k) + '</div><div class="sd-sub">' + _esc(ix.oppClub[f.k] || '') + ' \u00b7 last ' + _shortDate(f.last.Date) + '</div>' + h2h +
+      (who ? '' : '<div class="sd-chips-s">' + vic.slice(0, 4).map(function(v) { return '<span>' + _esc(v) + (f.victims[v] > 1 ? ' \u00d7' + f.victims[v] : '') + '</span>'; }).join('') + (vic.length > 4 ? '<span>+' + (vic.length - 4) + '</span>' : '') + '</div>') + '</div></div>';
+  };
+  var ringCmp = '<table class="sd-mini"><thead><tr><th>How</th><th>' + (who ? _esc(who.split(' ')[0]) : 'All') + '</th><th>' + (who ? 'Club' : sdRecentLabel()) + '</th></tr></thead><tbody>' +
+    Object.keys(how).sort(function(a, b) { return how[b] - how[a]; }).map(function(k) {
+      var me = pct(how, k, tot), other = who ? pct(clubHow, k, clubTot) : pct(recentHow, k, recTot);
+      return '<tr><td><i class="sd-sw" style="background:' + (SD_HOW_COL[k] || 'var(--purple)') + '"></i>' + _esc(k) + '</td><td>' + Math.round(me) + '%</td><td>' + (other === null ? '\u2013' : Math.round(other) + '% ') + (other === null ? '' : sdCmp(me, other, 0, 0, '')) + '</td></tr>';
+    }).join('') + '</tbody></table>';
   el.innerHTML = '<div class="sd-tools"><label class="sd-label">Batter <select id="bdWho" onchange="renderBatDismissals()">' + sdOpts(batters, who, 'All our batters') + '</select></label>' +
-    sdChip('dismissals', 'Current players only', onlyCur, 'SD.current.dismissals=!SD.current.dismissals;renderBatDismissals()') + '</div>' + tiles +
-    (tot ? '<div class="sd-two">' + sdPanel(who ? _esc(who) + '\u2019s bogey bowlers' : 'Who gets us out', who ? 'bowlers who have dismissed him twice or more' : 'opposition bowlers with the most Hessle wickets',
-        cards ? '<div class="sd-foes">' + cards + '</div>' : '<p class="sd-none">No bowler has dismissed him more than once.</p>') +
-      sdPanel(who ? 'How ' + _esc(who) + ' gets out' : 'How we get out', '', sdRing(how, tot)) + '</div>' : '<p class="sd-none">No dismissals here.</p>');
+    sdChip('dismissals', 'Current players only', onlyCur, 'SD.current.dismissals=!SD.current.dismissals;renderBatDismissals()') + '<span class="sd-sub">Tap a bowler\u2019s name for his full record against us</span></div>' + tiles +
+    (tot ? '<div class="sd-two sd-two-wide">' + sdPanel(who ? _esc(who) + '\u2019s bowlers' : 'Who gets us out', who ? 'every bowler who has dismissed him \u00b7 games = games he bowled when ' + _esc(who.split(' ')[0]) + ' batted' : 'games = games he bowled against us',
+        '<div class="sd-foes">' + flist.slice(0, who ? 16 : 14).map(card).join('') + '</div>') +
+      '<div>' + sdPanel(who ? 'How ' + _esc(who.split(' ')[0]) + ' gets out' : 'How we get out', who ? 'compared with the whole club' : 'compared with ' + sdRecentLabel(), sdRing(how, tot) + ringCmp) +
+      (tough.length ? sdPanel('Toughest matchups', 'most wickets per game bowled at ' + (who ? 'him' : 'us') + ' (2+ wickets)', tough.map(function(f) { return sdBarRow({ title: sdOppName(f.k), sub: _esc(ix.oppClub[f.k] || '') + ' \u00b7 ' + f.outs + ' wickets in ' + f.games + ' games', value: f.rate, max: tough[0].rate, label: sdF(f.rate, 2) + ' per game', cls: 'warm' }); }).join('')) : '') + '</div></div>'
+      : '<p class="sd-none">No dismissals here.</p>');
 }
 
-// ---------- Bowling → Wickets & victims
+// ---------- Bowling → Wickets & victims (with head-to-heads)
 function renderBowlVictims() {
   var el = document.getElementById('bowl-victims-content'); if (!el) return;
   if (!sdHasDetail()) { el.innerHTML = SD_EMPTY; return; }
-  var who = (document.getElementById('bvWho') || {}).value || '', cur = sdCurrent(), onlyCur = SD.current.victims, topOnly = SD.topOnly;
-  var ob = sdRows('opp_batting').filter(function(r) { return r.Bowler && !NOT_PLAYERS.has(r.Bowler) && r.Dismissal !== 'Run Out'; });
-  if (onlyCur) ob = ob.filter(function(r) { return cur.has(r.Bowler); });
+  var ix = sdIndex(), who = (document.getElementById('bvWho') || {}).value || '', cur = sdCurrent(), onlyCur = SD.current.victims, topOnly = SD.topOnly;
+  var allOb = sdRows('opp_batting').filter(function(r) { return r.Bowler && !NOT_PLAYERS.has(r.Bowler) && r.Dismissal !== 'Run Out'; });
+  var ob = onlyCur ? allOb.filter(function(r) { return cur.has(r.Bowler); }) : allOb;
   var top = function(r) { return typeof r.Pos === 'number' && r.Pos <= 4; };
   var bowlers = [...new Set(ob.map(function(r) { return r.Bowler; }))].sort();
   if (who && bowlers.indexOf(who) < 0) who = '';
   var chips = sdChip('victims', 'Current players only', onlyCur, 'SD.current.victims=!SD.current.victims;renderBowlVictims()') + sdChip('victims', 'Top order only', topOnly, 'SD.topOnly=!SD.topOnly;renderBowlVictims()');
   var picker = '<label class="sd-label">Bowler <select id="bvWho" onchange="renderBowlVictims()">' + sdOpts(bowlers, who, 'All our bowlers') + '</select></label>';
+  var clubTopPct = allOb.length ? 100 * allOb.filter(top).length / allOb.length : null;
+  var victimRuns = function(rows) { return rows.length ? rows.reduce(function(a, r) { return a + (r.Runs || 0); }, 0) / rows.length : null; };
+  var clubVR = victimRuns(allOb);
   if (topOnly) ob = ob.filter(top);
   if (!who) {
     var by = {};
-    ob.forEach(function(r) { var b = by[r.Bowler] || (by[r.Bowler] = { n: 0, top: 0, how: {} }); b.n++; if (top(r)) b.top++; b.how[r.Dismissal] = (b.how[r.Dismissal] || 0) + 1; });
+    ob.forEach(function(r) { var b = by[r.Bowler] || (by[r.Bowler] = { n: 0, top: 0, rec: 0, runs: 0, how: {} }); b.n++; b.runs += r.Runs || 0; if (top(r)) b.top++; if (sdIsRecent(r)) b.rec++; b.how[r.Dismissal] = (b.how[r.Dismissal] || 0) + 1; });
     var names = Object.keys(by).filter(function(n) { return by[n].n >= 5; }).sort(function(a, b) { return by[b].n - by[a].n; });
     var max = names.length ? by[names[0]].n : 1, mostTop = names.slice().sort(function(a, b) { return by[b].top - by[a].top; })[0];
-    var share = names.filter(function(n) { return by[n].n >= 15; }).sort(function(a, b) { return by[b].top / by[b].n - by[a].top / by[a].n; })[0];
     var rows = names.slice(0, 20).map(function(n) {
-      var b = by[n], w1 = Math.max(2, Math.round(100 * b.top / max)), w2 = Math.round(100 * (b.n - b.top) / max);
-      return '<div class="sd-row"><div class="sd-row-main"><div class="sd-row-t">' + sdLink(n) + '</div><div class="sd-row-s">' + b.top + ' top order \u00b7 ' + (b.how.Bowled || 0) + ' bowled \u00b7 ' + (b.how.LBW || 0) + ' lbw \u00b7 ' + ((b.how.Caught || 0) + (b.how['Ct & B'] || 0)) + ' caught</div></div>' +
+      var b = by[n], w1 = Math.max(2, Math.round(100 * b.top / max)), w2 = Math.round(100 * (b.n - b.top) / max), g = Object.keys(ix.ourBowl[n] || {}).length;
+      return '<div class="sd-row"><div class="sd-row-main"><div class="sd-row-t">' + sdLink(n) + '</div><div class="sd-row-s">' + (g ? sdF(b.n / g, 2) + ' a game \u00b7 ' : '') + Math.round(100 * b.top / b.n) + '% top order ' + sdCmp(100 * b.top / b.n, clubTopPct, 1, 0, ' pts') + ' \u00b7 victims made ' + sdF(b.runs / b.n) + ' ' + sdCmp(b.runs / b.n, clubVR, -1, 1) + (b.rec ? ' \u00b7 ' + b.rec + ' in ' + sdRecentLabel() : '') + '</div></div>' +
         '<div class="sd-track sd-stack"><span class="sd-fill" style="width:' + w1 + '%"></span><span class="sd-fill rest" style="left:' + w1 + '%;width:' + w2 + '%"></span><b>' + b.n + '</b></div></div>';
     }).join('');
     el.innerHTML = '<div class="sd-tools">' + picker + chips + '</div>' + sdTiles([
-        names[0] && [by[names[0]].n, topOnly ? 'Most top-order wickets' : 'Most wickets', sdLink(names[0]) + (topOnly ? ' \u00b7 batting 1\u20134' : '')],
+        names[0] && [by[names[0]].n, topOnly ? 'Most top-order wickets' : 'Most wickets', sdLink(names[0])],
         !topOnly && mostTop && [by[mostTop].top, 'Most top-order wickets', sdLink(mostTop) + ' \u00b7 batting 1\u20134'],
-        !topOnly && share && [Math.round(100 * by[share].top / by[share].n) + '%', 'Highest top-order share', sdLink(share) + ' \u00b7 at least 15 wickets'],
-        [ob.length, topOnly ? 'Top-order wickets' : 'Wickets', names.length + ' bowlers with 5+']
-      ]) + sdPanel('Our bowlers\u2019 wickets', '<i class="sd-dot"></i> top order (1\u20134) <i class="sd-dot rest"></i> the rest · pick a bowler for his victims', rows || '<p class="sd-none">No bowler with 5+ wickets here.</p>');
+        [sdF(clubTopPct, 0) + '%', 'Club top-order share', 'of all our wickets \u00b7 ' + sdRecentLabel() + ': ' + sdF(allOb.filter(sdIsRecent).length ? 100 * allOb.filter(sdIsRecent).filter(top).length / allOb.filter(sdIsRecent).length : null, 0) + '%'],
+        [sdF(clubVR), 'Runs per victim', 'what batters had made when we got them out \u00b7 lower is better']
+      ]) + sdPanel('Our bowlers\u2019 wickets', '<i class="sd-dot"></i> top order (1\u20134) <i class="sd-dot rest"></i> the rest \u00b7 green/red = better/worse than the club \u00b7 pick a bowler for his victims', rows || '<p class="sd-none">No bowler with 5+ wickets here.</p>');
     return;
   }
   var mine = ob.filter(function(r) { return r.Bowler === who; }), vic = {}, how = {};
+  var myGames = ix.ourBowl[who] || {};
   mine.forEach(function(r) {
     how[r.Dismissal] = (how[r.Dismissal] || 0) + 1;
-    var k = sdOppKey(r.BatterId, r.Batter, r.Opponent), v = vic[k] || (vic[k] = { name: r.Batter, opp: r.Opponent, n: 0, top: 0, how: {}, games: [], last: r });
-    v.n++; if (top(r)) v.top++; v.how[r.Dismissal] = (v.how[r.Dismissal] || 0) + 1; v.games.push(r); if (r.Date > v.last.Date) { v.last = r; v.name = r.Batter; }
+    var k = sdOppKey(r.BatterId, r.Batter, r.Opponent), v = vic[k] || (vic[k] = { k: k, n: 0, top: 0, how: {}, games: [], last: r });
+    v.n++; if (top(r)) v.top++; v.how[r.Dismissal] = (v.how[r.Dismissal] || 0) + 1; v.games.push(r); if (r.Date > v.last.Date) v.last = r;
   });
-  var list = Object.values(vic).sort(function(a, b) { return b.n - a.n || b.top - a.top || b.last.Date.localeCompare(a.last.Date); });
-  var topN = mine.filter(top).length, rep = list.filter(function(v) { return v.n >= 2; });
-  var clubs = {}; mine.forEach(function(r) { clubs[r.Opponent] = (clubs[r.Opponent] || 0) + 1; });
-  var fav = Object.keys(clubs).sort(function(a, b) { return clubs[b] - clubs[a]; })[0];
+  Object.values(vic).forEach(function(v) {   // head-to-head: games where both played
+    var met = Object.keys(ix.oppBat[v.k] || {}).filter(function(g) { return myGames[g]; });
+    v.met = met.length; v.rate = met.length ? v.n / met.length : null;
+    v.runsVs = met.length ? met.reduce(function(a, g) { return a + (ix.oppBat[v.k][g].Runs || 0); }, 0) / met.length : null;
+  });
+  var list = Object.values(vic).sort(function(a, b) { return b.n - a.n || (b.rate || 0) - (a.rate || 0) || b.last.Date.localeCompare(a.last.Date); });
+  var topN = mine.filter(top).length, rep = list.filter(function(v) { return v.n >= 2; }), g = Object.keys(myGames).length;
   var tile = function(v) {
-    return '<div class="sd-foe' + (v.n >= 2 ? ' hot' : '') + '"><div class="sd-foe-n">' + v.n + '<small>' + (v.n === 1 ? 'time' : 'times') + '</small></div><div class="sd-foe-main"><div class="sd-foe-name">' + _esc(v.name) + (v.top ? ' <span class="sd-tag">top order</span>' : '') + '</div>' +
-      '<div class="sd-sub">' + _esc(v.opp) + ' \u00b7 ' + Object.keys(v.how).map(function(h) { return _esc(h).toLowerCase() + (v.how[h] > 1 ? ' \u00d7' + v.how[h] : ''); }).join(', ') + '</div>' +
-      '<div class="sd-chips-s">' + v.games.slice(-4).map(function(g) { return '<span class="sd-click" role="button" tabindex="0" title="Open the scorecard" onclick="openMatchDetail(\'' + g.Date + '\',' + _esc(JSON.stringify(g.Opponent)) + ',\'' + g.Team + '\')">' + _shortDate(g.Date) + '</span>'; }).join('') + '</div></div></div>';
+    return '<div class="sd-foe' + (v.n >= 2 ? ' hot' : '') + '"><div class="sd-foe-n">' + v.n + '<small>' + (v.n === 1 ? 'time' : 'times') + '</small></div><div class="sd-foe-main"><div class="sd-foe-name">' + sdOppName(v.k) + (v.top ? ' <span class="sd-tag">top order</span>' : '') + '</div>' +
+      '<div class="sd-sub">' + _esc(ix.oppClub[v.k] || '') + ' \u00b7 ' + Object.keys(v.how).map(function(h) { return _esc(h).toLowerCase() + (v.how[h] > 1 ? ' \u00d7' + v.how[h] : ''); }).join(', ') + '</div>' +
+      (v.met ? '<div class="sd-h2h"><span><b>' + v.met + '</b> met</span><span><b>' + sdF(v.rate, 2) + '</b> per game</span><span>he averaged <b>' + sdF(v.runsVs) + '</b></span></div>' : '') +
+      '<div class="sd-chips-s">' + v.games.slice(-4).map(function(gm) { return '<span class="sd-click" role="button" tabindex="0" title="Open the scorecard" onclick="openMatchDetail(\'' + gm.Date + '\',' + _esc(JSON.stringify(gm.Opponent)) + ',\'' + gm.Team + '\')">' + _shortDate(gm.Date) + '</span>'; }).join('') + '</div></div></div>';
   };
-  el.innerHTML = '<div class="sd-tools">' + picker + chips + '</div>' + sdTiles([
-      [mine.length, 'Wickets', list.length + ' different batters'],
-      [topN, 'Top-order wickets', mine.length ? Math.round(100 * topN / mine.length) + '% of his wickets' : ''],
-      [rep.length, 'Repeat victims', 'dismissed more than once'],
-      fav && [clubs[fav], 'Favourite opponent', _esc(fav)]
-    ]) + '<div class="sd-two sd-two-wide">' + sdPanel('Victims', 'repeat victims first · tap a date for the scorecard', list.length ? '<div class="sd-foes">' + list.slice(0, 40).map(tile).join('') + '</div>' : '<p class="sd-none">No wickets here.</p>') +
-    sdPanel('How his wickets came', '', mine.length ? sdRing(how, mine.length) : '') + '</div>';
+  var myVR = victimRuns(mine), recent = mine.filter(sdIsRecent);
+  el.innerHTML = '<div class="sd-tools">' + picker + chips + '<span class="sd-sub">Tap a batter\u2019s name for his full record against us</span></div>' + sdTiles([
+      [mine.length, 'Wickets', list.length + ' different batters \u00b7 ' + (g ? sdF(mine.length / g, 2) + ' a game' : '') + (recent.length ? ' \u00b7 ' + recent.length + ' in ' + sdRecentLabel() : '')],
+      [topN, 'Top-order wickets', (mine.length ? Math.round(100 * topN / mine.length) + '% ' : '') + '\u00b7 club ' + sdF(clubTopPct, 0) + '% ' + (mine.length ? sdCmp(100 * topN / mine.length, clubTopPct, 1, 0, ' pts') : '')],
+      [sdF(myVR), 'Runs per victim', 'club ' + sdF(clubVR) + ' ' + sdCmp(myVR, clubVR, -1, 1) + ' \u00b7 lower = gets them early'],
+      [rep.length, 'Repeat victims', 'dismissed more than once']
+    ]) + '<div class="sd-two sd-two-wide">' + sdPanel('Victims', 'repeat victims first \u00b7 met = games they both played \u00b7 tap a date for the scorecard', list.length ? '<div class="sd-foes">' + list.slice(0, 40).map(tile).join('') + '</div>' : '<p class="sd-none">No wickets here.</p>') +
+    sdPanel('How his wickets came', 'compared with the whole club', mine.length ? sdRing(how, mine.length) + (function() {
+      var club = {}; allOb.forEach(function(r) { club[r.Dismissal] = (club[r.Dismissal] || 0) + 1; });
+      return '<table class="sd-mini"><thead><tr><th>How</th><th>' + _esc(who.split(' ')[0]) + '</th><th>Club</th></tr></thead><tbody>' + Object.keys(how).sort(function(a, b) { return how[b] - how[a]; }).map(function(k) {
+        var me = 100 * how[k] / mine.length, c = 100 * (club[k] || 0) / allOb.length;
+        return '<tr><td><i class="sd-sw" style="background:' + (SD_HOW_COL[k] || 'var(--purple)') + '"></i>' + _esc(k) + '</td><td>' + Math.round(me) + '%</td><td>' + Math.round(c) + '% ' + sdCmp(me, c, 0, 0, '') + '</td></tr>';
+      }).join('') + '</tbody></table>';
+    })() : '') + '</div>';
 }
 
-// ---------- Opponents → Opposition players
+// ---------- Opponents → Opposition players (with context)
 function renderOppPlayers() {
   var el = document.getElementById('opp-players-content'); if (!el) return;
   if (!sdHasDetail()) { el.innerHTML = SD_EMPTY; return; }
-  var ob = sdRows('opp_batting'), ow = sdRows('opp_bowling');
+  var ix = sdIndex(), ob = sdRows('opp_batting'), ow = sdRows('opp_bowling');
   var last = {}; ob.concat(ow).forEach(function(r) { if (!last[r.Opponent] || r.Date > last[r.Opponent]) last[r.Opponent] = r.Date; });
   var opps = Object.keys(last).sort(function(a, b) { return last[b].localeCompare(last[a]); });
   var sel = document.getElementById('opWho'), opp = sel && sel.value && opps.indexOf(sel.value) >= 0 ? sel.value : opps[0];
+  var batAgg = function(rows) { var runs = 0, outs = 0; rows.forEach(function(r) { runs += r.Runs || 0; if (!/not out|retired/i.test(r.Dismissal || '')) outs++; }); return { runs: runs, outs: outs, avg: sdAvg(runs, outs), inns: rows.length }; };
+  var bowlAgg = function(rows) { var b = 0, r = 0, w = 0; rows.forEach(function(x) { b += oversToBalls(x.Overs || 0); r += x.Runs || 0; w += x.Wickets || 0; }); return { w: w, avg: w ? r / w : null, econ: b ? r / (b / 6) : null }; };
+  var oppBat = ob.filter(function(r) { return r.Opponent === opp; }), oppBowl = ow.filter(function(r) { return r.Opponent === opp; });
+  var allB = batAgg(ob), clubB = batAgg(oppBat), recB = batAgg(oppBat.filter(sdIsRecent));
+  var allW = bowlAgg(ow), clubW = bowlAgg(oppBowl), recW = bowlAgg(oppBowl.filter(sdIsRecent));
   var bat = {}, bwl = {};
-  ob.filter(function(r) { return r.Opponent === opp; }).forEach(function(r) {
-    var k = sdOppKey(r.BatterId, r.Batter, r.Opponent), b = bat[k] || (bat[k] = { name: r.Batter, inns: 0, runs: 0, outs: 0, hs: null, fifty: 0, last: r.Date });
-    b.inns++; b.runs += r.Runs || 0; if (!/not out|retired/i.test(r.Dismissal || '')) b.outs++; if (!b.hs || (r.Runs || 0) > (b.hs.Runs || 0)) b.hs = r;
-    if ((r.Runs || 0) >= 50) b.fifty++; if (r.Date > b.last) { b.last = r.Date; b.name = r.Batter; }
-  });
-  ow.filter(function(r) { return r.Opponent === opp; }).forEach(function(r) {
-    var k = sdOppKey(r.BowlerId, r.Bowler, r.Opponent), b = bwl[k] || (bwl[k] = { name: r.Bowler, n: 0, balls: 0, runs: 0, w: 0, best: null, last: r.Date });
-    b.n++; b.balls += oversToBalls(r.Overs || 0); b.runs += r.Runs || 0; b.w += r.Wickets || 0;
-    if (!b.best || (r.Wickets || 0) > (b.best.Wickets || 0) || ((r.Wickets || 0) === (b.best.Wickets || 0) && (r.Runs || 0) < (b.best.Runs || 0))) b.best = r;
-    if (r.Date > b.last) { b.last = r.Date; b.name = r.Bowler; }
-  });
-  var bl = Object.values(bat).sort(function(a, b) { return b.runs - a.runs; }), wl = Object.values(bwl).sort(function(a, b) { return b.w - a.w || a.runs - b.runs; });
+  oppBat.forEach(function(r) { var k = sdOppKey(r.BatterId, r.Batter, r.Opponent); (bat[k] = bat[k] || []).push(r); });
+  oppBowl.forEach(function(r) { var k = sdOppKey(r.BowlerId, r.Bowler, r.Opponent); (bwl[k] = bwl[k] || []).push(r); });
+  var bl = Object.keys(bat).map(function(k) { var a = batAgg(bat[k]); a.k = k; a.rows = bat[k]; a.hs = bat[k].slice().sort(function(x, y) { return (y.Runs || 0) - (x.Runs || 0); })[0]; a.last = bat[k].reduce(function(m, r) { return r.Date > m ? r.Date : m; }, ''); a.fifty = bat[k].filter(function(r) { return (r.Runs || 0) >= 50; }).length; return a; }).sort(function(a, b) { return b.runs - a.runs; });
+  var wl = Object.keys(bwl).map(function(k) { var a = bowlAgg(bwl[k]); a.k = k; a.n = bwl[k].length; a.last = bwl[k].reduce(function(m, r) { return r.Date > m ? r.Date : m; }, ''); return a; }).sort(function(a, b) { return b.w - a.w; });
   var mxB = bl.length ? bl[0].runs : 1, mxW = wl.length ? wl[0].w : 1;
   var nNo = function(r) { return (r.Runs || 0) + (/not out/i.test(r.Dismissal || '') ? '*' : ''); };
-  var batRows = bl.slice(0, 10).map(function(b) { return sdBarRow({ title: '<b>' + _esc(b.name) + '</b>', sub: b.inns + ' inns \u00b7 avg ' + (b.outs ? (b.runs / b.outs).toFixed(1) : '\u2013') + ' \u00b7 best ' + nNo(b.hs) + (b.fifty ? ' \u00b7 ' + b.fifty + '\u00d7 50' : '') + ' \u00b7 last ' + b.last.slice(0, 4), value: b.runs, max: mxB, label: b.runs, cls: 'warm' }); }).join('');
-  var bowlRows = wl.slice(0, 10).map(function(b) { return sdBarRow({ title: '<b>' + _esc(b.name) + '</b>', sub: b.n + ' games \u00b7 avg ' + (b.w ? (b.runs / b.w).toFixed(1) : '\u2013') + ' \u00b7 econ ' + (b.balls ? (b.runs / (b.balls / 6)).toFixed(2) : '\u2013') + ' \u00b7 best ' + (b.best ? (b.best.Wickets || 0) + '/' + (b.best.Runs || 0) : '') + ' \u00b7 last ' + b.last.slice(0, 4), value: b.w, max: mxW, label: b.w, cls: 'warm' }); }).join('');
+  var batRows = bl.slice(0, 10).map(function(b) { return sdBarRow({ title: sdOppName(b.k), sub: b.inns + ' inns \u00b7 avg ' + sdF(b.avg) + ' ' + sdCmp(b.avg, allB.avg, -1, 1) + ' \u00b7 best ' + nNo(b.hs) + (b.fifty ? ' \u00b7 ' + b.fifty + '\u00d7 50' : '') + ' \u00b7 last ' + b.last.slice(0, 4), value: b.runs, max: mxB, label: b.runs, cls: 'warm' }); }).join('');
+  var bowlRows = wl.slice(0, 10).map(function(b) { return sdBarRow({ title: sdOppName(b.k), sub: b.n + ' games \u00b7 avg ' + sdF(b.avg) + ' ' + sdCmp(b.avg, allW.avg, 1, 1) + ' \u00b7 econ ' + sdF(b.econ, 2) + ' \u00b7 last ' + b.last.slice(0, 4), value: b.w, max: mxW, label: b.w, cls: 'warm' }); }).join('');
   var hs = ob.filter(function(r) { return typeof r.Runs === 'number'; }).sort(function(a, b) { return b.Runs - a.Runs; }).slice(0, 8);
   var bb = ow.filter(function(r) { return (r.Wickets || 0) > 0; }).sort(function(a, b) { return b.Wickets - a.Wickets || (a.Runs || 0) - (b.Runs || 0); }).slice(0, 8);
-  var recRow = function(fig, name, r) { return '<div class="sd-rec sd-click" role="button" tabindex="0" title="Open the scorecard" onclick="openMatchDetail(\'' + r.Date + '\',' + _esc(JSON.stringify(r.Opponent)) + ',\'' + r.Team + '\')"><b>' + fig + '</b><span><span class="sd-row-t">' + _esc(name) + '</span><span class="sd-row-s">' + sdGame(r) + '</span></span></div>'; };
-  var gamesV = new Set(ob.filter(function(r) { return r.Opponent === opp; }).map(function(r) { return r.Date + r.Team; })).size;
-  el.innerHTML = '<div class="sd-tools"><label class="sd-label">Opponent <select id="opWho" onchange="renderOppPlayers()">' + opps.map(function(o) { return '<option' + (o === opp ? ' selected' : '') + '>' + _esc(o) + '</option>'; }).join('') + '</select></label></div>' +
+  var recRow = function(fig, k, name, r) { return '<div class="sd-rec"><b class="sd-click" role="button" tabindex="0" title="Open the scorecard" onclick="openMatchDetail(\'' + r.Date + '\',' + _esc(JSON.stringify(r.Opponent)) + ',\'' + r.Team + '\')">' + fig + '</b><span><span class="sd-row-t">' + sdOppName(k, name) + '</span><span class="sd-row-s">' + sdGame(r) + '</span></span></div>'; };
+  // note: for opposition batters a LOWER average against us is better for Hessle (and a higher bowling average)
+  el.innerHTML = '<div class="sd-tools"><label class="sd-label">Opponent <select id="opWho" onchange="renderOppPlayers()">' + opps.map(function(o) { return '<option' + (o === opp ? ' selected' : '') + '>' + _esc(o) + '</option>'; }).join('') + '</select></label><span class="sd-sub">Tap a player for his full record against us \u00b7 green/red = good/bad for Hessle</span></div>' +
     sdTiles([
-      bl[0] && [bl[0].runs, 'Most runs against us', '<b>' + _esc(bl[0].name) + '</b> \u00b7 ' + bl[0].inns + ' innings'],
-      wl[0] && [wl[0].w, 'Most wickets against us', '<b>' + _esc(wl[0].name) + '</b> \u00b7 ' + wl[0].n + ' games'],
-      bl.length && [bl.reduce(function(a, b) { return a + b.fifty; }, 0), 'Fifties against us', 'by ' + _esc(opp) + ' players'],
-      [gamesV, 'Games with full scorecards', 'against ' + _esc(opp)]
+      [sdF(clubB.avg), 'Their batting average v us', 'all clubs ' + sdF(allB.avg) + ' ' + sdCmp(clubB.avg, allB.avg, -1, 1) + ' \u00b7 ' + sdRecentLabel() + ': ' + sdF(recB.avg)],
+      [sdF(clubW.avg), 'Their bowling average v us', 'all clubs ' + sdF(allW.avg) + ' ' + sdCmp(clubW.avg, allW.avg, 1, 1) + ' \u00b7 ' + sdRecentLabel() + ': ' + sdF(recW.avg)],
+      bl[0] && [bl[0].runs, 'Most runs against us', sdOppName(bl[0].k) + ' \u00b7 ' + bl[0].inns + ' innings'],
+      wl[0] && [wl[0].w, 'Most wickets against us', sdOppName(wl[0].k) + ' \u00b7 ' + wl[0].n + ' games']
     ]) +
-    '<div class="sd-two">' + sdPanel(_esc(opp) + '\u2019s danger batters', 'most runs against Hessle', batRows || '<p class="sd-none">No batting recorded.</p>') +
-    sdPanel(_esc(opp) + '\u2019s danger bowlers', 'most wickets against Hessle', bowlRows || '<p class="sd-none">No bowling recorded.</p>') + '</div>' +
-    '<div class="sd-two">' + sdPanel('Highest scores against Hessle', 'any club · tap for the scorecard', hs.map(function(r) { return recRow(nNo(r), r.Batter, r); }).join('')) +
-    sdPanel('Best bowling against Hessle', 'any club · tap for the scorecard', bb.map(function(r) { return recRow((r.Wickets || 0) + '/' + (r.Runs || 0), r.Bowler, r); }).join('')) + '</div>';
+    '<div class="sd-two">' + sdPanel(_esc(opp) + '\u2019s danger batters', 'most runs against Hessle \u00b7 average compared with all opposition batters (' + sdF(allB.avg) + ')', batRows || '<p class="sd-none">No batting recorded.</p>') +
+    sdPanel(_esc(opp) + '\u2019s danger bowlers', 'most wickets against Hessle \u00b7 average compared with all opposition bowlers (' + sdF(allW.avg) + ')', bowlRows || '<p class="sd-none">No bowling recorded.</p>') + '</div>' +
+    '<div class="sd-two">' + sdPanel('Highest scores against Hessle', 'any club \u00b7 tap the score for the scorecard', hs.map(function(r) { return recRow(nNo(r), sdOppKey(r.BatterId, r.Batter, r.Opponent), r.Batter, r); }).join('')) +
+    sdPanel('Best bowling against Hessle', 'any club \u00b7 tap the figures for the scorecard', bb.map(function(r) { return recRow((r.Wickets || 0) + '/' + (r.Runs || 0), sdOppKey(r.BowlerId, r.Bowler, r.Opponent), r.Bowler, r); }).join('')) + '</div>';
 }
+
+// ---------- an opposition player's full record against Hessle
+function sdOppCard(k) {
+  var ix = sdIndex(), name = ix.oppName[k] || '?', club = ix.oppClub[k] || '';
+  var id = k.indexOf('id:') === 0 ? k.slice(3) : null;
+  var same = function(r, idf, nf) { return id ? r[idf] === id : sdOppKey(r[idf], r[nf], r.Opponent) === k; };
+  var batRows = (CRICKET_DATA.opp_batting || []).filter(function(r) { return same(r, 'BatterId', 'Batter'); });
+  var bowlRows = (CRICKET_DATA.opp_bowling || []).filter(function(r) { return same(r, 'BowlerId', 'Bowler'); });
+  var ourOuts = (CRICKET_DATA.dismissals || []).filter(function(r) { return same(r, 'BowlerId', 'Bowler'); });
+  var seasons = [...new Set(batRows.concat(bowlRows).map(function(r) { return r.Date.slice(0, 4); }))].sort().reverse();
+  var tot = { inns: 0, runs: 0, outs: 0, hs: null, w: 0, b: 0, r: 0 };
+  var rows = seasons.map(function(y) {
+    var bt = batRows.filter(function(r) { return r.Date.slice(0, 4) === y; }), bw = bowlRows.filter(function(r) { return r.Date.slice(0, 4) === y; });
+    var runs = 0, outs = 0, hs = null; bt.forEach(function(r) { runs += r.Runs || 0; if (!/not out|retired/i.test(r.Dismissal || '')) outs++; if (!hs || (r.Runs || 0) > (hs.Runs || 0)) hs = r; });
+    var w = 0, b = 0, rc = 0; bw.forEach(function(r) { w += r.Wickets || 0; b += oversToBalls(r.Overs || 0); rc += r.Runs || 0; });
+    tot.inns += bt.length; tot.runs += runs; tot.outs += outs; tot.w += w; tot.b += b; tot.r += rc; if (hs && (!tot.hs || (hs.Runs || 0) > (tot.hs.Runs || 0))) tot.hs = hs;
+    var nNo = function(r) { return r ? (r.Runs || 0) + (/not out/i.test(r.Dismissal || '') ? '*' : '') : '\u2013'; };
+    return '<tr><td><b>' + y + '</b></td><td>' + (bt.length || '\u2013') + '</td><td>' + (bt.length ? runs : '\u2013') + '</td><td>' + sdF(sdAvg(runs, outs)) + '</td><td>' + nNo(hs) + '</td><td>' + (bw.length || '\u2013') + '</td><td>' + (bw.length ? w : '\u2013') + '</td><td>' + (w ? sdF(rc / w) : '\u2013') + '</td><td>' + (b ? sdF(rc / (b / 6), 2) : '\u2013') + '</td></tr>';
+  }).join('');
+  var byOurBowler = {}; batRows.filter(function(r) { return r.Bowler; }).forEach(function(r) { byOurBowler[r.Bowler] = (byOurBowler[r.Bowler] || 0) + 1; });
+  var hisVictims = {}; ourOuts.forEach(function(r) { hisVictims[r.Batter] = (hisVictims[r.Batter] || 0) + 1; });
+  var list = function(o, fmt) { var ks = Object.keys(o).sort(function(a, b) { return o[b] - o[a]; }); return ks.length ? ks.slice(0, 6).map(fmt).join('') : '<p class="sd-none">None</p>'; };
+  var html = '<div class="sd-oc-head"><div><h2>' + _esc(name) + '</h2><div class="sd-sub">' + _esc(club) + ' \u00b7 against Hessle ' + (seasons.length ? seasons[seasons.length - 1] + '\u2013' + seasons[0] : '') + '</div></div><button type="button" class="sd-oc-x" aria-label="Close" onclick="sdOppCardClose()">\u2715</button></div>' +
+    sdTiles([
+      tot.inns && [tot.runs, 'Runs against us', tot.inns + ' innings \u00b7 avg ' + sdF(sdAvg(tot.runs, tot.outs)) + ' \u00b7 best ' + (tot.hs ? (tot.hs.Runs || 0) + (/not out/i.test(tot.hs.Dismissal || '') ? '*' : '') : '\u2013')],
+      bowlRows.length && [tot.w, 'Wickets against us', bowlRows.length + ' games \u00b7 avg ' + (tot.w ? sdF(tot.r / tot.w) : '\u2013') + ' \u00b7 econ ' + (tot.b ? sdF(tot.r / (tot.b / 6), 2) : '\u2013')]
+    ]) +
+    '<div class="table-wrap"><table class="sd-mini sd-oc-table"><thead><tr><th>Season</th><th>Inns</th><th>Runs</th><th>Avg</th><th>Best</th><th>Games bowled</th><th>Wkts</th><th>Avg</th><th>Econ</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<div class="sd-two" style="margin-top:14px">' + sdPanel('Who gets him out', 'our bowlers', list(byOurBowler, function(b) { return '<div class="sd-rv"><span class="sd-rv-n">' + byOurBowler[b] + '\u00d7</span><span>' + sdLink(b) + '</span></div>'; })) +
+    sdPanel('Who he gets out', 'our batters', list(hisVictims, function(b) { return '<div class="sd-rv"><span class="sd-rv-n">' + hisVictims[b] + '\u00d7</span><span>' + sdLink(b) + '</span></div>'; })) + '</div>';
+  var ov = document.getElementById('sd-oc'); if (!ov) { ov = document.createElement('div'); ov.id = 'sd-oc'; ov.className = 'sd-oc'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true');
+    ov.addEventListener('click', function(e) { if (e.target === ov) sdOppCardClose(); }); document.body.appendChild(ov); }
+  ov.innerHTML = '<div class="sd-oc-box">' + html + '</div>'; ov.style.display = 'flex'; ov.setAttribute('aria-label', name + ' against Hessle');
+  var x = ov.querySelector('.sd-oc-x'); if (x) x.focus();
+}
+function sdOppCardClose() { var ov = document.getElementById('sd-oc'); if (ov) ov.style.display = 'none'; }
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') sdOppCardClose(); });
 
 // ---------- Player profile: partners and rivals
 function addProfileRivals(player) {
@@ -6491,7 +6752,7 @@ function showMoreRows(tableId) {
 // GLOBAL SEARCH
 // ============================================================
 function goToPlayer(name) {
-  showPage('profiles', document.querySelector('.nav-btn:nth-child(8)'));
+  showPage('profiles', null);
   setTimeout(()=>{
     const sel = document.getElementById('profileSelect');
     if(sel){ sel.value = name; renderProfile(); }
@@ -6499,7 +6760,7 @@ function goToPlayer(name) {
 }
 
 function goToOpponent(name) {
-  showPage('opponents', document.querySelector('.nav-btn:nth-child(7)'));
+  showPage('opponents', null);
   setTimeout(()=>openOppDetail(name), 100);
 }
 
@@ -7844,6 +8105,43 @@ function renderRecords() {
     if (top) records.push({label:'Most Run Outs', value:top[1], who:top[0], detail:'Career', colour:'green', board: sortedAgg.slice(0,10).map(([p,v])=>({player:p,value:v}))});
   })();
 
+  // ============================================================
+  // PARTNERSHIPS AND WICKETS (from the full scorecards)
+  // ============================================================
+  (function(){
+    var NP = function(n) { return NOT_PLAYERS.has(n); };
+    var ps = getFiltered(CRICKET_DATA.partnerships || []).filter(function(r) { return !NP(r.Batter1) && !NP(r.Batter2); });
+    var ob = getFiltered(CRICKET_DATA.opp_batting || []).filter(function(r) { return r.Bowler && !NP(r.Bowler) && r.Dismissal !== 'Run Out'; });
+    var ord = function(n) { var t = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (t[(v - 20) % 10] || t[v] || t[0]); };
+    var stand = function(r) { return r.Runs + (r.Unbroken ? '*' : ''); };
+    var pairName = function(r) { return [r.Batter1, r.Batter2].sort().join(' & '); };
+    if (ps.length) {
+      var best = ps.slice().sort(function(a, b) { return b.Runs - a.Runs; });
+      records.push({label:'Highest Partnership', value:stand(best[0]), who:best[0].Batter1 + ' & ' + best[0].Batter2, detail:ord(best[0].Wicket) + ' wicket \u00b7 vs ' + best[0].Opponent + ' \u00b7 ' + best[0].Date, colour:'blue',
+        board: best.slice(0, 10).map(function(r) { return {player:r.Batter1 + ' & ' + r.Batter2, noLink:true, value:stand(r), detail:ord(r.Wicket) + ' wicket \u00b7 ' + r.Team + ' XI vs ' + r.Opponent + ' \u00b7 ' + r.Date}; })});
+      var pairs = {};
+      ps.forEach(function(r) { var k = pairName(r), p = pairs[k] || (pairs[k] = {runs:0, n:0, outs:0}); p.runs += r.Runs; p.n++; if (!r.Unbroken) p.outs++; });
+      var pl = Object.entries(pairs).sort(function(a, b) { return b[1].runs - a[1].runs; });
+      records.push({label:'Most Runs Together', value:pl[0][1].runs, who:pl[0][0], detail:pl[0][1].n + ' partnerships', colour:'blue',
+        board: pl.slice(0, 10).map(function(e) { return {player:e[0], noLink:true, value:e[1].runs, detail:e[1].n + ' partnerships \u00b7 average ' + (e[1].outs ? (e[1].runs / e[1].outs).toFixed(1) : '\u2013')}; })});
+      var fifty = {};
+      ps.filter(function(r) { return r.Runs >= 50; }).forEach(function(r) { [r.Batter1, r.Batter2].forEach(function(n) { fifty[n] = (fifty[n] || 0) + 1; }); });
+      var fl = Object.entries(fifty).sort(function(a, b) { return b[1] - a[1]; });
+      if (fl.length) records.push({label:'Most 50+ Partnerships', value:fl[0][1], who:fl[0][0], detail:'Career', colour:'blue', board: fl.slice(0, 10).map(function(e) { return {player:e[0], value:e[1]}; })});
+    }
+    if (ob.length) {
+      var h2h = {};
+      ob.forEach(function(r) { var k = r.Bowler + '|' + (r.BatterId || r.Batter + '|' + r.Opponent), h = h2h[k] || (h2h[k] = {bowler:r.Bowler, batter:r.Batter, club:r.Opponent, n:0, last:r.Date}); h.n++; if (r.Date >= h.last) { h.last = r.Date; h.batter = r.Batter; h.club = r.Opponent; } });
+      var hl = Object.values(h2h).sort(function(a, b) { return b.n - a.n || b.last.localeCompare(a.last); });
+      records.push({label:'Most Times Dismissing One Batter', value:hl[0].n, who:hl[0].bowler, detail:hl[0].batter + ' (' + hl[0].club + ')', colour:'amber',
+        board: hl.slice(0, 10).map(function(h) { return {player:h.bowler, value:h.n, detail:h.batter + ' (' + h.club + ')'}; })});
+      var topw = {};
+      ob.filter(function(r) { return typeof r.Pos === 'number' && r.Pos <= 4; }).forEach(function(r) { topw[r.Bowler] = (topw[r.Bowler] || 0) + 1; });
+      var tl = Object.entries(topw).sort(function(a, b) { return b[1] - a[1]; });
+      if (tl.length) records.push({label:'Most Top-Order Wickets', value:tl[0][1], who:tl[0][0], detail:'Batters 1\u20134', colour:'amber', board: tl.slice(0, 10).map(function(e) { return {player:e[0], value:e[1]}; })});
+    }
+  })();
+
   window._clubRecords = records;
   document.getElementById('records-grid').innerHTML = records.map((r, i) => `
     <div class="kpi ${r.colour} lb-clickable" style="padding:16px 18px;" role="button" tabindex="0" title="View top 10" onclick="openClubRecordBoard(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openClubRecordBoard(${i});}">
@@ -7854,6 +8152,22 @@ function renderRecords() {
     </div>
   `).join('');
 
+}
+
+// Record partnership for each wicket (Records page). Each row opens that game's scorecard.
+function renderPartnershipRecords() {
+  var box = document.getElementById('partnership-records'); if (!box) return;
+  var ps = getFiltered(CRICKET_DATA.partnerships || []).filter(function(r) { return !NOT_PLAYERS.has(r.Batter1) && !NOT_PLAYERS.has(r.Batter2); });
+  if (!ps.length) { box.style.display = 'none'; return; }
+  var ord = function(n) { var t = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (t[(v - 20) % 10] || t[v] || t[0]); };
+  var rows = [];
+  for (var w = 1; w <= 10; w++) {
+    var b = ps.filter(function(r) { return r.Wicket === w; }).sort(function(a, c) { return c.Runs - a.Runs || a.Date.localeCompare(c.Date); })[0];
+    if (!b) continue;
+    rows.push('<tr style="cursor:pointer" title="Open the scorecard" onclick="openMatchDetail(\'' + b.Date + '\',' + _esc(JSON.stringify(b.Opponent)) + ',\'' + b.Team + '\')"><td>' + ord(w) + '</td><td><b>' + b.Runs + (b.Unbroken ? '*' : '') + '</b></td><td>' + _esc(b.Batter1) + ' &amp; ' + _esc(b.Batter2) + '</td><td>' + _shortDate(b.Date) + ' \u00b7 ' + b.Team + ' XI v ' + _esc(b.Opponent) + '</td></tr>');
+  }
+  document.querySelector('#tblPartnershipRecords tbody').innerHTML = rows.join('');
+  box.style.display = '';
 }
 
 const RQ_MEASURES = {
